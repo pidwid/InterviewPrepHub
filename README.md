@@ -17,6 +17,8 @@ InterviewPrepHub/
 
 ## The App
 
+![Interview Prep Hub screenshot](./public/page_screenshot.png)
+
 ### Overview
 
 The app has two main sections, toggled via the top tab bar:
