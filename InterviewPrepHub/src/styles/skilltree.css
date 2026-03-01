@@ -1,0 +1,382 @@
+/* ═══════════════════════════════════════════════
+   Skill Tree — Progress Roadmap
+═══════════════════════════════════════════════ */
+
+/* ── Time Filter ── */
+.st-time-filter {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.st-time-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.st-time-buttons {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.st-time-btn {
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.st-time-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.st-time-btn--active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+.st-time-btn--active:hover {
+  color: #fff;
+}
+
+.st-time-scope {
+  font-size: 0.73rem;
+  color: var(--accent);
+  font-weight: 500;
+}
+
+/* ── Summary ── */
+.st-summary {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.st-summary-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.st-summary-bar {
+  flex: 1;
+  height: 4px;
+  background: var(--border);
+  border-radius: 999px;
+  overflow: hidden;
+  max-width: 220px;
+}
+
+.st-summary-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--accent);
+}
+
+/* ── Phase list ── */
+.st-phases {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* ── Single phase ── */
+.st-phase {
+  position: relative;
+  padding-left: 2rem;
+}
+
+/* ── Vertical connector line ── */
+.st-connector {
+  position: absolute;
+  left: 0.7rem;
+  top: -0.5rem;
+  width: 2px;
+  height: 1rem;
+  background: var(--border);
+}
+
+.st-connector--active {
+  background: var(--accent);
+}
+
+/* ── Phase header ── */
+.st-phase-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  margin-bottom: 0.35rem;
+}
+
+.st-phase-dot {
+  width: 1.5rem;
+  height: 1.5rem;
+  min-width: 1.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  font-weight: 700;
+  border: 2px solid var(--border);
+  background: var(--bg);
+  color: var(--text-muted);
+  position: absolute;
+  left: 0;
+  top: 0.1rem;
+}
+
+.st-phase-dot--done {
+  background: var(--done);
+  border-color: var(--done);
+  color: #fff;
+}
+
+.st-phase-dot--active {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.st-phase-dot--pending {
+  opacity: 0.5;
+}
+
+.st-phase-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.st-phase-title-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.st-phase-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.st-phase--pending .st-phase-title {
+  color: var(--text-muted);
+}
+
+.st-phase-count {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.st-phase-week {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.st-phase--pending .st-phase-week {
+  color: var(--text-muted);
+}
+
+/* ── Phase progress bar ── */
+.st-phase-bar {
+  height: 3px;
+  background: var(--border);
+  border-radius: 999px;
+  overflow: hidden;
+  margin: 0.3rem 0 0.4rem;
+}
+
+.st-phase-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--accent);
+}
+
+.st-phase--done .st-phase-bar-fill {
+  background: var(--done);
+}
+
+/* ── Topics grid ── */
+.st-topics {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.25rem;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 600px) {
+  .st-topics {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Single topic row (display only) ── */
+.st-topic {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.35rem 0.55rem;
+  border-radius: 7px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 0.78rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  width: 100%;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.st-topic:hover {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 8%, var(--surface));
+}
+
+.st-topic--not_started {
+  opacity: 0.45;
+}
+
+.st-topic--done {
+  border-color: var(--done-border);
+  background: var(--done-bg);
+  opacity: 1;
+}
+
+.st-topic--revise {
+  border-color: var(--revise-border);
+  background: var(--revise-bg);
+  opacity: 1;
+}
+
+/* Topic dot */
+.st-topic-dot {
+  width: 1.2rem;
+  height: 1.2rem;
+  min-width: 1.2rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.58rem;
+  font-weight: 700;
+  background: var(--bg);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.st-topic-dot--done {
+  background: var(--done);
+  color: #fff;
+  border-color: var(--done);
+}
+
+.st-topic-dot--revise {
+  background: var(--revise);
+  color: #fff;
+  border-color: var(--revise);
+}
+
+.st-topic-name {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.st-topic-status {
+  font-size: 0.62rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  flex-shrink: 0;
+}
+
+.st-topic-status--done {
+  color: var(--done);
+}
+
+.st-topic-status--revise {
+  color: var(--revise);
+}
+
+/* ── Dimmed state (topic outside time filter scope) ── */
+.st-topic--dimmed {
+  opacity: 0.25;
+  filter: grayscale(0.9);
+}
+
+.st-topic--dimmed:hover {
+  opacity: 0.4;
+  filter: grayscale(0.5);
+}
+
+/* ── Highlighted state (in-scope when filter active) ── */
+.st-topic--highlighted {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 20%, transparent);
+}
+
+/* ── Quick Reference cards ── */
+.st-quick-refs {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 600px) {
+  .st-quick-refs {
+    grid-template-columns: 1fr;
+  }
+}
+
+.st-quick-ref {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.65rem 0.85rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.st-quick-ref:hover {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 6%, var(--surface));
+}
+
+.st-quick-ref-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.st-quick-ref-desc {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}

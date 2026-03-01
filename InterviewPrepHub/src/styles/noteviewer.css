@@ -1,0 +1,75 @@
+/* ═══════════════════════════════════════════════
+   Note Viewer
+═══════════════════════════════════════════════ */
+.note-viewer {
+    animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.note-viewer-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.note-viewer-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.note-viewer-empty {
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-muted);
+}
+
+.note-viewer-content {
+    max-width: 900px;
+}
+
+/* Note Viewer Tabs (Notes / Practice) */
+.note-viewer-tabs {
+    display: flex;
+    gap: 0.25rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.note-tab {
+    padding: 0.6rem 1.25rem;
+    border: none;
+    border-bottom: 3px solid transparent;
+    background: none;
+    color: var(--text-muted);
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: color 0.15s, border-color 0.15s;
+}
+
+.note-tab:hover {
+    color: var(--text);
+    border-bottom-color: var(--border);
+}
+
+.note-tab--active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+}
+

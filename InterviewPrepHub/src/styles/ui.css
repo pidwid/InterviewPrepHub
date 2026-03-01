@@ -1,0 +1,253 @@
+/* ═══════════════════════════════════════════════
+   Badge
+═══════════════════════════════════════════════ */
+.badge {
+  font-size: 0.7rem;
+  padding: 0.18rem 0.5rem;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.badge--revise {
+  background: var(--revise-bg);
+  color: var(--revise);
+  border: 1px solid var(--revise-border);
+}
+
+.badge--dim {
+    opacity: 0.3;
+}
+
+/* ═══════════════════════════════════════════════
+   Priority Badges
+═══════════════════════════════════════════════ */
+.priority-badge {
+    font-size: 0.62rem;
+    font-weight: 800;
+    padding: 0.12rem 0.45rem;
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.priority-badge--high {
+    background: var(--priority-high-bg);
+    color: var(--priority-high);
+    border: 1px solid var(--priority-high-border);
+}
+
+.priority-badge--medium {
+    background: var(--priority-medium-bg);
+    color: var(--priority-medium);
+    border: 1px solid var(--priority-medium-border);
+}
+
+.priority-badge--low {
+    background: var(--priority-low-bg);
+    color: var(--priority-low);
+    border: 1px solid var(--priority-low-border);
+}
+
+.priority-badge--small {
+    font-size: 0.6rem;
+    padding: 0.1rem 0.45rem;
+    margin-left: auto;
+}
+
+/* ═══════════════════════════════════════════════
+   Shared Buttons
+═══════════════════════════════════════════════ */
+.primary-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+    color: var(--text-on-accent);
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1.25rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.primary-btn:hover {
+    opacity: 0.88;
+}
+.ghost-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--surface);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.6rem 1.25rem;
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+.ghost-btn:hover {
+    border-color: var(--accent);
+    color: var(--text);
+}
+
+.ghost-btn--danger:hover {
+    border-color: var(--error);
+    color: var(--error-text);
+}
+
+.ghost-btn--compact {
+    padding: 0.3rem 0.7rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 6px;
+    white-space: nowrap;
+    margin-bottom: 3px;
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: var(--surface);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 0.38rem 0.85rem;
+  font-size: 0.88rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+.back-btn:hover {
+    color: var(--text);
+    border-color: var(--accent);
+}
+
+/* ═══════════════════════════════════════════════
+   Dashboard Actions
+═══════════════════════════════════════════════ */
+.dashboard-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.reset-progress-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.2rem 0.6rem;
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-family: inherit;
+    transition: border-color 0.15s, color 0.15s;
+}
+
+.reset-progress-btn:hover {
+    border-color: var(--error);
+    color: var(--error-text);
+}
+
+/* ═══════════════════════════════════════════════
+   Search Row (search bar + All Topics)
+═══════════════════════════════════════════════ */
+.search-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.search-row .search-bar {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+.search-row .primary-btn {
+    white-space: nowrap;
+    flex-shrink: 0;
+    padding: 0.55rem 1rem;
+    font-size: 0.82rem;
+}
+
+/* ═══════════════════════════════════════════════
+   Dashboard Sub-Tabs (Roadmap / Categories / Practice)
+═══════════════════════════════════════════════ */
+.dash-tabs {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 1.25rem;
+}
+
+.dash-tab {
+    position: relative;
+    padding: 0.6rem 1.1rem;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    transition: color 0.15s, border-color 0.15s;
+    white-space: nowrap;
+}
+
+.dash-tab:hover {
+    color: var(--text);
+    border-bottom-color: var(--border);
+}
+
+.dash-tab--active {
+    color: var(--text);
+    font-weight: 600;
+    border-bottom-color: var(--accent);
+}
+
+.dash-tabs-right {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-left: auto;
+}
+
+/* ── View toggle button (card ↔ list) ─────── */
+.view-toggle-btn {
+    padding: 0.3rem 0.7rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--surface);
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s;
+    white-space: nowrap;
+    margin-bottom: 3px;
+}
+
+.view-toggle-btn:hover {
+    border-color: var(--accent);
+    color: var(--text);
+    background: var(--accent-subtle);
+}
+
+.dash-tab-content {
+    min-height: 200px;
+}

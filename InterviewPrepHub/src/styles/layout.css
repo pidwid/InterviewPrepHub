@@ -1,0 +1,134 @@
+/* ═══════════════════════════════════════════════
+   Layout
+═══════════════════════════════════════════════ */
+.app-root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app {
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 2rem 2rem 5rem;
+  flex: 1;
+}
+
+/* ═══════════════════════════════════════════════
+   Tab Navigation
+═══════════════════════════════════════════════ */
+.tab-nav {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.tab-nav-inner {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  gap: 0.25rem;
+  align-items: stretch;
+}
+
+.tab-nav-brand {
+    font-weight: 800;
+    color: var(--text);
+    padding: 0.9rem 1.25rem 0.75rem 0;
+    margin-right: 0.75rem;
+    border-right: 1px solid var(--border);
+    white-space: nowrap;
+    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.tab-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.9rem 1.5rem 0.75rem;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.tab-btn:hover {
+  color: var(--text);
+  border-bottom-color: var(--border);
+}
+
+.tab-btn--active {
+  color: var(--text);
+border-bottom-color: var(--tab-accent, var(--accent));
+}
+
+.tab-btn-label {
+    font-weight: 600;
+}
+
+.tab-btn-pct {
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: var(--border);
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  color: var(--text-muted);
+  transition: background 0.15s, color 0.15s;
+}
+
+.tab-btn--active .tab-btn-pct {
+background: color-mix(in srgb, var(--tab-accent, var(--accent)) 20%, transparent);
+    color: var(--tab-accent, var(--accent));
+}
+
+.tab-btn-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: transparent;
+}
+
+.tab-btn-bar-fill {
+  height: 100%;
+background: var(--tab-accent, var(--accent));
+  opacity: 0.25;
+  transition: width 0.4s ease;
+}
+
+/* Theme toggle button */
+.theme-toggle-btn {
+    margin-left: auto;
+    padding: 0.5rem 0.75rem;
+    background: var(--surface-hover);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, transform 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: center;
+    line-height: 1;
+}
+
+.theme-toggle-btn:hover {
+    background: var(--accent-muted);
+    border-color: var(--accent);
+    transform: scale(1.05);
+}

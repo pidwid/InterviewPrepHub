@@ -1,0 +1,34 @@
+/* ═══════════════════════════════════════════════
+   App.css — Split into maintainable modules
+   layout.css → App shell,
+   Tab Nav,
+   Theme toggle stats.css → Stat Cards,
+   Progress Bar categories.css → Category grid/cards,
+   Mini Bar ui.css → Badges,
+   Buttons,
+   Search,
+   Dash tabs topics.css → Topic list,
+   Filter bar,
+   Topic cards,
+   Status buttons noteviewer.css → Note Viewer overlay markdown.css → Markdown rendered content practice.css → QnA,
+   Search bar,
+   Roadmap,
+   Practice,
+   Inline practice views.css → Category list,
+   Roadmap list,
+   Practice grid,
+   Index page responsive.css → Global responsive overrides sidebar.css → Sidebar (Reader) layout
+═══════════════════════════════════════════════ */
+
+@import './styles/layout.css';
+@import './styles/stats.css';
+@import './styles/categories.css';
+@import './styles/ui.css';
+@import './styles/topics.css';
+@import './styles/noteviewer.css';
+@import './styles/markdown.css';
+@import './styles/practice.css';
+@import './styles/views.css';
+@import './styles/skilltree.css';
+@import './styles/responsive.css';
+@import './styles/sidebar.css';

@@ -1,0 +1,299 @@
+/* ═══════════════════════════════════════════════
+   Topic List Page
+═══════════════════════════════════════════════ */
+.topic-list-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.topic-list-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* ═══════════════════════════════════════════════
+   Filter Bar
+═══════════════════════════════════════════════ */
+.filter-bar {
+  display: flex;
+  gap: 0.45rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 0.35rem 0.95rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  background: var(--surface);
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+.filter-btn:hover {
+    border-color: var(--accent);
+    color: var(--text);
+}
+
+.filter-btn--active.filter-btn--all {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-muted);
+}
+
+.filter-btn--active.filter-btn--done {
+    border-color: var(--done);
+    color: var(--done);
+    background: var(--done-bg);
+}
+
+.filter-btn--active.filter-btn--revise {
+    border-color: var(--revise);
+    color: var(--revise);
+    background: var(--revise-bg);
+}
+
+.filter-btn--active.filter-btn--not_started {
+    border-color: var(--not-started);
+    color: var(--text);
+    background: var(--surface-hover);
+}
+
+/* Priority filter buttons */
+.filter-btn--priority-active.filter-btn--priority-all {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-muted);
+}
+
+.filter-btn--priority-active.filter-btn--priority-high {
+    border-color: var(--priority-high);
+    color: var(--priority-high);
+    background: var(--error-bg);
+}
+
+.filter-btn--priority-active.filter-btn--priority-medium {
+    border-color: var(--priority-medium);
+    color: var(--priority-medium);
+    background: var(--priority-medium-bg);
+}
+
+.filter-btn--priority-active.filter-btn--priority-low {
+    border-color: var(--priority-low);
+    color: var(--priority-low);
+    background: var(--priority-low-bg);
+}
+
+/* ═══════════════════════════════════════════════
+   Category Section Heading (in topic list)
+═══════════════════════════════════════════════ */
+.category-section {
+  margin-bottom: 2.25rem;
+}
+
+.category-section-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.65rem;
+  padding-bottom: 0.45rem;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ═══════════════════════════════════════════════
+   Topic Cards
+═══════════════════════════════════════════════ */
+.topic-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.topic-cards .topic-card {
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+}
+
+.topic-cards .topic-card-actions {
+    width: auto;
+    flex-wrap: nowrap;
+    flex-shrink: 0;
+}
+
+.topic-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.65rem;
+}
+
+@media (max-width: 860px) {
+    .topic-cards-grid {
+        grid-template-columns: 1fr;
+    }
+}
+.topic-card {
+  display: flex;
+flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+    padding: 0.85rem 1rem;
+    border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+transition: background 0.12s, border-color 0.12s;
+}
+
+.topic-card--done {
+    border-color: var(--done-border);
+    background: var(--done-bg);
+}
+
+.topic-card--revise {
+    border-color: var(--revise-border);
+    background: var(--revise-bg);
+}
+
+.topic-card:hover {
+    background: var(--surface-hover);
+}
+
+.topic-card--done:hover {
+    background: var(--done-hover);
+}
+
+.topic-card--revise:hover {
+    background: var(--revise-hover);
+}
+
+.topic-card-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.topic-card-title {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1.4;
+}
+.topic-card-title:hover {
+    color: var(--text-link);
+    text-decoration: underline;
+}
+
+.topic-card-title-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.topic-card-actions {
+  display: flex;
+  align-items: center;
+gap: 0.5rem;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.status-btn-group {
+  display: flex;
+  gap: 0.35rem;
+  align-items: center;
+}
+
+/* ═══════════════════════════════════════════════
+   Status Buttons (Not Started / Revise / Done)
+═══════════════════════════════════════════════ */
+.status-btn {
+  padding: 0.28rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.73rem;
+  font-weight: 600;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  background: transparent;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.12s;
+}
+
+.status-btn:hover:not(.status-btn--active) {
+    border-color: var(--text-muted);
+    color: var(--text);
+}
+
+.status-btn--not_started.status-btn--active {
+    background: var(--surface-hover);
+    color: var(--text);
+    border-color: var(--not-started);
+}
+
+.status-btn--revise.status-btn--active {
+    background: var(--revise-bg);
+    color: var(--revise);
+    border-color: var(--revise);
+}
+
+.status-btn--done.status-btn--active {
+    background: var(--done-bg);
+    color: var(--done);
+    border-color: var(--done);
+}
+
+/* ═══════════════════════════════════════════════
+   Read Note Button
+═══════════════════════════════════════════════ */
+.read-note-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.32rem 0.8rem;
+  border-radius: 6px;
+font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+color: var(--text-on-accent);
+    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+    text-decoration: none;
+    white-space: nowrap;
+    flex-shrink: 0;
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
+    transition: opacity 0.15s, transform 0.1s;
+}
+
+.read-note-btn:hover {
+    opacity: 0.88;
+    transform: translateY(-1px);
+}
+
+/* Clickable topic title (for notes) */
+.topic-card-title--clickable {
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    color: var(--text);
+    text-align: left;
+    font-size: 0.9rem;
+    font-weight: 500;
+    line-height: 1.4;
+    transition: color 0.15s;
+}
+
+.topic-card-title--clickable:hover {
+    color: var(--text-link);
+    text-decoration: underline;
+}
+

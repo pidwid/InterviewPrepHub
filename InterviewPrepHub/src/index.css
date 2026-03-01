@@ -1,0 +1,164 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ═══════════════════════════════════════════════
+   Dark Theme (default)
+═══════════════════════════════════════════════ */
+:root,
+[data-theme="dark"] {
+  --bg: #0f1117;
+  --surface: #1a1d27;
+  --surface-hover: #22263a;
+  --border: #2a2e45;
+  --text: #e2e8f0;
+  --text-strong: #f7fafc;
+  --text-muted: #718096;
+  --text-link: #63b3ed;
+  --text-on-accent: #ffffff;
+
+  --done: #48bb78;
+  --done-bg: #1a3a2a;
+  --done-border: #276749;
+  --done-hover: #1f4533;
+
+  --revise: #ecc94b;
+  --revise-bg: #3a3010;
+  --revise-border: #744210;
+  --revise-hover: #3d3015;
+
+  --not-started: #718096;
+  --not-started-bg: #1a1d27;
+  --not-started-border: #2a2e45;
+
+  --accent: #667eea;
+  --accent-hover: #764ba2;
+  --accent-subtle: rgba(102, 126, 234, 0.08);
+    --accent-muted: rgba(102, 126, 234, 0.12);
+    --accent-light: rgba(102, 126, 234, 0.15);
+    --accent-faint: rgba(102, 126, 234, 0.04);
+  
+    --code-bg: #0d1117;
+    --code-text: #c9d1d9;
+    --inline-code-bg: rgba(102, 126, 234, 0.15);
+    --inline-code-text: #a5b4fc;
+  
+    --priority-high: #fc8181;
+    --priority-high-bg: rgba(229, 62, 62, 0.15);
+    --priority-high-border: rgba(229, 62, 62, 0.3);
+    --priority-medium: #ecc94b;
+    --priority-medium-bg: rgba(236, 201, 75, 0.15);
+    --priority-medium-border: rgba(236, 201, 75, 0.3);
+    --priority-low: #a0aec0;
+    --priority-low-bg: rgba(113, 128, 150, 0.15);
+    --priority-low-border: rgba(113, 128, 150, 0.25);
+  
+    --error: #e53e3e;
+    --error-text: #fc8181;
+    --error-bg: rgba(229, 62, 62, 0.12);
+    --error-border: rgba(229, 62, 62, 0.3);
+  
+    --table-stripe: rgba(255, 255, 255, 0.02);
+    --table-head-bg: rgba(102, 126, 234, 0.12);
+  
+    --gradient-start: #667eea;
+    --gradient-end: #764ba2;
+  
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.25);
+
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.6;
+  color: var(--text);
+  background: var(--bg);
+}
+
+/* ═══════════════════════════════════════════════
+   Light Theme
+═══════════════════════════════════════════════ */
+[data-theme="light"] {
+  --bg: #f7fafc;
+  --surface: #ffffff;
+  --surface-hover: #edf2f7;
+  --border: #e2e8f0;
+  --text: #1a202c;
+  --text-strong: #171923;
+  --text-muted: #718096;
+  --text-link: #3182ce;
+  --text-on-accent: #ffffff;
+
+  --done: #38a169;
+  --done-bg: #f0fff4;
+  --done-border: #9ae6b4;
+  --done-hover: #c6f6d5;
+
+  --revise: #d69e2e;
+  --revise-bg: #fffff0;
+  --revise-border: #ecc94b;
+  --revise-hover: #fefcbf;
+
+  --not-started: #a0aec0;
+  --not-started-bg: #ffffff;
+  --not-started-border: #e2e8f0;
+
+  --accent: #5a67d8;
+  --accent-hover: #6b46c1;
+  --accent-subtle: rgba(90, 103, 216, 0.06);
+  --accent-muted: rgba(90, 103, 216, 0.1);
+  --accent-light: rgba(90, 103, 216, 0.12);
+  --accent-faint: rgba(90, 103, 216, 0.03);
+
+  --code-bg: #f0f4f8;
+  --code-text: #2d3748;
+  --inline-code-bg: rgba(90, 103, 216, 0.1);
+  --inline-code-text: #5a67d8;
+
+  --priority-high: #e53e3e;
+  --priority-high-bg: rgba(229, 62, 62, 0.08);
+  --priority-high-border: rgba(229, 62, 62, 0.25);
+  --priority-medium: #d69e2e;
+  --priority-medium-bg: rgba(214, 158, 46, 0.08);
+  --priority-medium-border: rgba(214, 158, 46, 0.25);
+  --priority-low: #718096;
+  --priority-low-bg: rgba(113, 128, 150, 0.08);
+  --priority-low-border: rgba(113, 128, 150, 0.2);
+
+  --error: #e53e3e;
+  --error-text: #c53030;
+  --error-bg: rgba(229, 62, 62, 0.08);
+  --error-border: rgba(229, 62, 62, 0.25);
+
+  --table-stripe: rgba(0, 0, 0, 0.02);
+  --table-head-bg: rgba(90, 103, 216, 0.08);
+
+  --gradient-start: #667eea;
+  --gradient-end: #764ba2;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+body {
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+#root {
+  min-height: 100vh;
+}
+
+a {
+  color: var(--text-link);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
+}

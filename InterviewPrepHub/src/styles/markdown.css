@@ -1,0 +1,196 @@
+/* ═══════════════════════════════════════════════
+   Markdown Body — Rendered Notes
+═══════════════════════════════════════════════ */
+.markdown-body {
+    color: var(--text);
+    font-size: 0.95rem;
+    line-height: 1.75;
+    word-wrap: break-word;
+}
+
+.markdown-body h1 {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--text);
+    margin: 2rem 0 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border);
+}
+
+.markdown-body h2 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--text);
+    margin: 1.75rem 0 0.75rem;
+    padding-bottom: 0.35rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.markdown-body h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin: 1.5rem 0 0.65rem;
+}
+
+.markdown-body h4 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-muted);
+  text-transform: uppercase;
+letter-spacing: 0.04em;
+    margin: 1.25rem 0 0.5rem;
+}
+
+.markdown-body p {
+    margin: 0.65rem 0;
+}
+
+.markdown-body strong {
+    color: var(--text-strong);
+    font-weight: 700;
+}
+
+.markdown-body em {
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+.markdown-body a {
+    color: var(--text-link);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+        transition: border-color 0.15s;
+    }
+    
+    .markdown-body a:hover {
+        border-bottom-color: var(--text-link);
+        text-decoration: none;
+    }
+    
+    .markdown-body ul,
+    .markdown-body ol {
+        padding-left: 1.5rem;
+        margin: 0.65rem 0;
+    }
+    
+    .markdown-body li {
+        margin: 0.3rem 0;
+    }
+    
+    .markdown-body li>p {
+        margin: 0.25rem 0;
+    }
+    
+    .markdown-body blockquote {
+        border-left: 4px solid var(--accent);
+        background: var(--accent-subtle);
+        margin: 1rem 0;
+        padding: 0.75rem 1.25rem;
+        border-radius: 0 8px 8px 0;
+        color: var(--text);
+    }
+    
+    .markdown-body blockquote p {
+        margin: 0.25rem 0;
+    }
+    
+    .markdown-body hr {
+        border: none;
+        border-top: 1px solid var(--border);
+        margin: 1.5rem 0;
+    }
+    
+    /* Code blocks */
+    .markdown-body pre {
+        background: var(--code-bg);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 1rem 1.25rem;
+        overflow-x: auto;
+        margin: 1rem 0;
+        font-size: 0.85rem;
+        line-height: 1.6;
+    }
+    
+    .markdown-body pre code {
+        background: none;
+        padding: 0;
+        border: none;
+        font-size: inherit;
+        color: var(--code-text);
+        font-family: 'SF Mono', 'Fira Code', 'Fira Mono', Menlo, Consolas, monospace;
+    }
+    
+    .markdown-body code,
+    .markdown-body .inline-code {
+        background: var(--inline-code-bg);
+        color: var(--inline-code-text);
+        padding: 0.15rem 0.4rem;
+        border-radius: 4px;
+        font-size: 0.85em;
+        font-family: 'SF Mono', 'Fira Code', 'Fira Mono', Menlo, Consolas, monospace;
+    }
+    
+    /* Tables */
+    .markdown-body table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1rem 0;
+        font-size: 0.88rem;
+        overflow-x: auto;
+        display: block;
+    }
+    
+    .markdown-body thead {
+        background: var(--table-head-bg);
+    }
+    
+    .markdown-body th {
+        font-weight: 700;
+        text-align: left;
+        padding: 0.6rem 0.85rem;
+        border: 1px solid var(--border);
+        color: var(--text);
+        white-space: nowrap;
+    }
+    
+    .markdown-body td {
+        padding: 0.5rem 0.85rem;
+        border: 1px solid var(--border);
+        vertical-align: top;
+    }
+    
+    .markdown-body tr:nth-child(even) {
+        background: var(--table-stripe);
+    }
+    
+    /* Compact variant (for QnA answers) */
+    .markdown-body--compact {
+        font-size: 0.88rem;
+        line-height: 1.65;
+    }
+    
+    .markdown-body--compact h1 {
+        font-size: 1.3rem;
+        margin: 1rem 0 0.5rem;
+    }
+    
+    .markdown-body--compact h2 {
+        font-size: 1.1rem;
+        margin: 0.75rem 0 0.5rem;
+    }
+    
+    .markdown-body--compact h3 {
+        font-size: 0.95rem;
+        margin: 0.75rem 0 0.4rem;
+    }
+    
+    .markdown-body--compact p {
+        margin: 0.4rem 0;
+    }
+    
+    .markdown-body--compact pre {
+        padding: 0.65rem 1rem;
+        font-size: 0.8rem;
+    }
