@@ -1,112 +1,146 @@
-# 100-Day Atlassian Backend Engineer Prep
+# InterviewPrepHub
 
-**Jan 20 - Apr 30, 2026** | **Goal:** Backend Engineer @ Atlassian
-
----
-
-## Getting Started (Read This First)
-
-**Today is Day 1 (Jan 20, 2026)**
-
-1. Open [`QUICK_START.md`](./QUICK_START.md) - Read this first (3 min)
-2. Open today's file: [`daily-problems/Day-01_2026-01-20.md`](./daily-problems/Day-01_2026-01-20.md)
-3. Follow the daily plan (2.5-3 hours)
-4. Update [`PROGRESS.md`](./PROGRESS.md) at end of week
+A personal interview prep tracker for a 100-day structured study plan targeting a Backend Engineer role at Atlassian. It combines a React web app (for System Design and Low-Level Design tracking) with a set of daily markdown problem files and notes.
 
 ---
 
-## What You Have
-
-**3 Essential Files:**
-- **README.md** (this file) - Overview and roadmap
-- **QUICK_START.md** - Daily workflow guide
-- **PROGRESS.md** - Weekly tracking and reflection
-
-**100 Daily Files:**
-- `daily-problems/Day-01_2026-01-20.md` through `Day-100_2026-04-30.md`
-- Each day = 2.5-3 hours: DSA + Backend + Project + Review
-
----
-
-## 100-Day Roadmap
-
-### Phase 1: Foundation (Days 1-28) - Jan 20 to Feb 16
-**Build strong fundamentals**
-- **DSA:** Arrays, Hashing, Two Pointers, Sliding Window, Stacks, Linked Lists, Binary Search, Trees, Heaps, Graphs
-- **Backend:** Java 8+, Spring Boot, REST APIs, JPA/Hibernate, PostgreSQL, Testing
-- **Project:** Task Management API with database and authentication
-- **Target:** 60+ problems solved, working API
-
-### Phase 2: Intermediate (Days 29-56) - Feb 17 to Mar 16
-**Scale up your skills** (includes 10-day leave Mar 7-16)
-- **DSA:** Advanced Graphs, Dynamic Programming, Backtracking
-- **Backend:** Microservices, Kafka, Event-driven architecture, Redis, Security (OAuth/JWT)
-- **Project:** Split into microservices, add async processing and caching
-- **Target:** 120+ problems solved, microservices architecture
-
-### Phase 3: Advanced (Days 57-77) - Mar 17 to Apr 6
-**Production-ready engineering**
-- **DSA:** Complex DP, Low-level design, System design coding
-- **Backend:** Docker, Kubernetes, Observability, Monitoring, CI/CD
-- **Project:** Dockerize, deploy to K8s, add monitoring
-- **Target:** 165+ problems solved, deployed application
-
-### Phase 4: Interview Prep (Days 78-100) - Apr 7 to Apr 30
-**Polish and practice**
-- **Focus:** Mock interviews, weak area review, Atlassian-specific questions
-- **Activities:** 10+ mock interviews, system design practice, culture research
-- **Target:** 210+ problems solved, interview-ready
-
----
-
-## Daily Structure
-
-Each day follows this pattern (150-180 min total):
+## What's in This Repo
 
 ```
-DSA Practice (60 min)
-├─ Pattern Study: 15 min
-└─ Problem Solving: 45 min (2-3 problems)
+InterviewPrepHub/
+├── src/                    ← React/Vite web app (the tracker UI)
+├── daily-problems/         ← 100 daily markdown files (DSA + backend tasks)
+├── Notes/                  ← System design & LLD reference notes
+├── PROGRESS.md             ← Weekly tracking sheet (fill in manually)
+├── QUICK_START.md          ← Daily workflow guide
+└── README.md               ← This file
+```
 
-Backend Learning (45 min)
-└─ Concept study + hands-on practice
+There are two separate but complementary parts:
 
-Project Work (30 min)
-└─ Incremental feature building
+| Part | What it is | How you use it |
+|---|---|---|
+| **Web App** | React UI to track SD and LLD topic progress | Run locally in the browser |
+| **Daily Files** | 100 markdown problem files, one per day | Open in any editor/markdown viewer |
 
-Daily Review (15 min)
-└─ Reflect and plan next day
+---
+
+## The Web App
+
+### What it does
+
+The app is a progress tracker with two main sections, toggled via the top tab bar:
+
+- **System Design (SD)** — covers topics like caching, databases, load balancing, message queues, distributed systems, etc.
+- **Low-Level Design (LLD)** — covers OOP design patterns, concurrency, class design problems, etc.
+
+Each section has four views:
+
+| View | Description |
+|---|---|
+| **Roadmap** | A phased study plan. Click a topic to jump straight to it. |
+| **Categories** | Topics grouped by category, with a sidebar for quick navigation. |
+| **Practice** | Practice questions (filterable by difficulty/type for LLD). |
+| **Index** | A flat overview of all topics with your overall completion stats. |
+
+### Tracking progress
+
+Every topic card has a status you can cycle through:
+
+- **Not Started** (default)
+- **Done** — you've studied it
+- **Revise** — needs another pass
+
+Progress is saved in your browser's `localStorage` — no backend, no account needed. It persists across sessions automatically. You can reset a section from the Index view if you want a clean slate.
+
+### Running it locally
+
+Make sure you have Node.js installed, then:
+
+```bash
+npm install
+npm run dev
+```
+
+Open `http://localhost:5173` in your browser.
+
+Other commands:
+
+```bash
+npm run build     # Production build → dist/
+npm run preview   # Preview the production build locally
+npm run lint      # Run ESLint
 ```
 
 ---
 
-## Leaves & Breaks
+## The 100-Day Study Plan
 
-Built into the 100-day schedule:
-- **Feb 11-13:** 3 days off
-- **Mar 7-16:** 10 days off
-- Rest days already accounted for in timeline
+### Structure
+
+The plan runs **Jan 20 – Apr 30, 2026** across four phases:
+
+| Phase | Days | Dates | Focus |
+|---|---|---|---|
+| **Foundation** | 1–28 | Jan 20 – Feb 16 | DSA fundamentals, Spring Boot REST API, JPA/PostgreSQL |
+| **Intermediate** | 29–56 | Feb 17 – Mar 16 | Advanced graphs, DP, microservices, Kafka, Redis |
+| **Advanced** | 57–77 | Mar 17 – Apr 6 | Complex DP, LLD, Docker, Kubernetes, observability |
+| **Interview Prep** | 78–100 | Apr 7 – Apr 30 | Mock interviews, system design practice, Atlassian-specific questions |
+
+Leaves are built into the schedule (Feb 11–13, Mar 7–16).
+
+### Daily routine
+
+Each daily file (`daily-problems/Day-XX_YYYY-MM-DD.md`) is a self-contained 2.5–3 hour session:
+
+```
+DSA Practice      60 min   — Pattern study (15 min) + 2-3 LeetCode problems (45 min)
+Backend Learning  45 min   — Concept + hands-on code
+Project Work      30 min   — Incremental feature on the practice project
+Daily Review      15 min   — Reflect, check off tasks, preview tomorrow
+```
+
+### How to follow the daily plan
+
+1. Open today's file from `daily-problems/`
+2. Work through each section top to bottom
+3. Check off tasks as you complete them
+4. At the end of the week, update `PROGRESS.md`
+
+See [`QUICK_START.md`](./QUICK_START.md) for a detailed walkthrough of the daily workflow.
 
 ---
 
-## Success Metrics
+## Tracking Your Progress
 
-| Phase | End Date | Problems | Project Status |
-|-------|----------|----------|----------------|
-| Phase 1 | Feb 16 | 60+ | REST API with DB |
-| Phase 2 | Mar 16 | 120+ | Microservices |
-| Phase 3 | Apr 6 | 165+ | Production-ready |
-| Phase 4 | Apr 30 | 210+ | Interview-ready |
+[`PROGRESS.md`](./PROGRESS.md) is your manual tracking sheet. Update it each Sunday:
+
+- Fill in the weekly summary table (days completed, problems solved, hours)
+- Check off milestone items
+- Add reflections and note weak areas
+
+It also contains:
+- A spaced repetition tracker (problems to revisit)
+- A mock interview log
+- A final pre-interview checklist
+
+---
+
+## Notes
+
+The `Notes/` directory contains reference notes for:
+
+- **System Design** — architecture patterns, trade-offs, real-world examples
+- **Low-Level Design** — design patterns, OOP principles, concurrency
+- **Other** — general engineering concepts
+
+These notes are also surfaced directly in the web app — clicking a topic's note icon opens it as a rendered markdown page within the UI.
 
 ---
 
 ## Key Principles
 
-1. **Consistency > Intensity** - 2.5 hours daily beats marathon weekends
-2. **No solutions first** - Try problems yourself before looking up answers
-3. **Build real things** - Your project proves you can ship code
-4. **Track progress** - Weekly reflection keeps you on course
-
----
-
-**Next Step:** Open [`QUICK_START.md`](./QUICK_START.md) to understand your daily workflow
+1. **Consistency over intensity** — 2.5 hours daily beats marathon weekends
+2. **No solutions first** — attempt problems for at least 15–20 minutes before checking hints
+3. **Build real things** — the backend project is proof you can ship code
+4. **Track weak areas** — use the spaced repetition tracker in `PROGRESS.md` to revisit hard topics
