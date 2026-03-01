@@ -108,7 +108,7 @@ export default function Dashboard({
           <IndexPage
             categories={categories}
             progress={progress}
-            onOpenNote={onOpenNote}
+            onTopicClick={handleRoadmapTopicClick}
             stats={stats}
             pctDone={pctDone}
             pctRevise={pctRevise}
@@ -129,7 +129,6 @@ export default function Dashboard({
             categories={categories}
             progress={progress}
             setStatus={setStatus}
-            onOpenNote={onOpenNote}
             initialTopicId={pendingTopicId}
             onInitialTopicConsumed={() => setPendingTopicId(null)}
             onTopicSelect={(topicId) => onNavChange?.("categories", topicId)}
@@ -140,7 +139,6 @@ export default function Dashboard({
             categories={practiceCategories}
             progress={progress}
             setStatus={setStatus}
-            onOpenNote={onOpenNote}
             initialTopicId={pendingTopicId}
             onInitialTopicConsumed={() => setPendingTopicId(null)}
             onTopicSelect={(topicId) => onNavChange?.("practice", topicId)}

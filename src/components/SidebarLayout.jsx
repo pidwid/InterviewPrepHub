@@ -218,7 +218,6 @@ export default function SidebarLayout({
   categories,
   progress,
   setStatus,
-  onOpenNote,
   initialTopicId,
   onInitialTopicConsumed,
   onTopicSelect,
@@ -296,12 +295,18 @@ export default function SidebarLayout({
     [allTopics, progress],
   );
   const pickRandomRevise = () => {
-    if (reviseTopics.length === 0 || !onOpenNote) return;
+    if (reviseTopics.length === 0) return;
     const picked =
       reviseTopics[Math.floor(Math.random() * reviseTopics.length)];
     if (picked.noteFile || picked.solutionFile) {
-      onOpenNote(picked);
-      setActiveTopic(picked);
+      handleSelectTopic(picked);
+      // Expand the category containing the picked topic
+      for (const cat of categories) {
+        if (cat.topics.some((t) => t.id === picked.id)) {
+          setExpandedCats((prev) => new Set([...prev, cat.id]));
+          break;
+        }
+      }
     }
   };
 

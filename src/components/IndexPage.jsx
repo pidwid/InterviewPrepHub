@@ -13,7 +13,7 @@ const STATUS_CLASS = {
   not_started: "index-status--not-started",
 };
 
-export default function IndexPage({ categories, progress, onOpenNote, stats, pctDone, pctRevise, onReset }) {
+export default function IndexPage({ categories, progress, onTopicClick, stats, pctDone, pctRevise, onReset }) {
   const [search, setSearch] = useState("");
 
   const filtered = useMemo(() => {
@@ -76,7 +76,7 @@ export default function IndexPage({ categories, progress, onOpenNote, stats, pct
                 <button
                   key={topic.id}
                   className={`index-topic-row ${STATUS_CLASS[status]}`}
-                  onClick={() => topic.noteFile && onOpenNote(topic)}
+                  onClick={() => topic.noteFile && onTopicClick(topic.id)}
                   disabled={!topic.noteFile}
                 >
                   <span className="index-topic-num">{globalIdx}</span>
