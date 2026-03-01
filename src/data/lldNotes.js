@@ -2,7 +2,10 @@
 // Uses Vite's glob import to bundle them at build time
 
 const lldNoteModules = import.meta.glob(
-  '../../Notes/LowLevelDesign/*.md',
+  [
+    '../../Notes/LowLevelDesign/*.md',
+    '../../Notes/LowLevelDesign/Solutions/*.md'
+  ],
   { query: '?raw', import: 'default', eager: true }
 );
 

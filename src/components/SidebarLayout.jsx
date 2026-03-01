@@ -114,10 +114,11 @@ function ContentPanel({ topic, status, onSetStatus }) {
     );
   }
 
-  const content = getContent(topic.noteFile);
-  const hasQuestions = topicHasQuestions(topic.noteFile);
-  const questionCount = hasQuestions ? getQuestionCount(topic.noteFile) : 0;
-  const topicNum = getTopicNumFromNoteFile(topic.noteFile);
+  const targetFile = topic.noteFile || topic.solutionFile;
+  const content = getContent(targetFile);
+  const hasQuestions = topicHasQuestions(targetFile);
+  const questionCount = hasQuestions ? getQuestionCount(targetFile) : 0;
+  const topicNum = getTopicNumFromNoteFile(targetFile);
   const hasVideo = !!topic.youtubeId;
 
   return (
@@ -213,9 +214,9 @@ function ContentPanel({ topic, status, onSetStatus }) {
           ) : (
             <div className="sb-no-content">
               <p>No notes available for this topic yet.</p>
-              {topic.noteFile && (
+              {targetFile && (
                 <p className="sb-no-content-hint">
-                  Create <code>{topic.noteFile}</code> to add content.
+                  Create <code>{targetFile}</code> to add content.
                 </p>
               )}
             </div>
@@ -297,7 +298,7 @@ onTopicSelect?.(topic.id);
   const pickRandomRevise = () => {
     if (reviseTopics.length === 0 || !onOpenNote) return;
     const picked = reviseTopics[Math.floor(Math.random() * reviseTopics.length)];
-    if (picked.noteFile) {
+    if (picked.noteFile || picked.solutionFile) {
       onOpenNote(picked);
       setActiveTopic(picked);
     }
