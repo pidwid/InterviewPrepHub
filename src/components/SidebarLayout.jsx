@@ -2,6 +2,7 @@ import { useState, useMemo, useCallback, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
+import rehypeSlug from "rehype-slug";
 import { getNoteContent } from "../data/notes";
 import { getLLDNoteContent } from "../data/lldNotes";
 import InlinePractice, { topicHasQuestions, getQuestionCount, getTopicNumFromNoteFile } from "./InlinePractice";
@@ -170,16 +171,35 @@ function ContentPanel({ topic, status, onSetStatus }) {
           {content ? (
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
-              rehypePlugins={[rehypeRaw]}
+              rehypePlugins={[rehypeRaw, rehypeSlug]}
               components={{
-                code({ node, inline, className, children, ...props }) {
+                code({ inline, className, children, ...props }) {
                   return inline ? (
                     <code className="inline-code" {...props}>{children}</code>
                   ) : (
                     <code className={className} {...props}>{children}</code>
                   );
                 },
-                a({ node, children, href, ...props }) {
+                a({ children, href, ...props }) {
+                  // Determine if this is an anchor link within the current page
+                  if (href?.startsWith('#')) {
+                    return (
+                      <a
+                        href={href}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          const element = document.getElementById(href.slice(1));
+                          if (element) {
+                            element.scrollIntoView({ behavior: 'smooth' });
+                          }
+                        }}
+                        {...props}
+                      >
+                        {children}
+                      </a>
+                    );
+                  }
+                  
                   return (
                     <a href={href} target="_blank" rel="noreferrer" {...props}>
                       {children}
