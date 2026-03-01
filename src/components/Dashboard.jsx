@@ -17,7 +17,6 @@ export default function Dashboard({
   categories,
   showPractice,
   practiceGroups,
-  getStatus,
   setStatus,
   onOpenNote,
   roadmapPhases,
@@ -37,16 +36,22 @@ export default function Dashboard({
   const [dashTab, setDashTab] = useState(initialDashTab || "roadmap");
   const [pendingTopicId, setPendingTopicId] = useState(initialTopicId || null);
 
-  const handleDashTabChange = useCallback((tab) => {
-    setDashTab(tab);
-    onNavChange?.(tab, null);
-  }, [onNavChange]);
+  const handleDashTabChange = useCallback(
+    (tab) => {
+      setDashTab(tab);
+      onNavChange?.(tab, null);
+    },
+    [onNavChange],
+  );
 
-  const handleRoadmapTopicClick = useCallback((topicId) => {
-    setPendingTopicId(topicId);
-    setDashTab("categories");
-    onNavChange?.("categories", topicId);
-  }, [onNavChange]);
+  const handleRoadmapTopicClick = useCallback(
+    (topicId) => {
+      setPendingTopicId(topicId);
+      setDashTab("categories");
+      onNavChange?.("categories", topicId);
+    },
+    [onNavChange],
+  );
 
   // Convert practice groups into categories-shaped data for SidebarLayout
   const practiceCategories = useMemo(() => {
@@ -123,7 +128,6 @@ export default function Dashboard({
           <SidebarLayout
             categories={categories}
             progress={progress}
-            getStatus={getStatus}
             setStatus={setStatus}
             onOpenNote={onOpenNote}
             initialTopicId={pendingTopicId}
@@ -135,7 +139,6 @@ export default function Dashboard({
           <SidebarLayout
             categories={practiceCategories}
             progress={progress}
-            getStatus={getStatus}
             setStatus={setStatus}
             onOpenNote={onOpenNote}
             initialTopicId={pendingTopicId}

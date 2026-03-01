@@ -20,6 +20,3 @@ for (const [path, content] of Object.entries(lldNoteModules)) {
 export function getLLDNoteContent(filename) {
   return LLD_NOTES[filename] || null;
 }
-
-// List of all LLD note files (ordered)
-export const LLD_NOTE_FILES = Object.keys(LLD_NOTES).sort();

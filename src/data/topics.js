@@ -149,7 +149,6 @@ export const SD_PRACTICE_QUESTIONS = [
 ];
 
 export const ALL_TOPICS = CATEGORIES.flatMap((c) => c.topics);
-export const TOTAL_TOPICS = ALL_TOPICS.length;
 
 export const STATUS = {
   NOT_STARTED: 'not_started',
@@ -161,16 +160,4 @@ export const STATUS_LABELS = {
   [STATUS.NOT_STARTED]: 'Not Started',
   [STATUS.REVISE]: 'Revise',
   [STATUS.DONE]: 'Done',
-};
-
-export const PRIORITY = {
-  HIGH: 'high',
-  MEDIUM: 'medium',
-  LOW: 'low',
-};
-
-export const PRIORITY_LABELS = {
-  [PRIORITY.HIGH]: 'High',
-  [PRIORITY.MEDIUM]: 'Medium',
-  [PRIORITY.LOW]: 'Low',
 };

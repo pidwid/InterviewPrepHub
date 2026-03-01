@@ -35,6 +35,3 @@ for (const [path, content] of Object.entries(rootModules)) {
 export function getNoteContent(filename) {
   return NOTES[filename] || null;
 }
-
-// List of all note files (ordered)
-export const NOTE_FILES = Object.keys(NOTES).sort();

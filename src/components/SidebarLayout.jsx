@@ -1,16 +1,10 @@
-import { useState, useMemo, useCallback, useEffect } from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import rehypeRaw from "rehype-raw";
-import rehypeSlug from "rehype-slug";
-import { getNoteContent } from "../data/notes";
-import { getLLDNoteContent } from "../data/lldNotes";
-import InlinePractice, { topicHasQuestions, getQuestionCount, getTopicNumFromNoteFile } from "./InlinePractice";
-
-function getContent(noteFile) {
-  if (!noteFile) return null;
-  return getNoteContent(noteFile) || getLLDNoteContent(noteFile) || null;
-}
+import { useState, useRef, useMemo, useCallback, useEffect } from "react";
+import MarkdownRenderer, { getContent } from "./MarkdownRenderer";
+import InlinePractice, {
+  topicHasQuestions,
+  getQuestionCount,
+  getTopicNumFromNoteFile,
+} from "./InlinePractice";
 
 // ── Status helpers ──────────────────────────────────────────────────────────
 const STATUS_ICON = {
@@ -26,7 +20,14 @@ const STATUS_CLS = {
 };
 
 // ── Sidebar Item ────────────────────────────────────────────────────────────
-function SidebarCategory({ cat, progress, activeTopic, onSelect, isExpanded, onToggle }) {
+function SidebarCategory({
+  cat,
+  progress,
+  activeTopic,
+  onSelect,
+  isExpanded,
+  onToggle,
+}) {
   const done = cat.topics.filter((t) => progress[t.id] === "done").length;
   const total = cat.topics.length;
   const pct = total ? Math.round((done / total) * 100) : 0;
@@ -34,13 +35,17 @@ function SidebarCategory({ cat, progress, activeTopic, onSelect, isExpanded, onT
   return (
     <div className={`sb-category ${isExpanded ? "sb-category--open" : ""}`}>
       <button className="sb-category-header" onClick={onToggle}>
-        <span className={`sb-category-chevron ${isExpanded ? "sb-category-chevron--open" : ""}`}>
+        <span
+          className={`sb-category-chevron ${isExpanded ? "sb-category-chevron--open" : ""}`}
+        >
           ›
         </span>
         <span className="sb-category-title">{cat.title}</span>
         <span className="sb-category-progress">
           <span className="sb-category-pct">{pct}%</span>
-          <span className="sb-category-count">{done}/{total}</span>
+          <span className="sb-category-count">
+            {done}/{total}
+          </span>
         </span>
       </button>
       {isExpanded && (
@@ -62,8 +67,14 @@ function SidebarCategory({ cat, progress, activeTopic, onSelect, isExpanded, onT
                 </span>
                 <span className="sb-topic-name">{topic.title}</span>
                 {topic.priority && (
-                  <span className={`sb-priority sb-priority--${topic.priority}`}>
-                    {topic.priority === "high" ? "!" : topic.priority === "medium" ? "•" : ""}
+                  <span
+                    className={`sb-priority sb-priority--${topic.priority}`}
+                  >
+                    {topic.priority === "high"
+                      ? "!"
+                      : topic.priority === "medium"
+                        ? "•"
+                        : ""}
                   </span>
                 )}
               </button>
@@ -91,15 +102,16 @@ function YouTubeEmbed({ videoId }) {
 }
 
 // ── Content Panel ───────────────────────────────────────────────────────────
-function ContentPanel({ topic, status, onSetStatus }) {
-  const [activeTab, setActiveTab] = useState('notes');
+function ContentPanel({ topic, status, onSetStatus, scrollRef }) {
+  const [activeTab, setActiveTab] = useState("notes");
 
-  // Reset to notes tab when topic changes
+  // Reset to notes tab and scroll to top when topic changes
   const topicId = topic?.id;
   const prevTopicRef = useState({ id: null });
   if (topicId && topicId !== prevTopicRef[0].id) {
     prevTopicRef[0].id = topicId;
-    if (activeTab !== 'notes') setActiveTab('notes');
+    if (activeTab !== "notes") setActiveTab("notes");
+    scrollRef?.current?.scrollTo(0, 0);
   }
 
   if (!topic) {
@@ -128,7 +140,9 @@ function ContentPanel({ topic, status, onSetStatus }) {
         <div className="sb-content-title-area">
           <h1 className="sb-content-title">{topic.title}</h1>
           {topic.priority && (
-            <span className={`priority-badge priority-badge--${topic.priority} priority-badge--small`}>
+            <span
+              className={`priority-badge priority-badge--${topic.priority} priority-badge--small`}
+            >
               {topic.priority}
             </span>
           )}
@@ -136,16 +150,20 @@ function ContentPanel({ topic, status, onSetStatus }) {
         <div className="sb-content-actions">
           {hasVideo && (
             <button
-              className={`sb-practice-btn ${activeTab === 'video' ? 'sb-practice-btn--active' : ''}`}
-              onClick={() => setActiveTab(activeTab === 'video' ? 'notes' : 'video')}
+              className={`sb-practice-btn ${activeTab === "video" ? "sb-practice-btn--active" : ""}`}
+              onClick={() =>
+                setActiveTab(activeTab === "video" ? "notes" : "video")
+              }
             >
               ▶ Video
             </button>
           )}
           {hasQuestions && (
             <button
-              className={`sb-practice-btn ${activeTab === 'practice' ? 'sb-practice-btn--active' : ''}`}
-              onClick={() => setActiveTab(activeTab === 'practice' ? 'notes' : 'practice')}
+              className={`sb-practice-btn ${activeTab === "practice" ? "sb-practice-btn--active" : ""}`}
+              onClick={() =>
+                setActiveTab(activeTab === "practice" ? "notes" : "practice")
+              }
             >
               📝 Practice ({questionCount} Qs)
             </button>
@@ -156,61 +174,25 @@ function ContentPanel({ topic, status, onSetStatus }) {
               className={`sb-action-btn sb-action-btn--${s} ${status === s ? "sb-action-btn--active" : ""}`}
               onClick={() => onSetStatus(topic.id, s)}
             >
-              {s === "not_started" ? "Not Started" : s === "revise" ? "↻ Revise" : "✓ Done"}
+              {s === "not_started"
+                ? "Not Started"
+                : s === "revise"
+                  ? "↻ Revise"
+                  : "✓ Done"}
             </button>
           ))}
         </div>
       </div>
 
       {/* Content body */}
-      {activeTab === 'video' ? (
+      {activeTab === "video" ? (
         <div className="sb-content-body">
           <YouTubeEmbed videoId={topic.youtubeId} />
         </div>
-      ) : activeTab === 'notes' ? (
+      ) : activeTab === "notes" ? (
         <div className="sb-content-body markdown-body">
           {content ? (
-            <ReactMarkdown
-              remarkPlugins={[remarkGfm]}
-              rehypePlugins={[rehypeRaw, rehypeSlug]}
-              components={{
-                code({ inline, className, children, ...props }) {
-                  return inline ? (
-                    <code className="inline-code" {...props}>{children}</code>
-                  ) : (
-                    <code className={className} {...props}>{children}</code>
-                  );
-                },
-                a({ children, href, ...props }) {
-                  // Determine if this is an anchor link within the current page
-                  if (href?.startsWith('#')) {
-                    return (
-                      <a
-                        href={href}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          const element = document.getElementById(href.slice(1));
-                          if (element) {
-                            element.scrollIntoView({ behavior: 'smooth' });
-                          }
-                        }}
-                        {...props}
-                      >
-                        {children}
-                      </a>
-                    );
-                  }
-                  
-                  return (
-                    <a href={href} target="_blank" rel="noreferrer" {...props}>
-                      {children}
-                    </a>
-                  );
-                },
-              }}
-            >
-              {content}
-            </ReactMarkdown>
+            <MarkdownRenderer content={content} />
           ) : (
             <div className="sb-no-content">
               <p>No notes available for this topic yet.</p>
@@ -232,7 +214,16 @@ function ContentPanel({ topic, status, onSetStatus }) {
 }
 
 // ── Main Sidebar Layout ─────────────────────────────────────────────────────
-export default function SidebarLayout({ categories, progress, getStatus, setStatus, onOpenNote, initialTopicId, onInitialTopicConsumed, onTopicSelect }) {
+export default function SidebarLayout({
+  categories,
+  progress,
+  setStatus,
+  onOpenNote,
+  initialTopicId,
+  onInitialTopicConsumed,
+  onTopicSelect,
+}) {
+  const mainRef = useRef(null);
   const [activeTopic, setActiveTopic] = useState(null);
   const [expandedCats, setExpandedCats] = useState(() => {
     // Start with first category expanded
@@ -250,10 +241,13 @@ export default function SidebarLayout({ categories, progress, getStatus, setStat
     });
   }, []);
 
-const handleSelectTopic = useCallback((topic) => {
-setActiveTopic(topic);
-onTopicSelect?.(topic.id);
-}, [onTopicSelect]);
+  const handleSelectTopic = useCallback(
+    (topic) => {
+      setActiveTopic(topic);
+      onTopicSelect?.(topic.id);
+    },
+    [onTopicSelect],
+  );
 
   // Auto-select topic when navigated from roadmap
   useEffect(() => {
@@ -285,19 +279,26 @@ onTopicSelect?.(topic.id);
   // Overall stats
   const allTopics = categories.flatMap((c) => c.topics);
   const totalDone = allTopics.filter((t) => progress[t.id] === "done").length;
-  const totalRevise = allTopics.filter((t) => progress[t.id] === "revise").length;
-  const totalPct = allTopics.length ? Math.round((totalDone / allTopics.length) * 100) : 0;
+  const totalRevise = allTopics.filter(
+    (t) => progress[t.id] === "revise",
+  ).length;
+  const totalPct = allTopics.length
+    ? Math.round((totalDone / allTopics.length) * 100)
+    : 0;
 
-  const activeStatus = activeTopic ? (progress[activeTopic.id] || "not_started") : "not_started";
+  const activeStatus = activeTopic
+    ? progress[activeTopic.id] || "not_started"
+    : "not_started";
 
   // Quick review: pick random revise topic
   const reviseTopics = useMemo(
     () => allTopics.filter((t) => progress[t.id] === "revise"),
-    [allTopics, progress]
+    [allTopics, progress],
   );
   const pickRandomRevise = () => {
     if (reviseTopics.length === 0 || !onOpenNote) return;
-    const picked = reviseTopics[Math.floor(Math.random() * reviseTopics.length)];
+    const picked =
+      reviseTopics[Math.floor(Math.random() * reviseTopics.length)];
     if (picked.noteFile || picked.solutionFile) {
       onOpenNote(picked);
       setActiveTopic(picked);
@@ -305,9 +306,13 @@ onTopicSelect?.(topic.id);
   };
 
   return (
-    <div className={`sb-layout ${sidebarCollapsed ? "sb-layout--collapsed" : ""}`}>
+    <div
+      className={`sb-layout ${sidebarCollapsed ? "sb-layout--collapsed" : ""}`}
+    >
       {/* Sidebar */}
-      <aside className={`sb-sidebar ${sidebarCollapsed ? "sb-sidebar--collapsed" : ""}`}>
+      <aside
+        className={`sb-sidebar ${sidebarCollapsed ? "sb-sidebar--collapsed" : ""}`}
+      >
         {!sidebarCollapsed && (
           <>
             {/* Overall progress */}
@@ -350,7 +355,10 @@ onTopicSelect?.(topic.id);
                 className="sb-search-input"
               />
               {searchQuery && (
-                <button className="sb-search-clear" onClick={() => setSearchQuery("")}>
+                <button
+                  className="sb-search-clear"
+                  onClick={() => setSearchQuery("")}
+                >
                   ×
                 </button>
               )}
@@ -387,11 +395,12 @@ onTopicSelect?.(topic.id);
       </button>
 
       {/* Content */}
-      <main className="sb-main">
+      <main className="sb-main" ref={mainRef}>
         <ContentPanel
           topic={activeTopic}
           status={activeStatus}
           onSetStatus={setStatus}
+          scrollRef={mainRef}
         />
       </main>
     </div>

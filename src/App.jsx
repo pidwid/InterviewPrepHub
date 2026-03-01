@@ -65,7 +65,6 @@ function TabSection({
         onNavigate={setView}
         categories={categories}
         showPractice={showPractice}
-        getStatus={getStatus}
         setStatus={setStatus}
         onOpenNote={(topic) => setActiveNote(topic)}
         roadmapPhases={roadmapPhases}
