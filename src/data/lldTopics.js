@@ -27,7 +27,7 @@ export const LLD_CATEGORIES = [
     topics: [
       { id: 'lld-solid', title: 'SOLID Principles', noteFile: 'LLD-03-SOLID-Principles.md', priority: 'high' },
       { id: 'lld-dry-kiss-yagni', title: 'DRY, KISS, YAGNI & Other Principles', noteFile: 'LLD-04-Design-Principles.md', priority: 'medium' },
-      { id: 'lld-dependency-injection', title: 'Dependency Injection & IoC', priority: 'high' },
+      { id: 'lld-dependency-injection', title: 'Dependency Injection & IoC', noteFile: 'LLD-11-Dependency-Injection.md', priority: 'high' },
     ],
   },
   {
@@ -63,6 +63,7 @@ export const LLD_CATEGORIES = [
     title: 'Concurrency & Multi-threading',
     topics: [
       { id: 'lld-concurrency-notes', title: 'Concurrency & Multi-threading', noteFile: 'LLD-09-Concurrency.md', priority: 'high' },
+      { id: 'lld-concurrency-deep-dive', title: 'Concurrency Deep Dive (Primitives, Deadlock, Patterns)', noteFile: 'LLD-12-Concurrency-Deep-Dive.md', priority: 'high' },
     ],
   },
   {
@@ -84,6 +85,7 @@ export const LLD_CATEGORIES = [
       { id: 'lld-task-management',    title: 'Design a Task Management System',       priority: 'medium', solutionFile: 'Solution-Task-Management.md' },
       { id: 'lld-deck-of-cards',      title: 'Design a Deck of Cards',                priority: 'medium', solutionFile: 'Solution-Deck-Of-Cards.md', youtubeId: 'yENwNPu2Obo' },
       { id: 'lld-bowling-alley',      title: 'Design Bowling Alley Scoring',          priority: 'medium', solutionFile: 'Solution-Bowling-Alley.md', youtubeId: 'ExF4ZbJkokA' },
+      { id: 'lld-coffee-vending',    title: 'Design Coffee Vending Machine',         priority: 'medium', solutionFile: 'Solution-Coffee-Vending.md' },
     ],
   },
   {
@@ -110,6 +112,10 @@ export const LLD_CATEGORIES = [
       { id: 'lld-social-network',   title: 'Design a Social Network like Facebook',   priority: 'low',    solutionFile: 'Solution-Social-Network.md', youtubeId: 'YoS5cp0cirM' },
       { id: 'lld-restaurant',       title: 'Design Restaurant Management System',     priority: 'low',    solutionFile: 'Solution-Restaurant.md', youtubeId: 'eme8G4-tXuo' },
       { id: 'lld-concert-booking',  title: 'Design Concert Ticket Booking System',    priority: 'low',    solutionFile: 'Solution-Concert-Booking.md', youtubeId: 'dX5iHM2jlZw' },
+      { id: 'lld-voting-system',   title: 'Design an Online Voting System',          priority: 'medium', solutionFile: 'Solution-Voting-System.md' },
+      { id: 'lld-inventory',       title: 'Design Inventory Management System',      priority: 'medium', solutionFile: 'Solution-Inventory.md' },
+      { id: 'lld-payment-gateway', title: 'Design a Payment Gateway (Razorpay)',     priority: 'medium', solutionFile: 'Solution-Payment-Gateway.md', youtubeId: 'olfaBgJrUBI' },
+      { id: 'lld-lms',             title: 'Design Learning Management System',       priority: 'low',    solutionFile: 'Solution-LMS.md' },
     ],
   },
   {
@@ -130,6 +136,8 @@ export const LLD_CATEGORIES = [
       { id: 'lld-in-memory-fs',        title: 'Design In-Memory File System',                priority: 'high',   solutionFile: 'Solution-In-Memory-FS.md', youtubeId: 'oXEPfYaMOwI' },
       { id: 'lld-chat-messaging',      title: 'Design a Chat / Messaging System',            priority: 'high',   solutionFile: 'Solution-Chat-Messaging.md', youtubeId: 'vvhC64hQZMk' },
       { id: 'lld-spreadsheet',         title: 'Design a Spreadsheet (Excel)',                priority: 'medium', solutionFile: 'Solution-Spreadsheet.md' },
+      { id: 'lld-logistics',           title: 'Design a Logistics / Delivery System',       priority: 'medium', solutionFile: 'Solution-Logistics.md' },
+      { id: 'lld-survey',              title: 'Design a Survey System (Google Forms)',       priority: 'low',    solutionFile: 'Solution-Survey.md' },
     ],
   },
   {
@@ -165,6 +173,9 @@ export const LLD_CATEGORIES = [
       { id: 'lld-card-game',             title: 'Design an Online Card Game (e.g. Poker)',              priority: 'low',    solutionFile: 'Solution-Card-Game.md', youtubeId: 'PbOSdbd2q-M' },
       { id: 'lld-finite-state-machine',  title: 'Implement a Finite State Machine',                    priority: 'low',    solutionFile: 'Solution-FSM.md', youtubeId: 'hHaGYyKwRXY' },
       { id: 'lld-e-commerce-review',     title: 'Design an e-Commerce Review System',                  priority: 'low',    solutionFile: 'Solution-ECommerce-Review.md', youtubeId: 'pQQTy05sv5Q' },
+      { id: 'lld-in-memory-db',          title: 'Design an In-Memory Database with Indexing',          priority: 'medium', solutionFile: 'Solution-In-Memory-DB.md' },
+      { id: 'lld-config-management',     title: 'Design a Configuration Management System',            priority: 'low',    solutionFile: 'Solution-Config-Management.md' },
+      { id: 'lld-home-automation',       title: 'Design a Home Automation System',                     priority: 'low',    solutionFile: 'Solution-Home-Automation.md' },
     ],
   },
 ];

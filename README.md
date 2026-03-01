@@ -45,6 +45,15 @@ Each topic card has a status you can cycle through:
 
 Progress is saved in your browser's `localStorage` — no backend or account needed. It persists across sessions automatically. To wipe progress for a section, use the reset button on the Index view.
 
+### Prep Time Filters
+
+The app supports different preparation timelines to focus your study on what matters most:
+
+- **1 Week (~30h)**: A "Crash Course" covering the absolute essentials (9 core SD topics, 9 core LLD topics & patterns).
+- **2 Weeks (~70h)**: Expands on essentials with medium-complexity problems and vital concurrency concepts (19 SD, 17 LLD topics).
+- **1 Month (~120h)**: A standard prep plan covering all high-priority topics and common medium ones (30 SD, ~30 LLD topics).
+- **Comprehensive (All)**: Every single topic, deep dive, and niche problem (80+ topics).
+
 ### Notes
 
 Clicking the note icon on a topic card opens the corresponding reference note as a rendered markdown page directly in the app. The raw markdown files live in `Notes/`:

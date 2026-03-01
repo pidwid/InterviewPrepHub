@@ -14,39 +14,68 @@ function phaseProgress(phase, progress) {
  */
 const SD_1W_IDS = new Set([
   'note-01', 'note-03', 'note-08', 'note-11', 'note-12',
-  'note-13', 'note-14', 'note-24', 'note-cheatsheet',
-]);
+  'note-15', 'note-24', 'note-43', 'note-cheatsheet',
+]); // 9 topics (~15-20 hours)
+
 const SD_2W_IDS = new Set([
   ...SD_1W_IDS,
-  'note-02', 'note-04', 'note-05', 'note-06', 'note-07',
-  'note-09', 'note-10', 'note-15', 'note-16', 'note-17',
-]);
-// 1 month+ = everything
+  'note-02', 'note-04', 'note-05', 'note-06', 'note-10',
+  'note-13', 'note-17', 'note-18', 'note-30', 'note-44',
+]); // 19 topics (~30-40 hours)
+
+const SD_1M_IDS = new Set([
+  ...SD_2W_IDS,
+  'note-07', 'note-09', 'note-14', 'note-16', 'note-19',
+  'note-22', 'note-26', 'note-28', 'note-32', 'note-34',
+  'note-38',
+]); // 30 topics (~60 hours)
+
+const LLD_1W_IDS = new Set([
+  'lld-oop', 'lld-solid', 'lld-uml-diagrams',
+  'lld-creational', 'lld-structural', 'lld-behavioral',
+  'lld-parking-lot', 'lld-lru-cache', 'lld-cheatsheet'
+]); // 9 topics (~15-20 hours)
+
+const LLD_2W_IDS = new Set([
+  ...LLD_1W_IDS,
+  'lld-relationships', 'lld-dependency-injection',
+  'lld-vending-machine', 'lld-elevator', 'lld-hashmap',
+  'lld-tic-tac-toe', 'lld-concurrency-notes', 'lld-thread-pool'
+]); // 17 topics (~30-40 hours)
+
+const LLD_1M_IDS = new Set([
+  ...LLD_2W_IDS,
+  'lld-dry-kiss-yagni', 'lld-concurrency-deep-dive',
+  'lld-pub-sub', 'lld-coffee-vending', 'lld-api-rate-limiter',
+  'lld-chess', 'lld-distributed-id', 'lld-in-memory-cache',
+  'lld-cp-blocking-queue', 'lld-cp-concurrent-hashmap',
+]); // 27 topics (~60 hours)
 
 const TIME_OPTIONS = [
-  { key: "1w",  label: "1 Week" },
-  { key: "2w",  label: "2 Weeks" },
-  { key: "1m",  label: "1 Month+" },
-  { key: "all", label: "All" },
+  { key: "1w",  label: "1 Week (~30h)" },
+  { key: "2w",  label: "2 Weeks (~70h)" },
+  { key: "1m",  label: "1 Month (~120h)" },
+  { key: "all", label: "Comprehensive (All)" },
 ];
 
 /**
  * Determine if a topic is in scope for the selected time filter.
- * SD uses explicit topic sets from the study guide README.
- * LLD uses priority-based filtering.
  */
 function isTopicInScope(topicId, topic, timeKey) {
-  if (timeKey === "all" || timeKey === "1m") return true;
-  // SD topics start with "note-"
+  if (timeKey === "all") return true;
+  
   const isSD = topicId.startsWith('note-');
+  
   if (isSD) {
     if (timeKey === "1w") return SD_1W_IDS.has(topicId);
     if (timeKey === "2w") return SD_2W_IDS.has(topicId);
+    if (timeKey === "1m") return SD_1M_IDS.has(topicId) || topic.priority === 'high';
+  } else {
+    // LLD or Practice Questions
+    if (timeKey === "1w") return LLD_1W_IDS.has(topicId);
+    if (timeKey === "2w") return LLD_2W_IDS.has(topicId);
+    if (timeKey === "1m") return LLD_1M_IDS.has(topicId) || topic.priority === 'high';
   }
-  // LLD: fall back to priority
-  const p = topic?.priority || 'medium';
-  if (timeKey === "1w") return p === 'high';
-  if (timeKey === "2w") return p === 'high' || p === 'medium';
   return true;
 }
 
@@ -68,12 +97,14 @@ export default function SkillTreeRoadmap({ progress, roadmapPhases, allTopics, o
   const completedCount = phases.filter((p) => p.progress.pct === 100).length;
 
   const [timeFilter, setTimeFilter] = useState(() => {
-    try { return localStorage.getItem("prep_time_filter") || "all"; } catch { return "all"; }
+    try { return localStorage.getItem("prep_time_filter") || "all"; } catch (_) { return "all"; }
   });
 
   const handleTimeFilter = (key) => {
     setTimeFilter(key);
-    try { localStorage.setItem("prep_time_filter", key); } catch {}
+    try { localStorage.setItem("prep_time_filter", key); } catch (_) {
+      // Ignore
+    }
   };
 
   // Count how many topics are in scope for the selected timeframe

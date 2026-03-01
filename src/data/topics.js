@@ -71,6 +71,8 @@ export const CATEGORIES = [
       { id: 'note-28', title: 'Search Systems',                      noteFile: '28-Search-Systems.md',             priority: 'medium', youtubeId: 'PuZvF2EyfBM' },
       { id: 'note-29', title: 'Blob & Object Storage',               noteFile: '29-Blob-Object-Storage.md',        priority: 'low',    youtubeId: 'RvaMHMxHjp4' },
       { id: 'note-30', title: 'Distributed Locking',                 noteFile: '30-Distributed-Locking.md',        priority: 'medium', youtubeId: 'qoM6AojLSKY' },
+      { id: 'note-43', title: 'Consistent Hashing & Data Partitioning', noteFile: '43-Consistent-Hashing.md',    priority: 'high',   youtubeId: 'UF9Uj9TFzdE' },
+      { id: 'note-44', title: 'Service Discovery & Coordination',  noteFile: '44-Service-Discovery.md',          priority: 'medium', youtubeId: 'WL_7OLGp5ko' },
     ],
   },
   {
@@ -146,6 +148,12 @@ export const SD_PRACTICE_QUESTIONS = [
   { id: 'q-stock-exchange',     title: 'Design a Stock Exchange / Trading System',             priority: 'medium', solutionFile: 'Solution-Stock-Exchange.md',      youtubeId: 'dGYfpO3WJ1o' },
   { id: 'q-top-k',              title: 'Design a Top-K / Heavy Hitters System',               priority: 'high',   solutionFile: 'Solution-Top-K.md',               youtubeId: 'y-tA2NW4LNY' },
   { id: 'q-consistent-hashing', title: 'Design Consistent Hashing',                           priority: 'high',   solutionFile: 'Solution-Consistent-Hashing.md',  youtubeId: 'vccwdhfqIrI' },
+
+  // Additional questions from system-design-primer
+  { id: 'q-google-docs',       title: 'Design Google Docs (Collaborative Editor)',            priority: 'high',   solutionFile: 'Solution-Google-Docs.md',          youtubeId: 'M4KIwvPc9cM' },
+  { id: 'q-recommendation',    title: 'Design a Recommendation System',                      priority: 'medium', solutionFile: 'Solution-Recommendation.md',       youtubeId: '1JRrN09LXyg' },
+  { id: 'q-cdn',               title: 'Design a Content Delivery Network (CDN)',              priority: 'medium', solutionFile: 'Solution-CDN.md',                  youtubeId: '8zX0rue2Hic' },
+  { id: 'q-garbage-collection', title: 'Design a Garbage Collection System',                  priority: 'low',    solutionFile: 'Solution-Garbage-Collection.md' },
 ];
 
 export const ALL_TOPICS = CATEGORIES.flatMap((c) => c.topics);

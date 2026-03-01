@@ -16,7 +16,7 @@ export const ROADMAP_PHASES = [
     title: 'Infrastructure & Networking',
     week: 'Week 2–3',
     description: 'Learn how requests flow from users to servers and back.',
-    topics: ['note-06', 'note-07', 'note-08', 'note-09', 'note-10'],
+    topics: ['note-06', 'note-07', 'note-08', 'note-09', 'note-10', 'note-44'],
   },
   {
     id: 'phase-3',
@@ -47,8 +47,8 @@ export const ROADMAP_PHASES = [
     label: 'Phase 6',
     title: 'Building Blocks',
     week: 'Week 6–7',
-    description: 'Reusable components: ID generation, search, locking, storage.',
-    topics: ['note-26', 'note-28', 'note-30', 'note-27', 'note-29'],
+    description: 'Reusable components: ID generation, search, locking, hashing, storage.',
+    topics: ['note-26', 'note-28', 'note-30', 'note-43', 'note-27', 'note-29'],
   },
   {
     id: 'phase-7',

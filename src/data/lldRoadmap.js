@@ -8,7 +8,7 @@ export const LLD_ROADMAP_PHASES = [
     title: 'OOP & Design Foundations',
     week: 'Week 1',
     description: 'Master the OOP fundamentals, class relationships, and SOLID principles that underpin every LLD answer.',
-    topics: ['lld-oop', 'lld-relationships', 'lld-solid', 'lld-dry-kiss-yagni'],
+    topics: ['lld-oop', 'lld-relationships', 'lld-solid', 'lld-dry-kiss-yagni', 'lld-dependency-injection'],
   },
   {
     id: 'lld-phase-2',
@@ -40,7 +40,7 @@ export const LLD_ROADMAP_PHASES = [
     title: 'Concurrency & Multi-threading',
     week: 'Week 3',
     description: 'Threads, locks, mutex, semaphores, producer-consumer, deadlock prevention.',
-    topics: ['lld-concurrency-notes'],
+    topics: ['lld-concurrency-notes', 'lld-concurrency-deep-dive'],
   },
   {
     id: 'lld-phase-6',
@@ -48,7 +48,7 @@ export const LLD_ROADMAP_PHASES = [
     title: 'Easy LLD Problems',
     week: 'Week 3–4',
     description: 'Apply patterns to classic easy problems: Parking Lot, Vending Machine, Logging Framework.',
-    topics: ['lld-parking-lot', 'lld-vending-machine', 'lld-stack-overflow', 'lld-logging-framework', 'lld-traffic-signal', 'lld-coffee-vending', 'lld-task-management'],
+    topics: ['lld-parking-lot', 'lld-vending-machine', 'lld-coffee-vending', 'lld-stack-overflow', 'lld-logging-framework', 'lld-traffic-signal', 'lld-task-management'],
   },
   {
     id: 'lld-phase-7',
