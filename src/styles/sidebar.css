@@ -554,6 +554,27 @@
   text-align: center;
 }
 
+/* ── YouTube Embed ─────────────────────────────── */
+.yt-embed-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 760px;
+  aspect-ratio: 16 / 9;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #000;
+  margin-top: 1.5rem;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
+}
+
+.yt-embed-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
 /* ── Responsive ───────────────────────────────── */
 @media (max-width: 768px) {
   .sb-layout {

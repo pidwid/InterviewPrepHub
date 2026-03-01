@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import TabNav from "./components/TabNav";
 import Dashboard from "./components/Dashboard";
 import TopicList from "./components/TopicList";
 import NoteViewer from "./components/NoteViewer";
 import { useProgress } from "./store/useProgress";
 import { useTheme } from "./store/useTheme";
+import { useNavState } from "./store/useNavState";
 import { ALL_TOPICS, CATEGORIES, SD_PRACTICE_QUESTIONS } from "./data/topics";
 import {
   ALL_LLD_TOPICS,
@@ -29,6 +30,9 @@ function TabSection({
   showPractice,
   practiceGroups,
   roadmapPhases,
+  initialDashTab,
+  initialTopicId,
+  onNavChange,
 }) {
   const { progress, setStatus, getStatus, resetAll, stats } = useProgress(
     namespace,
@@ -67,6 +71,9 @@ function TabSection({
         roadmapPhases={roadmapPhases}
         allTopics={allTopics}
         practiceGroups={practiceGroups}
+        initialDashTab={initialDashTab}
+        initialTopicId={initialTopicId}
+        onNavChange={onNavChange}
         onReset={() => {
           if (
             window.confirm(
@@ -93,8 +100,18 @@ function TabSection({
 }
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState("sd");
+  const { initial, writeHash } = useNavState();
+  const [activeTab, setActiveTab] = useState(initial.tab);
   const { theme, toggleTheme } = useTheme();
+
+  const handleTabChange = useCallback((tab) => {
+    setActiveTab(tab);
+    writeHash(tab, 'roadmap', null);
+  }, [writeHash]);
+
+  const handleNavChange = useCallback((tab, dashTab, topicId) => {
+    writeHash(tab, dashTab, topicId);
+  }, [writeHash]);
 
   const sdProgress = useProgress("sd", ALL_TOPICS);
   const lldProgress = useProgress("lld", ALL_LLD_TOPICS);
@@ -149,7 +166,7 @@ export default function App() {
     <div className="app-root">
       <TabNav
         activeTab={activeTab}
-        onTabChange={setActiveTab}
+        onTabChange={handleTabChange}
         tabStats={tabStats}
         theme={theme}
         onToggleTheme={toggleTheme}
@@ -173,6 +190,9 @@ export default function App() {
                 showPractice={showPractice}
                 practiceGroups={practiceGroups}
                 roadmapPhases={roadmapPhases}
+                initialDashTab={initial.tab === id ? initial.dashTab : undefined}
+                initialTopicId={initial.tab === id ? initial.topicId : undefined}
+                onNavChange={(dashTab, topicId) => handleNavChange(id, dashTab, topicId)}
               />
             ) : null,
         )}

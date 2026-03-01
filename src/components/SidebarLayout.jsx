@@ -74,6 +74,21 @@ function SidebarCategory({ cat, progress, activeTopic, onSelect, isExpanded, onT
   );
 }
 
+// ── YouTube Embed ────────────────────────────────────────────────────────────
+function YouTubeEmbed({ videoId }) {
+  return (
+    <div className="yt-embed-wrap">
+      <iframe
+        className="yt-embed-frame"
+        src={`https://www.youtube-nocookie.com/embed/${videoId}`}
+        title="YouTube video"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+      />
+    </div>
+  );
+}
+
 // ── Content Panel ───────────────────────────────────────────────────────────
 function ContentPanel({ topic, status, onSetStatus }) {
   const [activeTab, setActiveTab] = useState('notes');
@@ -102,6 +117,7 @@ function ContentPanel({ topic, status, onSetStatus }) {
   const hasQuestions = topicHasQuestions(topic.noteFile);
   const questionCount = hasQuestions ? getQuestionCount(topic.noteFile) : 0;
   const topicNum = getTopicNumFromNoteFile(topic.noteFile);
+  const hasVideo = !!topic.youtubeId;
 
   return (
     <div className="sb-content">
@@ -116,6 +132,14 @@ function ContentPanel({ topic, status, onSetStatus }) {
           )}
         </div>
         <div className="sb-content-actions">
+          {hasVideo && (
+            <button
+              className={`sb-practice-btn ${activeTab === 'video' ? 'sb-practice-btn--active' : ''}`}
+              onClick={() => setActiveTab(activeTab === 'video' ? 'notes' : 'video')}
+            >
+              ▶ Video
+            </button>
+          )}
           {hasQuestions && (
             <button
               className={`sb-practice-btn ${activeTab === 'practice' ? 'sb-practice-btn--active' : ''}`}
@@ -137,7 +161,11 @@ function ContentPanel({ topic, status, onSetStatus }) {
       </div>
 
       {/* Content body */}
-      {activeTab === 'notes' ? (
+      {activeTab === 'video' ? (
+        <div className="sb-content-body">
+          <YouTubeEmbed videoId={topic.youtubeId} />
+        </div>
+      ) : activeTab === 'notes' ? (
         <div className="sb-content-body markdown-body">
           {content ? (
             <ReactMarkdown
@@ -165,9 +193,11 @@ function ContentPanel({ topic, status, onSetStatus }) {
           ) : (
             <div className="sb-no-content">
               <p>No notes available for this topic yet.</p>
-              <p className="sb-no-content-hint">
-                Create <code>{topic.noteFile}</code> to add content.
-              </p>
+              {topic.noteFile && (
+                <p className="sb-no-content-hint">
+                  Create <code>{topic.noteFile}</code> to add content.
+                </p>
+              )}
             </div>
           )}
         </div>
@@ -181,7 +211,7 @@ function ContentPanel({ topic, status, onSetStatus }) {
 }
 
 // ── Main Sidebar Layout ─────────────────────────────────────────────────────
-export default function SidebarLayout({ categories, progress, getStatus, setStatus, onOpenNote, initialTopicId, onInitialTopicConsumed }) {
+export default function SidebarLayout({ categories, progress, getStatus, setStatus, onOpenNote, initialTopicId, onInitialTopicConsumed, onTopicSelect }) {
   const [activeTopic, setActiveTopic] = useState(null);
   const [expandedCats, setExpandedCats] = useState(() => {
     // Start with first category expanded
@@ -199,9 +229,10 @@ export default function SidebarLayout({ categories, progress, getStatus, setStat
     });
   }, []);
 
-  const handleSelectTopic = useCallback((topic) => {
-    setActiveTopic(topic);
-  }, []);
+const handleSelectTopic = useCallback((topic) => {
+setActiveTopic(topic);
+onTopicSelect?.(topic.id);
+}, [onTopicSelect]);
 
   // Auto-select topic when navigated from roadmap
   useEffect(() => {
