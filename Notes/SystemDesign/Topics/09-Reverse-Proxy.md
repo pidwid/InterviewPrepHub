@@ -164,7 +164,7 @@ All services appear to be under one domain (example.com)
 but are actually different services on different ports.
 ```
 
-### Canary Deployments
+### <abbr title="Canary deployments: gradually roll out a new version to a small subset of users (like a canary in a coal mine). If the canary is fine, expand the rollout; if it fails, only a small percentage of users were affected.">Canary Deployments</abbr>
 
 ```
 Route 5% of traffic to the new version, 95% to the old:
@@ -247,8 +247,8 @@ Nginx as both reverse proxy + load balancer:
 |----------|-------------|----------|
 | **Nginx** | High performance, event-driven, low memory footprint | Static serving, reverse proxy, LB |
 | **HAProxy** | Best-in-class load balancing, very reliable | High-throughput load balancing |
-| **Envoy** | Modern L7 proxy, built for microservices, observability | Service mesh (Istio), gRPC |
-| **Traefik** | Auto-configuration with Docker/Kubernetes, built-in Let's Encrypt | Container orchestration environments |
+| **Envoy** | Modern L7 proxy, built for microservices, <abbr title="Observability: the ability to understand the internal state of a system by examining its outputs (metrics, logs, traces). Envoy emits detailed telemetry for every request.">observability</abbr> | Service mesh (Istio), gRPC |
+| **Traefik** | Auto-configuration with Docker/Kubernetes, built-in <abbr title="Let's Encrypt: a free, automated certificate authority that issues SSL/TLS certificates. Used to enable HTTPS without manual certificate management.">Let's Encrypt</abbr> | Container orchestration environments |
 | **Caddy** | Auto-HTTPS (automatic Let's Encrypt), simple config | Small projects, developer-friendly |
 | **Apache httpd** | Mature, highly configurable, mod_proxy | Legacy systems |
 
@@ -287,9 +287,9 @@ Nginx as both reverse proxy + load balancer:
 
 3. Compare NGINX, HAProxy, Envoy, and Traefik as reverse proxies. In a Kubernetes-native environment, which would you choose and why? [Answer](QnA-Answer-Key.md#9-reverse-proxy)
 
-4. Your reverse proxy is doing SSL termination, response compression, and caching. A security auditor says traffic between the reverse proxy and backend servers is unencrypted. Is this a problem? When do you need end-to-end encryption (mTLS)? [Answer](QnA-Answer-Key.md#9-reverse-proxy)
+4. Your reverse proxy is doing SSL termination, response compression, and caching. A security auditor says traffic between the reverse proxy and backend servers is unencrypted. Is this a problem? When do you need end-to-end encryption (<abbr title="mTLS (mutual TLS): both the client and server authenticate each other with certificates, not just the server authenticating to the client. Used in microservices to ensure only trusted services can communicate.">mTLS</abbr>)? [Answer](QnA-Answer-Key.md#9-reverse-proxy)
 
-5. Explain the difference between a reverse proxy, an API gateway, and a service mesh sidecar. Where do their responsibilities overlap, and when would you use all three together? [Answer](QnA-Answer-Key.md#9-reverse-proxy)
+5. Explain the difference between a reverse proxy, an <abbr title="API gateway: a specialized reverse proxy that also handles authentication, rate limiting, request transformation, and API versioning — typically the single entry point for all external API traffic">API gateway</abbr>, and a <abbr title="Service mesh sidecar: a proxy container automatically injected alongside each microservice that handles all network communication (retries, load balancing, mTLS, tracing) without any changes to the service itself">service mesh sidecar</abbr>. Where do their responsibilities overlap, and when would you use all three together? [Answer](QnA-Answer-Key.md#9-reverse-proxy)
 
 6. You're using NGINX as a reverse proxy to cache API responses. A user updates their profile, but the cached response still shows old data. How do you handle cache invalidation at the reverse proxy layer? [Answer](QnA-Answer-Key.md#9-reverse-proxy)
 

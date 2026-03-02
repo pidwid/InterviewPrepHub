@@ -19,7 +19,7 @@
 ### Monitoring vs Observability
 
 **Monitoring** tells you *when* something is wrong.
-**Observability** tells you *why* something is wrong.
+**Observability** tells you *why* something is wrong. (<abbr title="Observability: the ability to understand a system's internal state from its outputs (logs, metrics, traces) without adding new code.">definition</abbr>)
 
 Monitoring is a subset of observability. With good observability, you can debug
 issues you've never seen before — without deploying new code.
@@ -82,7 +82,7 @@ Microservices at scale:
 
 ## 3. Logging
 
-### Log Levels
+### <abbr title="Log levels: standardized severity tags that help you filter logs. Use INFO/WARN/ERROR in production, DEBUG/TRACE in dev or temporarily.">Log Levels</abbr>
 
 ```
 FATAL   → Application is about to crash. Wake someone up.
@@ -93,7 +93,8 @@ DEBUG   → Detailed diagnostic information (not in production usually).
 TRACE   → Very fine-grained (method entry/exit, variable values).
 ```
 
-### Structured vs Unstructured Logging
+
+### <abbr title="Structured logging: logs are emitted as JSON or key-value pairs, making them easy to search, aggregate, and analyze. Unstructured logs are plain text and harder to query.">Structured vs Unstructured Logging</abbr>
 
 ```
 Unstructured (bad for machines, hard to search):
@@ -197,7 +198,7 @@ Summary:
   Less flexible than histogram but more accurate for specific quantiles.
 ```
 
-### RED and USE Methods
+### <abbr title="RED: Rate, Errors, Duration for request-driven services. USE: Utilization, Saturation, Errors for resource metrics.">RED and USE Methods</abbr>
 
 Two frameworks for what metrics to collect:
 
@@ -244,7 +245,7 @@ Pull model: Prometheus pulls metrics from services every 15-30 seconds.
 Services expose a /metrics endpoint with current metric values.
 ```
 
-### Labels and Cardinality
+### <abbr title="Cardinality: the number of unique label combinations produced by a metric. High cardinality (e.g., user_id, request_id) creates huge numbers of time series and can overload monitoring systems.">Labels and Cardinality</abbr>
 
 ```
 Good (low cardinality):

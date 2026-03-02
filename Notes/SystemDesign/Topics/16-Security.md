@@ -19,7 +19,7 @@
 ## 1. Overview
 
 Security in system design is about protecting data confidentiality, integrity, and
-availability (the CIA triad). It's not a feature you bolt on at the end — it must be
+availability (the <abbr title="CIA triad: Confidentiality (keep data secret), Integrity (keep data accurate and untampered), Availability (keep systems accessible when needed).">CIA triad</abbr>). It's not a feature you bolt on at the end — it must be
 designed into the system from the start.
 
 ### CIA Triad
@@ -38,7 +38,7 @@ designed into the system from the start.
 | Integrity       | Data is not tampered with                     | Man-in-the-middle, SQL injection|
 | Availability    | System is accessible when needed              | DDoS attack, ransomware        |
 
-### Defense in Depth
+### <abbr title="Defense in depth: layering multiple independent security controls so if one layer fails, others still protect the system.">Defense in Depth</abbr>
 
 Don't rely on a single security layer. Multiple overlapping defenses:
 
@@ -62,7 +62,7 @@ Don't rely on a single security layer. Multiple overlapping defenses:
 
 ## 2. Encryption
 
-### Symmetric Encryption
+### <abbr title="Symmetric encryption: the same shared secret key is used to both encrypt and decrypt data. Fast and efficient, but the key must be securely shared and stored.">Symmetric Encryption</abbr>
 
 Same key for encryption and decryption. Fast but key distribution is the challenge.
 
@@ -77,7 +77,7 @@ Algorithms:
 
 **Use for**: Encrypting data at rest, bulk data encryption.
 
-### Asymmetric Encryption
+### <abbr title="Asymmetric encryption: uses a public/private key pair. The public key encrypts or verifies, the private key decrypts or signs. Enables secure key exchange and digital signatures.">Asymmetric Encryption</abbr>
 
 Key pair: public key (anyone can encrypt) + private key (only owner can decrypt).
 
@@ -96,7 +96,7 @@ Algorithms:
 
 **Use for**: Key exchange, digital signatures, TLS handshake.
 
-### Hashing
+### <abbr title="Hashing: a one-way function that maps input data to a fixed-length output (hash). You can't reverse it, and tiny input changes produce very different hashes.">Hashing</abbr>
 
 One-way function. Cannot reverse a hash back to the original data.
 
@@ -151,7 +151,7 @@ bcrypt (rounds=12) takes ~250ms per hash — fine for login, terrible for attack
 
 ---
 
-## 3. TLS/SSL
+## 3. <abbr title="TLS (Transport Layer Security): the modern protocol for encrypting data in transit between clients and servers. SSL is the older, deprecated predecessor; people still say 'SSL' but TLS is what is actually used.">TLS/SSL</abbr>
 
 TLS (Transport Layer Security) encrypts data in transit between client and server.
 
@@ -205,7 +205,7 @@ Root CA (Certificate Authority)
 | Certificate pinning               | For mobile apps, pin specific certs  |
 | OCSP stapling                     | Faster certificate revocation checks |
 
-### mTLS (Mutual TLS)
+### <abbr title="mTLS (mutual TLS): both the client and server present certificates. This lets each side verify the other's identity and is commonly used for secure service-to-service calls.">mTLS (Mutual TLS)</abbr>
 
 Standard TLS: only the server presents a certificate.
 mTLS: **both** client and server present certificates.

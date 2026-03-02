@@ -34,7 +34,7 @@ Availability = ─────────────────
 - System returns errors (5xx)
 - System doesn't respond at all (timeout)
 - System responds but with incorrect data
-- System is too slow to be useful (latency SLA breach)
+- System is too slow to be useful (<abbr title="SLA breach: when the system's performance drops below the level guaranteed in the Service Level Agreement — e.g., response time exceeds the agreed threshold">latency SLA breach</abbr>)
 
 ---
 
@@ -205,14 +205,14 @@ Failover:
 **Disadvantages:**
 - More complex — need to handle data synchronization
 - DNS or load balancer must know about both servers
-- Potential for *split-brain* if servers can't communicate
+- Potential for <abbr title="Split-brain: when two nodes in a cluster both think they are the primary/leader because they can't communicate with each other. Both accept writes independently, leading to data conflicts and corruption.">split-brain</abbr> if servers can't communicate
 
 ### Disadvantages of All Fail-over Approaches
 
 - **Potential data loss:** If the active server fails before replicating recent writes to the standby
 - **Complexity:** Need health monitoring, automatic IP takeover, data sync
 - **Additional hardware:** At least double the servers for full redundancy
-- **Split-brain risk:** Both servers think they're the primary → data corruption
+- **Split-brain risk:** Both servers think they're the primary → data corruption (see above)
 
 ---
 
@@ -317,7 +317,7 @@ For the highest availability, run your system in **multiple geographic regions.*
 | **TCP check** | Can we open a TCP connection? | Server is running |
 | **HTTP check** | Does `/health` return 200? | Server is serving requests |
 | **Deep health check** | Does `/health/deep` successfully query the DB, cache, and dependencies? | Server and all its dependencies are working |
-| **Synthetic monitoring** | Run a real user scenario (sign up, search, checkout) | End-to-end system is working |
+| **<abbr title="Synthetic monitoring: automated scripts that simulate real user actions (like logging in, searching, or checking out) to verify the end-to-end system works, not just individual components">Synthetic monitoring</abbr>** | Run a real user scenario (sign up, search, checkout) | End-to-end system is working |
 
 ### Example: AWS Load Balancer Health Check
 
@@ -345,8 +345,8 @@ Auto-recovery mechanisms that fix problems without human intervention:
 ```
 1. Auto-restart: Container crashes → Kubernetes restarts it
 2. Auto-scaling: CPU > 80% → Launch new instances
-3. Circuit breaker: Downstream service failing → Stop calling it, use fallback
-4. Auto-failover: Primary DB down → Promote replica automatically
+3. <abbr title="Circuit breaker: a pattern that 'breaks the circuit' (stops calling) a failing service to avoid wasting resources and causing cascading failures. It automatically tries again after a cooldown period.">Circuit breaker</abbr>: Downstream service failing → Stop calling it, use fallback
+4. Auto-failover: Primary DB down → Promote <abbr title="Replica: a copy of the primary database that receives and applies the same data changes. If the primary fails, a replica can be promoted to become the new primary.">replica</abbr> automatically
 ```
 
 ---
@@ -404,7 +404,7 @@ you'll be surprised when they happen for real.
 
 ### The Bulkhead Pattern
 
-Isolate failures so they don't cascade. Named after ship bulkheads that prevent one leak from sinking the whole ship.
+<abbr title="Bulkhead pattern: dividing system resources (like thread pools or connection pools) into isolated groups per service, so a failure in one area can't consume all resources and bring down unrelated parts of the system. Named after the watertight compartments in a ship's hull.">Isolate failures so they don't cascade.</abbr> Named after ship bulkheads that prevent one leak from sinking the whole ship.
 
 ```
 Without bulkhead:
@@ -481,9 +481,9 @@ Example:
 
 2. Active-active vs active-passive failover: when would you choose each? What are the hidden complexities of active-active that most people underestimate? [Answer](QnA-Answer-Key.md#5-availability-patterns)
 
-3. A database failover takes 30 seconds. During that time, all writes are lost. How would you redesign the system to achieve zero data loss during failover? Discuss synchronous replication, WAL shipping, and their trade-offs. [Answer](QnA-Answer-Key.md#5-availability-patterns)
+3. A database failover takes 30 seconds. During that time, all writes are lost. How would you redesign the system to achieve zero data loss during failover? Discuss synchronous replication, <abbr title="WAL shipping (Write-Ahead Log shipping): the primary database streams its transaction log (WAL) to replicas in near real-time, so replicas stay nearly in sync and can take over with minimal data loss">WAL shipping</abbr>, and their trade-offs. [Answer](QnA-Answer-Key.md#5-availability-patterns)
 
-4. Your system uses health checks to detect failure. A service is responding to health checks but returning incorrect data (a "gray failure"). How do you detect and handle this? [Answer](QnA-Answer-Key.md#5-availability-patterns)
+4. Your system uses health checks to detect failure. A service is responding to health checks but returning incorrect data (a <abbr title="Gray failure: a partial failure where a service appears healthy (health checks pass) but is actually misbehaving — returning wrong data, silently dropping requests, or running very slowly. Harder to detect than a complete crash.">gray failure</abbr>). How do you detect and handle this? [Answer](QnA-Answer-Key.md#5-availability-patterns)
 
 5. Explain the circuit breaker pattern in detail. What are the three states? How do you set the thresholds? What happens to in-flight requests when the circuit opens? [Answer](QnA-Answer-Key.md#5-availability-patterns)
 

@@ -161,9 +161,9 @@ Application is decomposed into **small, independent services,** each responsible
 - **Distributed system complexity:** Network failures, partial failures, distributed transactions
 - **Operational overhead:** 20 services = 20 deployments, 20 sets of logs, 20 monitoring dashboards
 - **Inter-service latency:** Network calls (1-10ms) instead of function calls (µs)
-- **Data consistency:** No ACID transactions across services; need eventual consistency, sagas
+- **Data consistency:** No ACID transactions across services; need eventual consistency, <abbr title="Sagas: a pattern for managing distributed transactions across microservices. Instead of one big transaction, you break it into a sequence of local transactions, each publishing an event/message to trigger the next step. If a step fails, compensating transactions undo previous steps.">sagas</abbr>
 - **Testing difficulty:** Integration testing across services is hard
-- **Debugging difficulty:** Request spans multiple services; need distributed tracing
+- **Debugging difficulty:** Request spans multiple services; need <abbr title="Distributed tracing: tracking a single request as it flows through multiple microservices, so you can see exactly where time was spent or where failures occurred. Tools: Jaeger, Zipkin, AWS X-Ray">distributed tracing</abbr>
 - **API versioning:** Changing one service's API can break others
 
 ### Real-World Example: Netflix
@@ -441,10 +441,10 @@ E-commerce platform:
   └── Analytics Service (reporting, dashboards)
 
 Each service = one business capability
-Maps well to organizational structure (Conway's Law)
+Maps well to organizational structure (<abbr title="Conway's Law: 'Any organization that designs a system will produce a design whose structure is a copy of the organization's communication structure.' Teams tend to build systems that mirror how they communicate — so organizing teams around services helps.">Conway's Law</abbr>)
 ```
 
-### By Subdomain (Domain-Driven Design)
+### By Subdomain (<abbr title="Domain-Driven Design (DDD): a software approach that structures code around the business domain (the problem you're solving) rather than technical concerns. It uses concepts like Bounded Contexts, Aggregates, and Ubiquitous Language to keep code aligned with business needs.">Domain-Driven Design</abbr>)
 
 ```
 Bounded Contexts from DDD:
@@ -458,7 +458,7 @@ Each bounded context has its own domain model.
 "Customer" in Billing might be different from "Customer" in Ordering.
 ```
 
-### The Strangler Fig Pattern (Migration)
+### The <abbr title="Strangler Fig pattern: named after the strangler fig vine that gradually surrounds and replaces a host tree. You incrementally route more traffic to new microservices while the old monolith slowly 'dies'. Safe migration with no big-bang rewrite.">Strangler Fig Pattern</abbr> (Migration)
 
 ```
 Gradually migrate from monolith to microservices:
@@ -510,7 +510,7 @@ Step 4: Eventually, monolith is gone
 
 2. An interviewer says: "Microservices solve all scaling problems." What are the top 5 problems that microservices introduce that a monolith didn't have? When is a monolith actually the better choice? [Answer](QnA-Answer-Key.md#10-application-layer)
 
-3. You have 100 microservices and a new feature requires changes to 7 of them deployed atomically. How do you handle cross-service transactions? Compare 2PC, Saga (choreography vs orchestration), and eventual consistency. [Answer](QnA-Answer-Key.md#10-application-layer)
+3. You have 100 microservices and a new feature requires changes to 7 of them deployed atomically. How do you handle cross-service transactions? Compare <abbr title="2PC (Two-Phase Commit): a distributed transaction protocol where a coordinator asks all participants to 'prepare' (phase 1), then tells them all to 'commit' or 'abort' (phase 2). Provides strong consistency but blocks if any participant fails.">2PC</abbr>, Saga (choreography vs orchestration), and eventual consistency. [Answer](QnA-Answer-Key.md#10-application-layer)
 
 4. Service A calls Service B, which calls Service C. Service C is slow. How does this cascade, and what patterns (circuit breaker, timeout budget, bulkhead) prevent Service A from failing too? [Answer](QnA-Answer-Key.md#10-application-layer)
 

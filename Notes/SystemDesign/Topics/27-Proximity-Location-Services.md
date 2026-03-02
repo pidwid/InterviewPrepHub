@@ -74,7 +74,7 @@ For short distances, approximate with:
 
 ---
 
-## 3. Geohashing
+## 3. <abbr title="Geohashing: encodes latitude/longitude into a short string; nearby locations share prefixes.">Geohashing</abbr>
 
 Encodes a 2D location into a 1D string. Nearby locations share a common prefix.
 
@@ -159,7 +159,7 @@ fixed precision levels.
 
 ---
 
-## 4. Quadtrees
+## 4. <abbr title="Quadtree: a tree that recursively splits 2D space into four quadrants for fast spatial queries.">Quadtrees</abbr>
 
 A tree data structure that recursively divides 2D space into 4 quadrants.
 
@@ -244,7 +244,7 @@ updates require rebalancing, harder to distribute.
 
 ---
 
-## 5. R-Trees
+## 5. <abbr title="R-tree: a balanced tree that groups spatial objects using bounding rectangles for efficient range queries.">R-Trees</abbr>
 
 Balanced tree that groups nearby objects using minimum bounding rectangles (MBRs).
 
@@ -289,7 +289,7 @@ Spatial query: "Find all points in this rectangle"
 
 ---
 
-## 6. S2 Geometry (Google)
+## 6. <abbr title="S2 Geometry: Google's spatial indexing library that projects the Earth onto a sphere and divides it using a Hilbert curve.">S2 Geometry (Google)</abbr>
 
 Google's library that projects Earth's surface onto a unit sphere and divides it
 using a Hilbert space-filling curve.
@@ -345,7 +345,7 @@ To find "all restaurants within 5km of user":
 
 ---
 
-## 7. H3 (Uber)
+## 7. <abbr title="H3: Uber's hexagonal hierarchical spatial index for geospatial queries.">H3 (Uber)</abbr>
 
 Uber's hexagonal hierarchical spatial index.
 
@@ -395,7 +395,7 @@ lat, lng = h3.cell_to_latlng(h3_index)
 
 ---
 
-## 8. PostGIS & Spatial Databases
+## 8. <abbr title="PostGIS: PostgreSQL extension that adds spatial data types, functions, and indexes for geospatial queries.">PostGIS & Spatial Databases</abbr>
 
 PostGIS extends PostgreSQL with spatial data types and indexes.
 

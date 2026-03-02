@@ -70,7 +70,7 @@ If the barista takes 30 seconds → latency is 30 seconds.
 ### Types of Latency
 
 - **Network latency:** Time for data to travel across the network (speed of light + routing)
-- **Disk latency:** Time to read/write to storage (SSD vs HDD)
+- **Disk latency:** Time to read/write to storage (<abbr title="Solid State Drive: uses flash memory with no moving parts, much faster than traditional spinning hard drives (HDD)">SSD</abbr> vs <abbr title="Hard Disk Drive: uses spinning magnetic disks, slower than SSDs but cheaper for large storage">HDD</abbr>)
 - **Processing latency:** Time spent by the CPU computing the result
 - **Queuing latency:** Time spent waiting in a queue before being processed
 
@@ -104,10 +104,10 @@ how many the shop can produce in a given time window.
 
 ### Units of Throughput
 
-- **RPS / QPS:** Requests or Queries Per Second
-- **TPS:** Transactions Per Second
+- **RPS / QPS:** <abbr title="Requests Per Second / Queries Per Second: how many individual requests or database queries your system can handle every second">Requests or Queries Per Second</abbr>
+- **TPS:** <abbr title="Transactions Per Second: how many complete database transactions (which may include multiple reads/writes) your system can process per second">Transactions Per Second</abbr>
 - **Bandwidth:** Bits per second (bps, Mbps, Gbps)
-- **IOPS:** Input/Output Operations Per Second (for storage)
+- **IOPS:** <abbr title="Input/Output Operations Per Second: how many read/write operations a storage device can handle per second. Important for databases and storage-heavy workloads">Input/Output Operations Per Second (for storage)</abbr>
 
 ---
 
@@ -133,7 +133,6 @@ or high throughput even with high latency.
 Imagine a factory assembly line:
 
 Latency = time for one car to go from start to finish = 5 hours
-
 But if there are 100 stations and a new car enters every 3 minutes:
 Throughput = 20 cars/hour
 
@@ -175,7 +174,7 @@ You don't optimize for one at the expense of the other. You need *enough* throug
                          └──────────────────────────────────┘
 ```
 
-The key insight: **as load approaches capacity, latency spikes non-linearly.** This is described by queuing theory (Little's Law).
+The key insight: **as load approaches capacity, latency spikes non-linearly.** This is described by <abbr title="A branch of mathematics that models waiting lines. It predicts how queue length and wait times grow as systems approach full capacity.">queuing theory</abbr> (<abbr title="Little's Law: L = λW. The average number of items in a system (L) equals the arrival rate (λ) multiplied by the average time each item spends in the system (W). As latency (W) rises, concurrent requests (L) pile up.">Little's Law</abbr>).
 
 ---
 
@@ -186,7 +185,7 @@ User clicks a button
     │
     ▼  ~1-5ms    DNS lookup (cached)
     │
-    ▼  ~10-50ms  TCP connection + TLS handshake
+    ▼  ~10-50ms  TCP connection + TLS handshake  (TCP = Transmission Control Protocol, the reliable connection setup; TLS = encryption handshake)
     │
     ▼  ~1-5ms    Request travels over the network
     │
@@ -233,7 +232,7 @@ P99: 5000ms ← What your slowest 1% of users experience
 |-----------|---------|----------------|
 | **P50 (Median)** | Half of requests are faster than this | "Typical" user experience |
 | **P90** | 90% of requests are faster | Most users' experience |
-| **P95** | 95% of requests are faster | Important for SLAs |
+| **P95** | 95% of requests are faster | Important for <abbr title="Service Level Agreement: a formal contract with a customer guaranteeing a minimum level of performance or uptime">SLAs</abbr> |
 | **P99** | 99% of requests are faster | Your "worst case" for most users |
 | **P99.9** | 999 out of 1000 are faster | Critical for high-traffic systems |
 
@@ -289,14 +288,14 @@ Network within datacenter is ~300x faster than cross-continent
 | Technique | How It Helps | Example |
 |-----------|-------------|---------|
 | **Caching** | Avoid slow operations by storing results | Redis cache for DB queries |
-| **CDN** | Serve content from closer locations | CloudFront for static assets |
-| **Connection pooling** | Avoid repeated connection setup | HikariCP for database connections |
+| **<abbr title="Content Delivery Network: a globally distributed network of servers that stores copies of your content close to users, reducing the distance data has to travel">CDN</abbr>** | Serve content from closer locations | CloudFront for static assets |
+| **Connection pooling** | Avoid repeated connection setup | <abbr title="HikariCP: a popular, high-performance database connection pool library for Java">HikariCP</abbr> for database connections |
 | **Async processing** | Don't make the user wait for slow operations | Send email asynchronously |
-| **Indexing** | Speed up database lookups | B-tree index on frequently queried columns |
+| **Indexing** | Speed up database lookups | <abbr title="B-tree index: a tree-shaped data structure that keeps data sorted so the database can find rows in O(log N) time instead of scanning every row">B-tree index</abbr> on frequently queried columns |
 | **Data locality** | Keep related data close together | Co-locate services in same datacenter |
 | **Compression** | Reduce amount of data transferred | gzip HTTP responses |
 | **Prefetching** | Load data before it's needed | Predictive prefetch in mobile apps |
-| **Protocol optimization** | Use faster protocols | HTTP/2 multiplexing, gRPC over REST |
+| **Protocol optimization** | Use faster protocols | <abbr title="HTTP/2 multiplexing: allows multiple requests to share a single connection simultaneously, removing the need to open a new connection per request">HTTP/2 multiplexing</abbr>, <abbr title="gRPC: Google's high-performance Remote Procedure Call framework — faster and more efficient than REST for service-to-service communication">gRPC</abbr> over REST |
 
 ---
 
@@ -309,8 +308,8 @@ Network within datacenter is ~300x faster than cross-continent
 | **Batch processing** | Process many items at once | Batch DB inserts instead of one-by-one |
 | **Asynchronous processing** | Don't block on slow operations | Message queues (Kafka, SQS) |
 | **Database read replicas** | Spread read load across copies | PostgreSQL read replicas |
-| **Sharding** | Split data across multiple databases | Shard by user_id |
-| **Caching** | Serve more requests from fast storage | Memcached for hot data |
+| **<abbr title="Sharding: horizontally splitting a database into smaller pieces (shards), each held on a separate server, so reads and writes are spread across many machines">Sharding</abbr>** | Split data across multiple databases | Shard by user_id |
+| **Caching** | Serve more requests from fast storage | <abbr title="Memcached: a simple, high-speed in-memory key-value cache used to store frequently accessed data and reduce database load">Memcached</abbr> for hot data |
 | **Connection multiplexing** | Share connections efficiently | HTTP/2, connection pools |
 
 ---
@@ -388,7 +387,7 @@ Asynchronous (user doesn't wait):
 
 5. Your database can handle 5,000 QPS, but the application needs 50,000 QPS. Walk through every technique you'd use, and in what order, to bridge that gap. [Answer](QnA-Answer-Key.md#2-latency-vs-throughput)
 
-6. How does Little's Law (L = λW) apply to system design? If your service has an average of 100 concurrent requests and each takes 200ms, what is your throughput? What happens if latency doubles? [Answer](QnA-Answer-Key.md#2-latency-vs-throughput)
+6. How does <abbr title="Little's Law: L = λW. The average number of items in a system (L) equals the arrival rate (λ) multiplied by average time in system (W). Fundamental to understanding queuing and capacity">Little's Law</abbr> (L = λW) apply to system design? If your service has an average of 100 concurrent requests and each takes 200ms, what is your throughput? What happens if latency doubles? [Answer](QnA-Answer-Key.md#2-latency-vs-throughput)
 
 7. An interviewer claims that "adding a cache always improves latency." Present a scenario where adding a cache actually worsens latency or overall system behavior. [Answer](QnA-Answer-Key.md#2-latency-vs-throughput)
 

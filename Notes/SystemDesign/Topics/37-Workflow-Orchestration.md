@@ -48,11 +48,11 @@ Example: E-commerce Order Processing
 
 | Challenge              | Without Orchestration         | With Orchestration           |
 |-----------------------|-------------------------------|------------------------------|
-| Multi-step processes  | Manual coordination code      | Declarative workflow         |
-| Failure handling      | Custom retry/rollback logic   | Built-in retries + compensation |
+| Multi-step processes  | Manual coordination code      | <abbr title="Declarative workflow: you describe the steps and branching logic; the orchestrator handles state persistence, retries, and failure compensation.">Declarative workflow</abbr>         |
+| Failure handling      | Custom retry/rollback logic   | Built-in retries + <abbr title="Compensation: a rollback-like action that undoes a previously completed step when a later step fails (used instead of traditional DB transactions in distributed systems).">compensation</abbr> |
 | State tracking        | Database + custom code        | Automatic state persistence  |
 | Visibility            | Grep logs across services     | Dashboard with step status   |
-| Long-running processes| Cron jobs + polling           | Durable timers + continuations|
+| Long-running processes| Cron jobs + polling           | <abbr title="Durable timers: workflow timers that survive server restarts; the orchestrator resumes the workflow after the delay without needing a polling loop.">Durable timers</abbr> + continuations|
 | Human-in-the-loop     | Email + polling DB            | Built-in approval steps      |
 
 ---
@@ -102,7 +102,7 @@ Choreography (event-based, no central coordinator):
 ## 4. Temporal
 
 The most powerful open-source workflow orchestration platform.
-Founded by ex-Uber engineers (Cadence → Temporal).
+Founded by ex-Uber engineers (<abbr title="Cadence: Uber's internal workflow orchestration system that inspired Temporal; Temporal is the open-source successor built by the same team.">Cadence</abbr> → Temporal).
 
 ```
 Temporal Architecture:
@@ -187,7 +187,7 @@ async def reserve_inventory(order: Order) -> Reservation:
 | Query           | Read state from a running workflow                     |
 | Timer           | Durable sleep (can last days/months)                   |
 | Child Workflow  | Workflow started by another workflow                   |
-| Continue-As-New | Restart workflow with new state (avoid large history)  |
+| <abbr title="Continue-As-New: a Temporal mechanism that completes the current workflow execution and immediately starts a new one with fresh state, preventing unbounded event history growth.">Continue-As-New</abbr> | Restart workflow with new state (avoid large history)  |
 
 ### Why Temporal is Powerful
 
@@ -211,7 +211,7 @@ Deterministic replay:
 
 ## 5. AWS Step Functions
 
-Managed orchestration service from AWS. Uses JSON-based state machine language (ASL).
+Managed orchestration service from AWS. Uses JSON-based state machine language (<abbr title="ASL (Amazon States Language): the JSON-based language used to define AWS Step Functions state machines, including tasks, choices, parallel branches, and error handling.">ASL</abbr>).
 
 ```
 State Machine:
@@ -303,7 +303,7 @@ Express:  Short (up to 5 min), at-least-once, cheaper
 
 ## 6. Apache Airflow
 
-Workflow orchestration for data pipelines. Python-based DAGs.
+Workflow orchestration for data pipelines. Python-based <abbr title="DAG (Directed Acyclic Graph): a graph of tasks where edges show dependencies and there are no cycles — Airflow uses DAGs to define the order and dependencies of pipeline steps.">DAGs</abbr>.
 
 ```
 Airflow Architecture:
@@ -351,14 +351,14 @@ with DAG(
     extract >> transform >> load
 ```
 
-**Best for**: Data pipelines, ETL, batch processing, scheduled jobs.
+**Best for**: Data pipelines, <abbr title="ETL (Extract, Transform, Load): a pipeline that extracts data from sources, transforms it into the desired format, then loads it into a target (data warehouse, lake, etc.).">ETL</abbr>, batch processing, scheduled jobs.
 **Not ideal for**: Real-time orchestration, long-running business workflows.
 
 ---
 
 ## 7. Saga Pattern
 
-A pattern for managing distributed transactions across microservices.
+The <abbr title="Saga pattern: manages distributed transactions across microservices by breaking them into a sequence of local transactions, each paired with a compensating transaction that undoes it on failure.">Saga pattern</abbr> — managing distributed transactions across microservices.
 
 ```
 Order Saga (orchestration-based):

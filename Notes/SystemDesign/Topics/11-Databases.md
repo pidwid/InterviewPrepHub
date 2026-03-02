@@ -65,9 +65,9 @@ via **foreign keys**.
 - **Schema**: Defines the structure — column names, data types, constraints.
   You must define the schema *before* inserting data.
 - **SQL**: Structured Query Language — the standard interface for querying relational data.
-- **Normalization**: Organizing data to reduce redundancy (1NF, 2NF, 3NF, BCNF).
-- **Foreign Keys**: Enforce referential integrity between tables.
-- **Joins**: Combine data from multiple tables in a single query.
+- **<abbr title="Normalization: organizing database tables to eliminate duplicate data. Data is split into separate tables linked by foreign keys. Reduces storage and prevents update anomalies.">Normalization</abbr>**: Organizing data to reduce redundancy (1NF, 2NF, 3NF, BCNF).
+- **<abbr title="Foreign Keys: a column in one table that references a primary key in another table, enforcing referential integrity — you can't reference a row that doesn't exist.">Foreign Keys</abbr>**: Enforce referential integrity between tables.
+- **<abbr title="Joins: a SQL operation that combines rows from two or more tables based on a related column. For example, JOIN orders with customers to get customer name on each order.">Joins</abbr>**: Combine data from multiple tables in a single query.
 
 ### Normalization Forms (Quick Reference)
 
@@ -145,7 +145,7 @@ or **Repeatable Read** (MySQL InnoDB).
 ### D — Durability
 
 Once a transaction is committed, it stays committed — even if the server crashes.
-Typically implemented via **write-ahead logging (WAL)**.
+Typically implemented via **<abbr title="WAL (Write-Ahead Log): before making any change to actual data, the database first writes what it's about to do to a sequential log file. If it crashes mid-operation, it can replay the WAL on restart to recover to a consistent state.">write-ahead logging (WAL)</abbr>**.
 
 ```
 Write Flow:
@@ -410,7 +410,7 @@ Application              Shard A     Shard B     Shard C
     │ results locally       │           │           │
 ```
 
-This is called **scatter-gather**. It's expensive but sometimes unavoidable.
+This is called <abbr title="Scatter-gather: when a query must be sent ('scattered') to all shards in parallel, then results are collected ('gathered') and merged by the application. Expensive but sometimes unavoidable for cross-shard queries.">scatter-gather</abbr>. It's expensive but sometimes unavoidable.
 
 ### Resharding (Adding/Removing Shards)
 
@@ -500,8 +500,8 @@ No joins needed. One table has everything.
 
 1. **Application-level**: Update all copies in the same transaction (if possible).
 2. **Triggers**: Database triggers update denormalized copies automatically.
-3. **Change Data Capture (CDC)**: Tools like Debezium stream changes and update copies.
-4. **Materialized views**: Database refreshes them automatically (periodic or on-demand).
+3. **<abbr title="Change Data Capture (CDC): reads the database's transaction log in real-time to capture every insert, update, and delete as an event stream. Allows you to sync changes to other systems without polling. Tools: Debezium, AWS DMS.">Change Data Capture (CDC)</abbr>**: Tools like Debezium stream changes and update copies.
+4. **<abbr title="Materialized views: a database object that stores the result of a query physically on disk, like a cached query result. Unlike a regular view (which runs the query every time), a materialized view is pre-computed and periodically refreshed.">Materialized views</abbr>**: Database refreshes them automatically (periodic or on-demand).
 
 ---
 
@@ -603,7 +603,7 @@ SELECT * FROM orders WHERE customer_id = 42;
 SELECT order_id, total, status FROM orders WHERE customer_id = 42;
 ```
 
-#### 4. Avoid N+1 Queries
+#### 4. Avoid <abbr title="N+1 query problem: fetching N items with one query, then making one additional query per item to get related data. With 100 users, this creates 101 queries instead of 1. Solved by using JOINs or eager loading.">N+1 Queries</abbr>
 
 ```python
 # BAD: N+1 problem (1 query + N queries)
@@ -790,7 +790,7 @@ Both nodes and edges can have properties.
 
 **Characteristics:**
 - Relationships are first-class citizens (not computed via joins).
-- Traversals across relationships are O(1) per hop (index-free adjacency).
+- Traversals across relationships are O(1) per hop (<abbr title="Index-free adjacency: in graph databases, each node directly stores pointers to its adjacent nodes, so following a relationship takes constant time regardless of graph size. This is much faster than SQL joins which must look up foreign keys via indexes.">index-free adjacency</abbr>).
 - Query languages: Cypher (Neo4j), Gremlin (Apache TinkerPop).
 - Not designed for bulk analytics or simple key-value lookups.
 
@@ -854,7 +854,7 @@ RETURN DISTINCT fof.name
 - You need **very low latency** at massive scale
 - Strong consistency is not a hard requirement
 
-### The Reality: Polyglot Persistence
+### The Reality: <abbr title="Polyglot persistence: using multiple different database technologies within a single application, each chosen for what it does best (e.g., PostgreSQL for transactions, Redis for caching, Elasticsearch for search)">Polyglot Persistence</abbr>
 
 Most real-world systems use **multiple databases**:
 

@@ -16,7 +16,7 @@
 
 ## 1. Overview
 
-Event-driven architecture (EDA) is a design paradigm where the flow of the program
+Event-driven architecture (<abbr title="EDA (Event-Driven Architecture): a design style where services emit events (state changes) and other services react to those events asynchronously, instead of making direct synchronous calls.">EDA</abbr>) is a design paradigm where the flow of the program
 is determined by **events** — significant changes in state. Instead of services
 calling each other directly, they communicate by producing and consuming events.
 
@@ -179,7 +179,7 @@ On failure at any step → sends compensating commands
 
 ---
 
-## 4. Event Sourcing
+### <abbr title="Event Sourcing: store every state change as an immutable event in an append-only log. The current state is rebuilt by replaying events in order.">Event Sourcing</abbr>
 
 Instead of storing the **current state** of an entity, store the **sequence of 
 events** that led to the current state. The current state is derived by replaying
@@ -295,7 +295,7 @@ To rebuild state:
 
 ---
 
-## 5. CQRS (Command Query Responsibility Segregation)
+## 5. <abbr title="CQRS (Command Query Responsibility Segregation): a pattern that separates write operations (commands) from read operations (queries), often using different data models or databases optimized for each.">CQRS</abbr> (Command Query Responsibility Segregation)
 
 CQRS separates the **write model** (commands) from the **read model** (queries).
 Instead of one model for both reads and writes, you have two specialized models.
@@ -451,7 +451,7 @@ Each read model is independently built, scaled, and optimized.
 
 ## 7. Event Schema Design
 
-### Event Envelope
+### <abbr title="Event envelope: a consistent wrapper around every event that includes metadata like event_id, type, version, timestamp, and correlation/causation IDs. Makes events traceable, versioned, and easier to process.">Event Envelope</abbr>
 
 ```json
 {

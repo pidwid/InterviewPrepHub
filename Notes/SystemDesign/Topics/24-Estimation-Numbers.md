@@ -36,7 +36,7 @@ Back-of-the-envelope estimation is a critical skill for system design interviews
 You need to quickly estimate scale, storage, bandwidth, and capacity to justify
 your design decisions.
 
-The goal is NOT precision — it's getting in the right **order of magnitude**.
+The goal is NOT precision — it's getting in the right **order of magnitude** (<abbr title="Order of magnitude: the rough scale of a number in powers of 10 (e.g., 10^3 vs 10^6).">what this means</abbr>).
 Being off by 2x is fine; being off by 100x means your design is wrong.
 
 ```
@@ -56,6 +56,8 @@ Good answer: "If we have 100M URLs created per month, that's ~40 URLs/sec.
 ## 2. Powers of Two
 
 Memorize these. They come up constantly in estimation.
+
+<abbr title="Powers of two: memory/storage sizes scale in powers of 2 (2^10≈1KB, 2^20≈1MB, 2^30≈1GB)."></abbr>
 
 ```
 Power   │ Exact Value        │ Approx.      │ Name        │ Symbol
@@ -196,6 +198,8 @@ Quick conversions:
 
 ### QPS to Machine Requirements
 
+<abbr title="QPS (Queries Per Second) / RPS (Requests Per Second): how many requests your system handles per second."></abbr>
+
 ```
 Rough per-server capacity (modern servers):
   Web server (Nginx):          10,000-50,000 req/sec (static)
@@ -216,6 +220,8 @@ Example: "We need 10,000 API req/sec for our service."
 ---
 
 ## 5. Availability Numbers
+
+<abbr title="Nines: shorthand for availability targets (e.g., 99.9% = three nines). More nines means less downtime."></abbr>
 
 ```
 Nines   │ Availability │ Downtime/Year     │ Downtime/Month   │ Downtime/Day

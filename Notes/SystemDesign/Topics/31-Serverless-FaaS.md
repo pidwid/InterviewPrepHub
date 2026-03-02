@@ -1,5 +1,7 @@
 # Serverless & Functions as a Service (FaaS)
 
+<abbr title="FaaS (Functions as a Service): run small stateless functions on demand, billed per invocation/time. The provider handles servers.">FaaS</abbr>
+
 ## Table of Contents
 
 1. [Overview](#1-overview)

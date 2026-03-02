@@ -17,7 +17,7 @@
 
 ## 1. Overview
 
-Some data is inherently connected — social networks, knowledge graphs,
+Some data is inherently connected — social networks, <abbr title="Knowledge graph: a graph that represents real-world entities and their relationships (e.g. Google Knowledge Panel) — used for semantic search and question answering.">knowledge graphs</abbr>,
 fraud rings, recommendation engines. Graph databases are purpose-built
 for these relationships, where SQL JOINs become expensive and NoSQL
 loses the relationship context entirely.
@@ -75,7 +75,7 @@ Key concepts:
   - Edges are directional (but can be traversed both ways)
 ```
 
-### RDF (Resource Description Framework)
+### <abbr title="RDF (Resource Description Framework): a W3C standard for representing knowledge as subject-predicate-object triples, used in semantic web and linked-data knowledge graphs.">RDF (Resource Description Framework)</abbr>
 
 ```
 Used in knowledge graphs (Wikidata, Google Knowledge Graph).
@@ -259,11 +259,11 @@ Facebook TAO (The Associations and Objects):
 
 | Algorithm          | What It Does                              | Use Case                    |
 |-------------------|-------------------------------------------|-----------------------------|
-| BFS/DFS           | Traverse graph level-by-level / depth-first| Finding connected nodes    |
+| <abbr title="BFS (Breadth-First Search): explores all nodes at the current depth before going deeper. DFS (Depth-First Search): goes as deep as possible along one path first.">BFS/DFS</abbr>           | Traverse graph level-by-level / depth-first| Finding connected nodes    |
 | Shortest Path     | Find minimum hops/weight between nodes    | Degrees of separation       |
-| PageRank          | Rank node importance by link structure    | Search ranking, influence   |
-| Community Detection| Find clusters of densely connected nodes | User groups, fraud rings    |
-| Centrality        | Find most connected/important nodes       | Influencer identification   |
+| <abbr title="PageRank: Google's original ranking algorithm — a node is important if many important nodes point to it. Used for search ranking and influencer identification.">PageRank</abbr>          | Rank node importance by link structure    | Search ranking, influence   |
+| <abbr title="Community Detection: graph algorithms (e.g. Louvain) that find clusters of densely connected nodes, useful for identifying user groups or fraud rings.">Community Detection</abbr>| Find clusters of densely connected nodes | User groups, fraud rings    |
+| <abbr title="Centrality: metrics (degree, betweenness, closeness) that measure how important a node is within the graph.">Centrality</abbr>        | Find most connected/important nodes       | Influencer identification   |
 | Label Propagation | Spread labels through the graph           | Classification, clustering  |
 
 ### PageRank
@@ -367,7 +367,7 @@ Scaling approaches:
 | Takeaway | Details |
 |----------|---------|
 | Graphs excel at relationship-heavy queries | Friends-of-friends, shortest path, pattern matching |
-| Index-free adjacency is the key advantage | O(1) per hop vs O(log n) for SQL JOINs |
+| <abbr title="Index-free adjacency: each graph node stores direct pointers to its neighbours, so traversal is O(1) per hop rather than requiring a costly index lookup.">Index-free adjacency</abbr> is the key advantage | O(1) per hop vs O(log n) for SQL JOINs |
 | Social graphs need heavy caching | Facebook TAO serves billions of reads/sec with cache |
 | Graph partitioning is fundamentally hard | Relationships cross partition boundaries |
 | Neo4j + Cypher is the most popular combo | Start here for most use cases |

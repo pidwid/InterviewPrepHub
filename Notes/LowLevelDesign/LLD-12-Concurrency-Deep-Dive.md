@@ -101,7 +101,7 @@ t.join();
 
 ## 4. Race Conditions & Critical Sections
 
-### Race Condition
+### <abbr title="Race condition: the result changes depending on timing or thread interleaving, often leading to incorrect state.">Race Condition</abbr>
 
 A race condition occurs when the correctness of a program depends on the
 relative timing of thread execution.
@@ -136,7 +136,7 @@ public synchronized void increment() {
 
 ## 5. Synchronization Primitives
 
-### Mutex (Mutual Exclusion)
+### <abbr title="Mutex: a mutual exclusion lock that allows only one thread in a critical section at a time.">Mutex (Mutual Exclusion)</abbr>
 
 ```java
 // Only ONE thread can hold the lock at a time.
@@ -153,7 +153,7 @@ public void criticalOperation() {
 }
 ```
 
-### Semaphore
+### <abbr title="Semaphore: allows up to N threads to access a resource concurrently using permits.">Semaphore</abbr>
 
 ```java
 // Allows up to N threads to access a resource concurrently.
@@ -171,7 +171,7 @@ public void accessPool() throws InterruptedException {
 // Mutex is a semaphore with N=1 (binary semaphore)
 ```
 
-### Condition Variables
+### <abbr title="Condition variables: let threads wait until a condition becomes true, then be signaled to resume.">Condition Variables</abbr>
 
 ```java
 // Allow threads to wait for a specific condition to become true.
@@ -204,7 +204,7 @@ public void put(Item item) {
 }
 ```
 
-### Compare-and-Swap (CAS)
+### <abbr title="Compare-and-Swap (CAS): an atomic CPU instruction that updates a value only if it matches an expected value. Used for lock-free algorithms.">Compare-and-Swap (CAS)</abbr>
 
 ```java
 // Lock-free atomic operation. Hardware-level instruction.
@@ -257,7 +257,7 @@ public void write(String key, String value) {
 
 ## 6. Concurrency Challenges
 
-### Deadlock
+### <abbr title="Deadlock: two or more threads are waiting on each other for locks, so none can make progress.">Deadlock</abbr>
 
 Two or more threads waiting for each other forever.
 
@@ -300,9 +300,9 @@ if (lockA.tryLock(100, TimeUnit.MILLISECONDS)) {
 // 3. Single lock (coarse-grained — simple but less concurrent)
 ```
 
-### Livelock
+### <abbr title="Livelock: threads keep reacting to each other and changing state, but no useful progress is made.">Livelock</abbr>
 
-Threads are not blocked but keep changing state without making progress.
+Threads are not blocked but keep changing state without making progress (like two people in a hallway dodging the same way).
 
 ```
 Two people in a hallway:
@@ -316,7 +316,7 @@ because they react to each other's retries.
 Fix: Add randomized backoff (like Ethernet CSMA/CD).
 ```
 
-### Starvation
+### <abbr title="Starvation: a thread never gets the resources it needs because other threads keep winning access.">Starvation</abbr>
 
 A thread never gets access to a shared resource because other threads keep
 taking priority.

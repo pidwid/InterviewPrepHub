@@ -117,9 +117,9 @@ When two nodes receive conflicting writes before syncing, you need a conflict re
 
 | Strategy | How It Works | Example |
 |----------|-------------|---------|
-| **Last Writer Wins (LWW)** | Highest timestamp wins, other writes are discarded | Cassandra (default) |
-| **Vector Clocks** | Track causal history; detect and surface conflicts | DynamoDB, Riak |
-| **Merge (CRDT)** | Automatically merge conflicting changes | Counters, sets (Riak data types) |
+| **<abbr title="Last Writer Wins (LWW): the node with the highest timestamp 'wins' when there are conflicting writes. Simple but can silently discard valid data if clocks are not perfectly synced">Last Writer Wins (LWW)</abbr>** | Highest timestamp wins, other writes are discarded | Cassandra (default) |
+| **<abbr title="Vector Clocks: a list of counters, one per node, that track the order of events. They let the system detect when two writes conflict (neither happened before the other) rather than blindly discarding one">Vector Clocks</abbr>** | Track causal history; detect and surface conflicts | DynamoDB, Riak |
+| **Merge (<abbr title="CRDT (Conflict-free Replicated Data Type): a special data structure mathematically designed so that concurrent updates from different nodes can always be merged automatically without conflicts. Examples: counters, sets, registers.">CRDT</abbr>)** | Automatically merge conflicting changes | Counters, sets (Riak data types) |
 | **Application-level resolution** | App decides how to merge | Shopping cart: union of items |
 
 ### When Eventual Consistency Is Appropriate
@@ -348,8 +348,8 @@ These two terms are often confused. They're both about "consistency" but in diff
 ### Serializability (Multi-Object, Transactions)
 
 - About **transactions** (a group of operations on potentially multiple objects)
-- Guarantees: concurrent transactions produce the same result as if they ran one-at-a-time
-- This is the "I" (Isolation) in ACID
+- Guarantees: concurrent transactions produce the same result as if they ran one-at-a-time (even if they actually ran in parallel)
+- This is the "I" (<abbr title="Isolation: the 'I' in ACID. Even when multiple transactions run at the same time, each transaction behaves as if it's the only one running, preventing dirty reads and race conditions">Isolation</abbr>) in ACID
 - Does NOT necessarily respect real-time ordering between transactions
 
 ### Strict Serializability (Both)
@@ -403,9 +403,9 @@ These two terms are often confused. They're both about "consistency" but in diff
 
 4. Your system uses eventual consistency with a replication lag of ~500ms. A downstream service reads stale data and makes a wrong decision. How do you architect around this without switching to strong consistency? [Answer](QnA-Answer-Key.md#4-consistency-patterns)
 
-5. Compare quorum-based consistency (R + W > N) with synchronous replication. When would you prefer one over the other? What are the failure modes of each? [Answer](QnA-Answer-Key.md#4-consistency-patterns)
+5. Compare <abbr title="Quorum-based consistency: R + W > N means the number of nodes that must confirm a read (R) plus the number that must confirm a write (W) must exceed the total number of replicas (N). This guarantees at least one node overlaps, ensuring you always read the latest write.">quorum-based consistency (R + W > N)</abbr> with synchronous replication. When would you prefer one over the other? What are the failure modes of each? [Answer](QnA-Answer-Key.md#4-consistency-patterns)
 
-6. You need causal consistency for a messaging app (messages must appear in order). How would you implement this without strong consistency? Discuss vector clocks, Lamport timestamps, or hybrid logical clocks. [Answer](QnA-Answer-Key.md#4-consistency-patterns)
+6. You need causal consistency for a messaging app (messages must appear in order). How would you implement this without strong consistency? Discuss vector clocks, <abbr title="Lamport timestamps: a simple logical clock where each event increments a counter. Events can be ordered, but you can't detect true concurrency — vector clocks are needed for that.">Lamport timestamps</abbr>, or <abbr title="Hybrid Logical Clocks (HLC): combines physical wall-clock time with logical counters to give you both real-time ordering and causality tracking, even when clocks drift slightly">hybrid logical clocks</abbr>. [Answer](QnA-Answer-Key.md#4-consistency-patterns)
 
 7. An interviewer asks you to design a distributed counter that is strongly consistent. Then they ask: "What if we need 100,000 increments per second?" Walk through why strong consistency at that scale is hard and what patterns (CRDTs, sharded counters) help. [Answer](QnA-Answer-Key.md#4-consistency-patterns)
 

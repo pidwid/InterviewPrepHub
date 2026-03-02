@@ -3,6 +3,8 @@
 > Reference material from [The System Design Primer](https://github.com/donnemartin/system-design-primer).
 > Powers of two and latency numbers are also covered in detail in [24-Estimation-Numbers.md](24-Estimation-Numbers.md).
 
+<abbr title="Appendix: reference material and external links used to supplement the main topics."></abbr>
+
 ---
 
 ## Table of Contents

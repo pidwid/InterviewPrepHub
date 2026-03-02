@@ -18,8 +18,8 @@
 
 ## 1. Overview
 
-In a microservices architecture, services need to find and communicate with each
-other. Service instances are dynamic — they scale up, scale down, crash, and
+In a <abbr title="Microservices architecture: a style where an application is composed of small, independently deployable services, each owning its own data and communicating over the network.">microservices architecture</abbr>, services need to find and communicate with each
+other. Service instances are <abbr title="Ephemeral instances: short-lived compute units (containers, VMs) that can be created, destroyed, or rescheduled at any time, making hardcoded IP addresses unreliable.">dynamic</abbr> — they scale up, scale down, crash, and
 restart on different IPs/ports. You can't hardcode addresses.
 
 ```
@@ -144,7 +144,7 @@ registry and forwards to an appropriate instance.
 
 **Pros**: Client is simple (just knows the load balancer address), discovery
 logic is centralized.
-**Cons**: Extra network hop, load balancer is a potential bottleneck/SPOF
+**Cons**: Extra network hop, load balancer is a potential bottleneck/<abbr title="SPOF (Single Point of Failure): a component whose failure brings down the whole system — load balancers must themselves be highly available (HA) to avoid this.">SPOF</abbr>
 (must be HA itself).
 
 **Example**: AWS ALB + ECS, Kubernetes Service + kube-proxy.
@@ -200,7 +200,7 @@ Passive Health Check:
 
 ## 6. ZooKeeper
 
-Apache ZooKeeper is a distributed coordination service. Not specifically designed
+<abbr title="ZooKeeper: a distributed coordination service that uses a tree of znodes to store configuration and coordination data; ephemeral znodes auto-delete when a client session ends, making them ideal for service registration.">Apache ZooKeeper</abbr> is a distributed coordination service. Not specifically designed
 for service discovery but widely used for it.
 
 ```
@@ -251,7 +251,7 @@ service discovery, limited scalability for very large clusters.
 
 ## 7. etcd
 
-etcd is a distributed key-value store using Raft consensus. It's the backbone
+<abbr title="etcd: a distributed key-value store that uses the Raft consensus algorithm to guarantee strong consistency; it is the backbone of Kubernetes, storing all cluster state.">etcd</abbr> is a distributed key-value store using <abbr title="Raft consensus: a distributed consensus algorithm where an elected leader coordinates all writes; a quorum of nodes must acknowledge each write before it is committed.">Raft consensus</abbr>. It's the backbone
 of Kubernetes.
 
 ```
@@ -305,8 +305,8 @@ write throughput limited by Raft consensus.
 
 ## 8. Consul
 
-HashiCorp Consul is purpose-built for service discovery, configuration, and
-service mesh.
+HashiCorp <abbr title="Consul: a purpose-built service discovery, health checking, key-value store, and service mesh tool by HashiCorp; supports DNS-based discovery and multi-datacenter clusters.">Consul</abbr> is purpose-built for service discovery, configuration, and
+<abbr title="Service mesh: an infrastructure layer that handles service-to-service communication (mTLS, load balancing, retries, circuit breaking) transparently — examples: Istio, Consul Connect.">service mesh</abbr>.
 
 ```
 Consul Architecture:
@@ -442,7 +442,7 @@ Simple setup, few services?
 | Two patterns: client-side vs server-side | Client-side is more efficient; server-side is simpler for clients |
 | Registry must be highly available | If the registry goes down, no service can find any other service |
 | Health checking prevents routing to dead instances | Heartbeats, active probes, or passive observation |
-| Ephemeral nodes / leases handle crash cleanup | ZooKeeper ephemeral znodes and etcd leases auto-expire |
+| <abbr title="Ephemeral nodes/leases: ZooKeeper ephemeral znodes disappear when the client session ends; etcd leases expire if heartbeats stop — both automatically deregister crashed services.">Ephemeral nodes / leases</abbr> handle crash cleanup | ZooKeeper ephemeral znodes and etcd leases auto-expire |
 | DNS is the simplest form of discovery | Works everywhere, but suffers from caching and stale entries |
 | Kubernetes solves this natively | kube-dns + Services + probes = built-in service discovery |
 | Consul is the most feature-rich standalone option | Discovery + health checks + DNS + config + service mesh |

@@ -18,7 +18,7 @@
 ## 1. Overview
 
 When distributing data across multiple servers, you need a way to decide which
-server stores which key. Consistent hashing is an algorithm that maps both keys
+server stores which key. <abbr title="Consistent hashing: maps both keys and servers onto a circular hash ring so that adding or removing a server only remaps ~1/N keys — far less disruption than simple modulo hashing.">Consistent hashing</abbr> is an algorithm that maps both keys
 and servers onto a circular hash space (a ring), so that adding or removing a
 server only affects a minimal fraction of keys.
 
@@ -190,7 +190,7 @@ Everything else is untouched.
 
 ---
 
-## 6. Virtual Nodes (vNodes)
+## 6. <abbr title="Virtual nodes (vNodes): assigning each physical server many positions on the hash ring (100–200 virtual tokens) to ensure even load distribution and smoother rebalancing when a node joins or leaves.">Virtual Nodes (vNodes)</abbr>
 
 ### The Problem: Non-Uniform Distribution
 
@@ -297,9 +297,9 @@ Cons: No range queries, more complex implementation
 
 | Strategy         | Distribution | Rebalancing | Range Queries | Complexity |
 |------------------|-------------|-------------|---------------|------------|
-| Range-based      | Skewed      | Manual      | Yes           | Low        |
+| <abbr title="Range-based partitioning: assigns contiguous key ranges to each server — efficient for range queries but prone to hotspots if data is skewed.">Range-based</abbr>      | Skewed      | Manual      | Yes           | Low        |
 | Hash (modulo)    | Uniform     | Catastrophic| No            | Low        |
-| Consistent hash  | Uniform*    | Minimal     | No            | Medium     |
+| <abbr title="Consistent hashing: places both keys and servers on a hash ring; a node change only affects ~1/N keys.">Consistent hash</abbr>  | Uniform*    | Minimal     | No            | Medium     |
 
 *With virtual nodes.
 
@@ -388,8 +388,8 @@ Adding Node D:
 |----------|---------|
 | Modulo hashing breaks at scale | Changing N remaps nearly all keys — unacceptable |
 | Consistent hashing minimizes disruption | Only ~1/N keys remap when a node joins or leaves |
-| Virtual nodes are essential | Without vNodes, load distribution is uneven |
-| Lookup is O(log V) | V = total virtual nodes; uses binary search on a sorted ring |
+| <abbr title="vNodes (virtual nodes): each physical server gets many hash-ring positions so load distributes evenly and a node failure spreads keys across all remaining nodes rather than just one neighbour.">Virtual nodes</abbr> are essential | Without vNodes, load distribution is uneven |
+| Lookup is <abbr title="O(log V): binary search time complexity — V is the total number of virtual nodes on the ring; doubling V only adds one extra comparison.">O(log V)</abbr> | V = total virtual nodes; uses binary search on a sorted ring |
 | Replication rides on the ring | Store copies on the next N clockwise distinct physical nodes |
 | Not suited for range queries | Keys are scattered by hash — use range partitioning if needed |
 | Industry standard | DynamoDB, Cassandra, Redis Cluster, Memcached all use variants |

@@ -1,6 +1,6 @@
 # Structural Design Patterns
 
-> Structural patterns deal with **how classes and objects are composed** to form larger structures. They simplify design by identifying simple ways to realize relationships between entities.
+> Structural patterns deal with **how classes and objects are composed** to form larger structures. They simplify design by identifying simple ways to realize relationships between entities. (<abbr title="Structural patterns: focus on how classes/objects are combined (e.g., Adapter, Decorator, Facade) to form bigger structures.">definition</abbr>)
 
 ---
 
@@ -23,13 +23,13 @@
 
 | Pattern | Intent | Analogy |
 |---------|--------|---------|
-| **Adapter** | Convert one interface to another | Power plug adapter |
-| **Bridge** | Separate abstraction from implementation | Remote control → Device |
-| **Composite** | Treat individual objects and groups uniformly | File/Folder tree |
-| **Decorator** | Add behavior dynamically without changing the class | Toppings on pizza |
-| **Facade** | Simplified interface to a complex subsystem | Hotel concierge |
-| **Flyweight** | Share common state across many objects | Character glyphs in a text editor |
-| **Proxy** | Surrogate that controls access to another object | Credit card as proxy for bank account |
+| **<abbr title="Adapter: converts one interface into another that clients expect.">Adapter</abbr>** | Convert one interface to another | Power plug adapter |
+| **<abbr title="Bridge: separates abstraction from implementation so both can vary independently.">Bridge</abbr>** | Separate abstraction from implementation | Remote control → Device |
+| **<abbr title="Composite: treat individual objects and groups uniformly using a tree structure.">Composite</abbr>** | Treat individual objects and groups uniformly | File/Folder tree |
+| **<abbr title="Decorator: add behavior to an object dynamically without changing its class.">Decorator</abbr>** | Add behavior dynamically without changing the class | Toppings on pizza |
+| **<abbr title="Facade: provide a simplified interface to a complex subsystem.">Facade</abbr>** | Simplified interface to a complex subsystem | Hotel concierge |
+| **<abbr title="Flyweight: share common state across many objects to save memory.">Flyweight</abbr>** | Share common state across many objects | Character glyphs in a text editor |
+| **<abbr title="Proxy: a stand-in object that controls access to another object.">Proxy</abbr>** | Surrogate that controls access to another object | Credit card as proxy for bank account |
 
 ---
 

@@ -14,7 +14,7 @@
 
 ---
 
-## 1. OSI Model
+## 1. <abbr title="OSI (Open Systems Interconnection) Model: a 7-layer model that describes how data moves across a network.">OSI Model</abbr>
 
 Seven layers, from physical wire to application. Each layer communicates
 only with the layers directly above and below it.
@@ -83,7 +83,7 @@ Receiving: The reverse. Each layer strips its header and passes data up.
 
 ## 2. TCP/IP in Depth
 
-### TCP Connection Lifecycle
+### <abbr title="TCP connection lifecycle: the 3-way handshake establishes a connection, and a 4-step FIN/ACK sequence closes it. TIME_WAIT prevents old packets from being mistaken as new ones.">TCP Connection Lifecycle</abbr>
 
 ```
 Three-Way Handshake (connection establishment):
@@ -156,7 +156,7 @@ Congestion Control:
 TCP:
   ✓ Reliable, ordered delivery
   ✓ Flow control, congestion control
-  ✗ Head-of-line blocking (one lost packet blocks ALL streams)
+  ✗ <abbr title="Head-of-line blocking: one lost packet holds up everything behind it.">Head-of-line blocking</abbr> (one lost packet blocks ALL streams)
   ✗ Connection setup takes 1-2 RTT (plus TLS adds 1-2 more)
   
   Use for: Web (HTTP/1, HTTP/2), databases, file transfer
@@ -277,6 +277,9 @@ HTTP/3 (QUIC):
   0-RTT connection resumption.
   Built-in encryption (TLS 1.3).
 ```
+
+- <abbr title="Head-of-line blocking: one slow or lost response blocks everything behind it.">Head-of-line blocking</abbr>
+- <abbr title="HPACK: HTTP/2 header compression to reduce repeated header bytes.">HPACK</abbr>
 
 ---
 

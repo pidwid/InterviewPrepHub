@@ -49,10 +49,10 @@ Common wastes:
 | Model             | Discount  | Commitment      | Best For                    |
 |-------------------|-----------|-----------------|-----------------------------|
 | On-Demand         | 0%        | None            | Unpredictable workloads     |
-| Reserved (1yr)    | ~40%      | 1 year          | Steady-state workloads      |
+| <abbr title="Reserved Instances: commit to use a specific instance type for 1 or 3 years in exchange for up to 60% discount versus on-demand pricing.">Reserved (1yr)</abbr>    | ~40%      | 1 year          | Steady-state workloads      |
 | Reserved (3yr)    | ~60%      | 3 years         | Long-term stable workloads  |
-| Savings Plans     | ~40-60%   | $/hr commitment | Flexible across instance types|
-| Spot Instances    | ~60-90%   | None (can be revoked)| Fault-tolerant batch jobs |
+| <abbr title="Savings Plans: a flexible commitment to spend a fixed $/hr on compute for 1–3 years, applicable across instance types and sizes unlike Reserved Instances.">Savings Plans</abbr>     | ~40-60%   | $/hr commitment | Flexible across instance types|
+| <abbr title="Spot Instances: spare AWS EC2 capacity offered at up to 90% discount; can be reclaimed by AWS with 2 minutes notice — suitable only for fault-tolerant workloads.">Spot Instances</abbr>    | ~60-90%   | None (can be revoked)| Fault-tolerant batch jobs |
 
 ### Spot Instances Deep Dive
 
@@ -86,7 +86,7 @@ Strategy: Mix spot + on-demand in Auto Scaling Group
 
 ## 3. Compute Optimization
 
-### Right-Sizing
+### <abbr title="Right-sizing: matching your instance type and size to actual CPU/memory usage so you're not paying for idle capacity.">Right-Sizing</abbr>
 
 ```
 Right-sizing = matching instance type to actual usage.
@@ -273,10 +273,10 @@ Step 4: Map to resources
 |-------------------|---------------------------------------------|
 | CPU utilization   | Compute capacity                            |
 | Memory utilization| Instance right-sizing                       |
-| Disk IOPS         | Storage performance needs                   |
+| <abbr title="IOPS (Input/Output Operations Per Second): the rate at which a storage device can read or write data; critical for database and high-throughput workloads.">Disk IOPS</abbr>         | Storage performance needs                   |
 | Network throughput| Bandwidth requirements                      |
 | Queue depth       | Processing capacity vs demand               |
-| p99 latency       | When capacity is becoming insufficient      |
+| <abbr title="p99 latency (99th percentile): 99% of requests complete within this time. A high p99 with a low p50 indicates tail-latency problems that affect a subset of users.">p99 latency</abbr>       | When capacity is becoming insufficient      |
 | Error rate        | System under stress                         |
 
 ### Auto-Scaling Policies
@@ -304,7 +304,7 @@ Predictive Scaling:
 
 ## 8. FinOps Practices
 
-Financial Operations (FinOps) = collaboration between engineering, finance,
+<abbr title="FinOps (Cloud Financial Operations): a practice that brings engineering, finance, and business together to take ownership of cloud spending through visibility, optimization, and governance.">Financial Operations (FinOps)</abbr> = collaboration between engineering, finance,
 and business to manage cloud costs.
 
 ```
@@ -377,7 +377,7 @@ Alerting:
 |--------|---------------|
 | No untagged resources | AWS Config rule + remediation |
 | Dev environments off at night | Lambda + EventBridge (cron) |
-| Max instance size per team | Service Control Policy (SCP) |
+| Max instance size per team | <abbr title="SCP (Service Control Policy): an AWS Organizations policy that sets the maximum permissions available to accounts in an organizational unit.">Service Control Policy (SCP)</abbr> |
 | Budget alerts per team | AWS Budgets per cost center |
 | Spot for non-prod | ASG launch template policy |
 | Review unused resources weekly | Trusted Advisor + automation |

@@ -103,7 +103,7 @@ Use correct status codes:
   422 Unprocessable Entity (validation errors)
 ```
 
-### Principle 5: Idempotency
+### Principle 5: <abbr title="Idempotency: an operation that can be applied multiple times without changing the result after the first successful call. Critical for safe retries.">Idempotency</abbr>
 
 Clients should be able to safely retry requests.
 
@@ -361,11 +361,11 @@ The cursor is typically a base64-encoded value of the last item's sort key.
 |------------------|-----------------------------------------------------|----------------------------|
 | API Key          | Send key in header: `X-API-Key: abc123`             | Server-to-server, simple    |
 | Bearer Token     | `Authorization: Bearer <jwt>`                       | User sessions, mobile apps  |
-| OAuth 2.0        | Redirect flow → authorization code → access token   | Third-party access          |
+| <abbr title="OAuth 2.0: an authorization framework that lets third-party apps access a user's data without sharing the user's password. Uses access tokens granted by an authorization server.">OAuth 2.0</abbr>        | Redirect flow → authorization code → access token   | Third-party access          |
 | Basic Auth       | `Authorization: Basic base64(user:pass)`            | Internal/development only   |
-| mTLS             | Client certificate verification                     | High-security service-to-service |
+| <abbr title="mTLS (mutual TLS): both client and server present certificates. The connection is encrypted and both sides verify each other's identity, preventing unauthorized service-to-service calls.">mTLS</abbr>             | Client certificate verification                     | High-security service-to-service |
 
-### JWT (JSON Web Token)
+### <abbr title="JSON Web Token (JWT): a compact token format that encodes user claims in a signed string. Often used for stateless authentication.">JWT</abbr>
 
 ```
 Header.Payload.Signature
@@ -403,12 +403,12 @@ Auth Server ──► Client App
 ### Authorization (What can you do?)
 
 ```
-Role-Based Access Control (RBAC):
+Role-Based Access Control (<abbr title="RBAC: permissions are tied to roles (admin, editor, viewer).">RBAC</abbr>):
   admin  → can do everything
   editor → can create, read, update
   viewer → can only read
 
-Attribute-Based Access Control (ABAC):
+Attribute-Based Access Control (<abbr title="ABAC: permissions are decided by attributes such as user department, resource type, time of day, or clearance level.">ABAC</abbr>):
   if user.department == "engineering" AND resource.type == "code" → allow
   if user.clearance >= resource.classification → allow
 
@@ -416,6 +416,7 @@ Resource-Based:
   User can only access their own resources:
   GET /users/123/orders → only works if authenticated user IS user 123
 ```
+
 
 ---
 
@@ -629,7 +630,7 @@ Third-Party ───────►│  - Response Transformation         │�
 | Request/response logging  | Centralized logging and monitoring                |
 | CORS handling             | Handle cross-origin policies centrally            |
 
-### Backend for Frontend (BFF) Pattern
+### <abbr title="Backend for Frontend (BFF): a pattern where you create a dedicated backend per client type (mobile, web, admin) so each gets the exact data shape it needs without over-fetching.">Backend for Frontend (BFF)</abbr> Pattern
 
 Different clients often need different API shapes:
 

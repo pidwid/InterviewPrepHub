@@ -232,7 +232,7 @@ Benefits:
   - Origin only gets requests for truly uncached content
 ```
 
-### PoP (Point of Presence)
+### <abbr title="PoP (Point of Presence): a physical data center location where CDN servers are installed. The more PoPs a CDN has, the closer it can be to users worldwide.">PoP (Point of Presence)</abbr>
 
 A PoP is a physical location where the CDN has servers. Major CDNs have 200+ PoPs worldwide.
 
@@ -340,8 +340,8 @@ Drawback: Invalidation takes time to propagate across all edge servers
 
 | Provider | Key Strength | Pricing Model |
 |----------|-------------|--------------|
-| **CloudFront** (AWS) | Tight AWS integration, Lambda@Edge for edge computing | Pay per GB transferred + requests |
-| **CloudFlare** | Free tier, built-in DDoS/WAF, Workers for edge compute | Free tier available, paid plans for enterprise |
+| **CloudFront** (AWS) | Tight AWS integration, <abbr title="Lambda@Edge: run AWS Lambda functions at CDN edge locations, allowing you to customize content, add auth headers, or redirect requests without sending traffic to your origin server">Lambda@Edge</abbr> for edge computing | Pay per GB transferred + requests |
+| **CloudFlare** | Free tier, built-in DDoS/<abbr title="WAF (Web Application Firewall): filters and monitors HTTP traffic to block common attacks like SQL injection, XSS, and DDoS before they reach your servers">WAF</abbr>, Workers for edge compute | Free tier available, paid plans for enterprise |
 | **Akamai** | Largest network (350K+ servers), enterprise-grade | Custom pricing |
 | **Fastly** | Real-time purging (< 150ms), edge computing (Compute@Edge) | Pay per GB + requests |
 | **Azure CDN** | Azure integration, multiple CDN providers (Verizon, Akamai) | Pay per GB |
@@ -377,7 +377,7 @@ Drawback: Invalidation takes time to propagate across all edge servers
 
 6. **In system design interviews,** always put static content on a CDN. It's one of the easiest wins for performance and scalability.
 
-7. **CDNs also provide security** — DDoS protection, WAF, and SSL termination at the edge.
+7. **CDNs also provide security** — DDoS protection, WAF, and <abbr title="SSL termination: the CDN handles the HTTPS encryption/decryption at the edge server, so traffic between the CDN and your origin can optionally use plain HTTP internally, reducing CPU load on your servers">SSL termination</abbr> at the edge.
 
 ---
 
@@ -385,7 +385,7 @@ Drawback: Invalidation takes time to propagate across all edge servers
 
 1. You're designing an image-heavy social media app serving users globally. Walk through your CDN strategy — would you use push or pull? How would you handle dynamic content like personalized feeds? [Answer](QnA-Answer-Key.md#7-content-delivery-networks)
 
-2. A Pull CDN causes a "thundering herd" problem when a popular item's cache expires and thousands of requests hit your origin simultaneously. How do you prevent this? [Answer](QnA-Answer-Key.md#7-content-delivery-networks)
+2. A Pull CDN causes a <abbr title="Thundering herd: when many requests simultaneously trigger a cache miss (e.g., after cache expiry), flooding the origin server with identical requests at once — potentially overwhelming it">thundering herd</abbr> problem when a popular item's cache expires and thousands of requests hit your origin simultaneously. How do you prevent this? [Answer](QnA-Answer-Key.md#7-content-delivery-networks)
 
 3. Your CDN cache hit ratio is only 40%. What are the common causes, and how would you systematically improve it to 90%+? [Answer](QnA-Answer-Key.md#7-content-delivery-networks)
 
@@ -397,7 +397,7 @@ Drawback: Invalidation takes time to propagate across all edge servers
 
 7. Your company operates in China, where most Western CDNs don't have PoPs. How do you serve low-latency content to Chinese users while complying with local regulations? [Answer](QnA-Answer-Key.md#7-content-delivery-networks)
 
-8. Explain how a CDN edge server decides whether to serve a cached response or fetch from the origin. Walk through the role of Cache-Control headers, ETags, and If-Modified-Since. [Answer](QnA-Answer-Key.md#7-content-delivery-networks)
+8. Explain how a CDN edge server decides whether to serve a cached response or fetch from the origin. Walk through the role of Cache-Control headers, <abbr title="ETag (Entity Tag): a unique identifier the server assigns to a specific version of a resource. The client sends it back on the next request; if the content hasn't changed, the server replies with 304 Not Modified (no body needed), saving bandwidth.">ETags</abbr>, and <abbr title="If-Modified-Since: an HTTP header the client sends with the date of the cached version. The server only sends the full content if it has changed since that date; otherwise it returns 304 Not Modified.">If-Modified-Since</abbr>. [Answer](QnA-Answer-Key.md#7-content-delivery-networks)
 
 9. You're using a CDN for both static assets AND as a DDoS shield. The CDN provider has an outage. What happens to your traffic, and how do you design for CDN failure? [Answer](QnA-Answer-Key.md#7-content-delivery-networks)
 

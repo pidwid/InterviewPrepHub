@@ -19,7 +19,7 @@
 
 Cloud architecture is about designing systems that leverage cloud services
 to achieve scalability, reliability, security, and cost-efficiency. It's not
-just about moving on-premise systems to the cloud — it's about re-thinking
+just about moving <abbr title="On-premise: infrastructure owned and operated in a company's own data center, rather than rented from a cloud provider.">on-premise</abbr> systems to the cloud — it's about re-thinking
 how systems are built.
 
 ```
@@ -34,7 +34,7 @@ On-Premise Mindset:              Cloud-Native Mindset:
 
 ---
 
-## 2. Well-Architected Framework
+## 2. <abbr title="Well-Architected Framework: a set of best-practice pillars (security, reliability, performance, cost, sustainability) published by cloud providers to guide system design.">Well-Architected Framework</abbr>
 
 AWS, GCP, and Azure each publish a Well-Architected Framework. AWS's has
 6 pillars (the most widely referenced):
@@ -274,7 +274,7 @@ On-Premise ◄──── VPN / Direct Connect ────► Cloud
 
 ## 6. Landing Zones
 
-A pre-configured, secure, multi-account cloud environment following best practices.
+A pre-configured, secure, multi-account cloud environment following best practices. <abbr title="Landing Zone: a pre-configured, governed multi-account cloud environment that enforces security, networking, and compliance guardrails from day one.">Landing Zones</abbr> use guardrails such as <abbr title="SCPs (Service Control Policies): AWS policies that restrict what actions accounts within an organization can perform, acting as a ceiling on permissions.">SCPs</abbr> to enforce governance at scale.
 
 ```
 Organization Root
@@ -325,16 +325,16 @@ Key Guardrails:
 
 | Pattern | Description |
 |---------|-------------|
-| Strangler Fig | Gradually replace legacy with new services behind a facade |
-| Sidecar | Attach helper container alongside main container (logging, proxy) |
-| Ambassador | Proxy outbound connections (circuit breaker, retry) |
-| Circuit Breaker | Fail fast when downstream is unhealthy |
-| Bulkhead | Isolate failure domains (separate pools/instances) |
-| Retry with Backoff | Exponential backoff + jitter for transient failures |
+| <abbr title="Strangler Fig: gradually replace parts of a legacy system by routing traffic through a facade, incrementally retiring old code.">Strangler Fig</abbr> | Gradually replace legacy with new services behind a facade |
+| <abbr title="Sidecar: a helper container attached to a main container in the same pod, handling cross-cutting concerns like logging or proxying.">Sidecar</abbr> | Attach helper container alongside main container (logging, proxy) |
+| <abbr title="Ambassador: a proxy sidecar that intercepts outbound calls to add circuit-breaking, retries, and timeouts transparently.">Ambassador</abbr> | Proxy outbound connections (circuit breaker, retry) |
+| <abbr title="Circuit Breaker: a pattern that stops calling a failing downstream service after N failures, letting it recover before retrying.">Circuit Breaker</abbr> | Fail fast when downstream is unhealthy |
+| <abbr title="Bulkhead: isolates resources (thread pools, connections) per caller so one slow consumer cannot exhaust shared resources.">Bulkhead</abbr> | Isolate failure domains (separate pools/instances) |
+| Retry with Backoff | <abbr title="Exponential backoff: each retry waits 2× longer than the last; jitter adds random delay to prevent thundering-herd retries.">Exponential backoff + jitter</abbr> for transient failures |
 | Queue-Based Load Leveling | Buffer requests via queue to smooth spikes |
 | Competing Consumers | Multiple workers process from same queue |
-| CQRS | Separate read and write models for different scale requirements |
-| Event Sourcing | Store events, not state — rebuild state from event log |
+| <abbr title="CQRS (Command Query Responsibility Segregation): separates the write model (commands) from the read model (queries) so each can scale independently.">CQRS</abbr> | Separate read and write models for different scale requirements |
+| <abbr title="Event Sourcing: instead of storing current state, store the full sequence of events; replay them to reconstruct state at any point in time.">Event Sourcing</abbr> | Store events, not state — rebuild state from event log |
 
 ### Resilience Patterns in Detail
 
@@ -392,7 +392,7 @@ Migration approach:
 
 ---
 
-## 9. Cloud Service Models (IaaS/PaaS/SaaS)
+## 9. Cloud Service Models (<abbr title="IaaS: Infrastructure as a Service — you manage OS and above; the provider manages hardware, networking, and virtualisation. Example: EC2.">IaaS</abbr>/<abbr title="PaaS: Platform as a Service — you manage only your application code; the provider manages runtime, OS, and infrastructure. Example: Heroku.">PaaS</abbr>/<abbr title="SaaS: Software as a Service — a fully managed application delivered over the internet; you manage nothing. Example: Gmail, Salesforce.">SaaS</abbr>)
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -426,7 +426,7 @@ Migration approach:
 |----------|---------|
 | Learn the Well-Architected Framework | The 6 pillars are the language SA interviewers speak |
 | Design for failure | Everything fails — auto-healing, multi-AZ, backups |
-| Multi-region ≠ just replication | Active-active needs conflict resolution; active-passive needs fast failover |
+| Multi-region ≠ just replication | <abbr title="Active-active: both regions serve live traffic simultaneously, requiring bi-directional replication and conflict resolution.">Active-active</abbr> needs conflict resolution; <abbr title="Active-passive: one region serves traffic; the other is a warm standby that takes over on failover.">active-passive</abbr> needs fast failover |
 | Multi-cloud is organizational, not technical | The operational overhead is rarely worth it unless mandated |
 | Landing zones enable governance at scale | Multi-account strategy with guardrails |
 | 12-Factor App is the cloud-native checklist | Stateless, config in env vars, disposable processes |

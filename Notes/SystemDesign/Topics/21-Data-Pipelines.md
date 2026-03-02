@@ -37,6 +37,9 @@ Sources              Pipeline                    Sinks
 
 ### ETL vs ELT
 
+<abbr title="ETL: extract → transform → load (clean before storage).">ETL (Extract, Transform, Load)</abbr> and
+<abbr title="ELT: extract → load → transform (store raw, transform inside the warehouse).">ELT (Extract, Load, Transform)</abbr> describe when transformations happen.
+
 ```
 ETL (Extract, Transform, Load):
   Source ──► Extract ──► Transform (on pipeline) ──► Load to target
@@ -173,11 +176,15 @@ Processing Semantics:
   │ Exactly-once        │ Events never lost, no duplicates.      │
   │                     │ (hardest to achieve)                   │
   └─────────────────────┴────────────────────────────────────────┘
-  
+
   Exactly-once is typically achieved via:
     - Idempotent writes (deduplication at the consumer)
     - Transactional writes (Kafka transactions)
 ```
+
+- <abbr title="At-most-once: each event is processed 0 or 1 times (fast but can lose data).">At-most-once</abbr>
+- <abbr title="At-least-once: events are processed 1+ times (no loss, possible duplicates).">At-least-once</abbr>
+- <abbr title="Exactly-once: each event processed once (hard to guarantee).">Exactly-once</abbr>
 
 ### Windowing
 
@@ -393,7 +400,7 @@ With DLQ: Bad messages are set aside, good messages keep flowing.
 
 ---
 
-## 6. Change Data Capture (CDC)
+### <abbr title="Change Data Capture (CDC): capture changes from a database by reading its transaction log and streaming them to other systems.">Change Data Capture (CDC)</abbr>
 
 CDC captures changes from a database and streams them to other systems.
 Instead of polling or dual-writes, CDC reads from the database's
@@ -462,8 +469,8 @@ Operations: c=create, u=update, d=delete, r=read (snapshot)
 
 ### Data Warehouse
 
-A specialized database optimized for **analytical queries** (OLAP) rather than
-transactional workloads (OLTP).
+A specialized database optimized for **analytical queries** (<abbr title="OLAP: Online Analytical Processing — large, read-heavy analytics like aggregations and reporting.">OLAP</abbr>) rather than
+transactional workloads (<abbr title="OLTP: Online Transaction Processing — high-volume inserts/updates for day-to-day app operations.">OLTP</abbr>).
 
 ```
 OLTP (Online Transaction Processing):        OLAP (Online Analytical Processing):
@@ -524,7 +531,7 @@ Medallion Architecture (Bronze / Silver / Gold):
   Gold:   Business-level aggregates, ready for reporting
 ```
 
-### Data Lakehouse
+### <abbr title="Data lakehouse: combines cheap object storage of a data lake with ACID reliability and performance features of a data warehouse.">Data Lakehouse</abbr>
 
 Combines the best of data lakes and data warehouses.
 

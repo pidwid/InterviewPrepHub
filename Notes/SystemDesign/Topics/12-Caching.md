@@ -43,7 +43,7 @@ Client Request
 └────────────┘
 ```
 
-### Why Caching Works: The Pareto Principle
+### Why Caching Works: The <abbr title="Pareto Principle (80/20 rule): 80% of effects come from 20% of causes. In caching, a small subset of your data (the 'hot' data) accounts for the vast majority of reads — making it very effective to cache just that portion.">Pareto Principle</abbr>
 
 In most applications, **20% of the data** is responsible for **80% of the reads**.
 Caching that hot 20% eliminates the majority of database load.
@@ -133,11 +133,11 @@ On next request:
 
 Most databases have built-in caching:
 
-- **Buffer Pool** (InnoDB, PostgreSQL): Caches frequently-accessed data pages in memory.
+- **<abbr title="Buffer Pool: an in-memory area in the database that stores copies of frequently-accessed disk pages (data blocks). Reads from memory are ~1000x faster than reads from disk, so keeping hot data in the buffer pool is critical for performance.">Buffer Pool</abbr>** (InnoDB, PostgreSQL): Caches frequently-accessed data pages in memory.
   Usually set to 70-80% of available RAM on a dedicated database server.
 - **Query Cache** (deprecated in MySQL 8.0): Cached query results. Invalidated on any
   write to the table, so it was only useful for read-heavy, rarely-updated tables.
-- **Prepared Statement Cache**: Caches parsed and optimized query plans.
+- **<abbr title="Prepared Statement Cache: caches the parsed query tree and optimized execution plan for a SQL query so the database doesn't need to re-parse and re-optimize it on every execution. Especially useful for frequently-repeated queries with different parameters.">Prepared Statement Cache</abbr>**: Caches parsed and optimized query plans.
 
 ---
 
@@ -341,10 +341,10 @@ When the cache is full, which entry do you remove to make room?
 
 | Policy | Name                    | How It Works                               | Best For                        |
 |--------|-------------------------|--------------------------------------------|---------------------------------|
-| LRU    | Least Recently Used     | Evict the item accessed longest ago         | General purpose (most popular)  |
-| LFU    | Least Frequently Used   | Evict the item accessed fewest times        | Stable hot-set workloads        |
-| FIFO   | First In, First Out     | Evict oldest inserted item                  | Simple, time-based data         |
-| TTL    | Time To Live            | Evict after a set time period               | Time-sensitive data             |
+| <abbr title="LRU (Least Recently Used): evicts the item that has not been accessed for the longest time. The idea: if you haven't used it recently, you probably won't need it soon. The most popular eviction policy.">LRU</abbr>    | Least Recently Used     | Evict the item accessed longest ago         | General purpose (most popular)  |
+| <abbr title="LFU (Least Frequently Used): evicts the item that has been accessed the fewest total times. Keeps frequently-used items even if they weren't accessed recently.">LFU</abbr>    | Least Frequently Used   | Evict the item accessed fewest times        | Stable hot-set workloads        |
+| <abbr title="FIFO (First In, First Out): evicts the oldest inserted item regardless of how often it was accessed. Simple but often suboptimal for caching.">FIFO</abbr>   | First In, First Out     | Evict oldest inserted item                  | Simple, time-based data         |
+| <abbr title="TTL (Time To Live): items are automatically removed from the cache after a fixed duration, ensuring data doesn't stay stale forever even without explicit invalidation.">TTL</abbr>    | Time To Live            | Evict after a set time period               | Time-sensitive data             |
 | Random | Random Eviction         | Evict a random item                         | Surprisingly close to LRU       |
 
 ### LRU vs LFU
@@ -530,7 +530,7 @@ far more versatile.
 
 ---
 
-## 7. Cache Stampede (Thundering Herd)
+## 7. <abbr title="Cache Stampede (Thundering Herd): when a popular cached item expires, many requests simultaneously get a cache miss and all rush to rebuild the cache from the database at the same time, potentially overwhelming it with identical queries.">Cache Stampede (Thundering Herd)</abbr>
 
 When a popular cache entry expires, hundreds of concurrent requests all get a cache
 miss simultaneously and all hit the database at once.
@@ -640,14 +640,14 @@ Redis is the most popular caching solution and is used far beyond simple caching
 | Set         | SADD, SMEMBERS, SINTER     | Tags, unique visitors, mutual friends |
 | Sorted Set  | ZADD, ZRANGE, ZRANGEBYSCORE| Leaderboards, priority queues         |
 | Stream      | XADD, XREAD, XREADGROUP   | Event streaming, activity logs        |
-| HyperLogLog | PFADD, PFCOUNT             | Unique count estimation (12 KB mem)   |
+| <abbr title="HyperLogLog: a probabilistic data structure that estimates the number of unique items in a set using only ~12 KB of memory, regardless of how many items there are. It's not exact (±0.81% error) but useful for counting unique visitors at massive scale.">HyperLogLog</abbr> | PFADD, PFCOUNT             | Unique count estimation (12 KB mem)   |
 | Bitmap      | SETBIT, GETBIT, BITCOUNT   | Feature flags, daily active users     |
 
 ### Redis Persistence
 
 Redis offers two persistence options:
 
-**RDB (Snapshotting):**
+**<abbr title="RDB (Redis Database): Redis's snapshot persistence mode. At configured intervals, Redis forks a child process and writes all data to a compact binary file. Fast restarts but can lose data between snapshots.">RDB</abbr> (Snapshotting):**
 ```
 Config: save 900 1        # Snapshot if at least 1 key changed in 900 seconds
         save 300 10       # Snapshot if at least 10 keys changed in 300 seconds
@@ -657,7 +657,7 @@ Pro: Compact file, fast restart
 Con: Data loss between snapshots
 ```
 
-**AOF (Append Only File):**
+**<abbr title="AOF (Append Only File): Redis's log-based persistence mode. Every write command is appended to a log file. On restart, Redis replays the log to reconstruct data. More durable than RDB but produces larger files and slower restarts.">AOF</abbr> (Append Only File):**
 ```
 Config: appendonly yes
         appendfsync everysec   # Flush to disk every second (recommended)

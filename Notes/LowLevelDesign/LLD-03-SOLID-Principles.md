@@ -21,11 +21,11 @@
 
 | Principle | One-liner | Violation Smell |
 |-----------|-----------|-----------------|
-| **SRP** | A class should have only one reason to change | God class, class doing too much |
-| **OCP** | Open for extension, closed for modification | `if/else` chains for types |
-| **LSP** | Subtypes must be substitutable for base types | Override that throws exceptions |
-| **ISP** | No client should depend on methods it doesn't use | Fat interface with unused methods |
-| **DIP** | Depend on abstractions, not concretions | `new ConcreteClass()` inside business logic |
+| **<abbr title="Single Responsibility Principle: a class should have one reason to change.">SRP</abbr>** | A class should have only one reason to change | God class, class doing too much |
+| **<abbr title="Open/Closed Principle: software should be open to extension but closed to modification.">OCP</abbr>** | Open for extension, closed for modification | `if/else` chains for types |
+| **<abbr title="Liskov Substitution Principle: subtypes must be substitutable for their base types without breaking behavior.">LSP</abbr>** | Subtypes must be substitutable for base types | Override that throws exceptions |
+| **<abbr title="Interface Segregation Principle: clients should not depend on methods they do not use.">ISP</abbr>** | No client should depend on methods it doesn't use | Fat interface with unused methods |
+| **<abbr title="Dependency Inversion Principle: high-level modules depend on abstractions, not concrete implementations.">DIP</abbr>** | Depend on abstractions, not concretions | `new ConcreteClass()` inside business logic |
 
 ---
 
@@ -128,7 +128,7 @@ public class DiscountCalculator {
 }
 ```
 
-### OCP Enablers
+### <abbr title="OCP enablers: design techniques that let you add new behavior without modifying existing code.">OCP Enablers</abbr>
 
 | Mechanism | When to Use |
 |-----------|-------------|
@@ -210,7 +210,7 @@ public class Square extends Shape {
 }
 ```
 
-### LSP Violation Checklist
+### <abbr title="LSP violation checklist: common signs that a subtype breaks the base type's contract.">LSP Violation Checklist</abbr>
 
 - ❌ Subclass **throws exceptions** the parent doesn't
 - ❌ Subclass **ignores** parent method (empty override)
@@ -275,7 +275,7 @@ public class Robot implements Workable {  // Only implements what it needs
 
 ---
 
-## 6. D — Dependency Inversion Principle (DIP)
+## 6. D — <abbr title="Dependency Inversion Principle (DIP): high-level modules depend on abstractions, not on low-level concrete implementations.">Dependency Inversion Principle (DIP)</abbr>
 
 > **High-level modules should not depend on low-level modules. Both should depend on abstractions.**
 

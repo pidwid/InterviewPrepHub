@@ -43,7 +43,7 @@ Single Server:                    Distributed (problem):
 
 ---
 
-## 2. UUID (Universally Unique Identifier)
+## 2. <abbr title="UUID (Universally Unique Identifier): a 128-bit identifier with extremely low collision probability.">UUID (Universally Unique Identifier)</abbr>
 
 128-bit identifier, typically represented as 36 hex characters.
 
@@ -109,7 +109,7 @@ hard to add/remove servers, sequential IDs leak business info (order volume, etc
 
 ---
 
-## 4. Twitter Snowflake
+## 4. <abbr title="Twitter Snowflake: 64-bit, time-ordered ID format with timestamp + machine ID + sequence.">Twitter Snowflake</abbr>
 
 64-bit ID scheme designed by Twitter for generating unique IDs at scale.
 
@@ -178,7 +178,7 @@ timestamp = (ID >> 22) + EPOCH
 **Cons**: Clock skew can cause duplicates, machine ID assignment needs coordination,
 time component leaks approximate creation time.
 
-### Clock Skew Mitigation
+### <abbr title="Clock skew: different machines have slightly different system times, which can break time-ordered ID generation.">Clock Skew Mitigation</abbr>
 
 ```
 NTP adjusts clock backward:
@@ -193,7 +193,7 @@ Solutions:
 
 ---
 
-## 5. ULID (Universally Unique Lexicographically Sortable Identifier)
+## 5. <abbr title="ULID: Universally Unique Lexicographically Sortable Identifier. 128-bit, time-sortable, base32 string.">ULID (Universally Unique Lexicographically Sortable Identifier)</abbr>
 
 128-bit identifier that is sortable and more readable than UUID.
 

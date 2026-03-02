@@ -38,15 +38,16 @@ A system has a **performance problem** when it is **slow for a single user**, ev
 User clicks "Search" → 8 seconds to get results
 (No other users on the system)
 
+```
+
 This is a PERFORMANCE problem.
 The system is fundamentally slow, regardless of load.
 
 Root causes could be:
-- Unindexed database queries (O(N) full table scan)
+- <abbr title="A search operation that scans every row in a database table sequentially, usually occurring when an index is missing or not used. This operation scales linearly with table size and is extremely slow for large datasets.">Unindexed database queries (O(N) full table scan)</abbr>
 - Synchronous calls to slow external APIs
 - Inefficient algorithms
 - No caching layer
-```
 
 ---
 
@@ -71,16 +72,16 @@ A system has a **scalability problem** when it is **fast for one user but slow u
 1,000:      Search takes 2s      ⚠️ Noticeable
 10,000:     Search takes 30s     ❌ Unusable
 100,000:    System crashes        💀 Dead
+```
 
-This is a SCALABILITY problem.
+This is a **SCALABILITY** problem.
 The system is fast at low load but degrades as load increases.
 
 Root causes could be:
 - Single database server handling all queries
-- No connection pooling (running out of DB connections)
+- No <abbr title="A cache of database connections maintained so that the connections can be reused when future requests to the database are required.">connection pooling</abbr> (running out of DB connections)
 - Stateful servers (can't add more servers)
-- Lock contention under concurrency
-```
+- <abbr title="A performance bottleneck that occurs when multiple threads or processes try to acquire the same lock simultaneously, causing them to wait and slowing down concurrent operations.">Lock contention</abbr> under concurrency
 
 ---
 
@@ -136,7 +137,7 @@ Before:                          After:
 ### When Vertical Scaling Works
 
 - Early-stage startups (< 100K users)
-- Databases that are hard to distribute (e.g., a well-tuned PostgreSQL instance can handle a lot)
+- <abbr title = "Database systems that work great on a single powerful machine but are complex to scale across many machines while keeping strong consistency and full SQL features (joins, transactions, etc.) intact." > Databases that are hard to distribute </abbr> (e.g., a well-tuned PostgreSQL instance can handle a lot)
 - Real-time trading systems where latency matters more than throughput
 
 ### Example
@@ -189,21 +190,19 @@ Before:                          After:
 
 ### Key Requirements for Horizontal Scaling
 
-```
-1. Stateless Application Servers
+1. **<abbr title="An architectural pattern where no client data (state) is saved on the server between requests. Every request must contain all necessary information.">Stateless Application Servers</abbr>**
    - No in-memory sessions
    - Any request can go to any server
    - Session data stored in Redis/Memcached/DB
 
-2. Load Balancer
+2. **Load Balancer**
    - Distributes requests across servers
    - Health checks unhealthy servers
 
-3. Shared Data Layer
+3. **Shared Data Layer**
    - Centralized database or distributed database
-   - Shared cache layer (Redis cluster)
+   - Shared cache layer (<abbr title = "A Redis Cluster is a distributed deployment of Redis where data is automatically sharded across multiple Redis nodes">Redis cluster</abbr>)
    - Shared file storage (S3, NFS)
-```
 
 ---
 
@@ -214,9 +213,9 @@ Before:                          After:
 | **Complexity** | Low (just upgrade hardware) | High (distributed systems) |
 | **Cost at small scale** | Lower | Higher (load balancer, multiple servers) |
 | **Cost at large scale** | Much higher (exponential) | Lower (commodity hardware) |
-| **Downtime risk** | SPOF — one machine failure = total outage | Resilient — can survive machine failures |
+| **Downtime risk** | <abbr title="Single Point Of Failure: A part of a system that, if it fails, will stop the entire system from working.">SPOF</abbr> — one machine failure = total outage | Resilient — can survive machine failures |
 | **Upper limit** | Hard ceiling (biggest machine available) | Virtually unlimited |
-| **Data consistency** | Easy (single machine) | Hard (CAP theorem) |
+| **Data consistency** | Easy (single machine) | Hard (<abbr title="Consistency, Availability, Partition tolerance: A theorem stating it's impossible for a distributed data store to simultaneously provide more than two out of three guarantees.">CAP theorem</abbr>) |
 | **Best for** | Databases, early startups | Web servers, stateless services |
 
 ### The Practical Approach
@@ -301,7 +300,7 @@ Approach: Started with 3 engineers, scaled carefully
 
 3. You have a stateful monolithic application. Walk me through the steps to make it horizontally scalable without a full rewrite. [Answer](QnA-Answer-Key.md#1-performance-vs-scalability)
 
-4. Your service latency is fine at P50 but terrible at P99 under load. Is this a performance issue, a scalability issue, or both? How do you approach it? [Answer](QnA-Answer-Key.md#1-performance-vs-scalability)
+4. Your service latency is fine at <abbr title="50th percentile (median): 50% of requests complete within this time">P50</abbr> but terrible at <abbr title="99th percentile (tail): 99% of requests complete within this time">P99</abbr> under load. Is this a performance issue, a scalability issue, or both? How do you approach it? [Answer](QnA-Answer-Key.md#1-performance-vs-scalability)
 
 5. How would you decide between adding more read replicas vs. introducing a caching layer when your database reads are the bottleneck? [Answer](QnA-Answer-Key.md#1-performance-vs-scalability)
 

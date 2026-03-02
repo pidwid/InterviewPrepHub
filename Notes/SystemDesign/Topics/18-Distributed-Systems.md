@@ -64,7 +64,7 @@ Use timeouts, retries, circuit breakers, and idempotency everywhere.
 
 ## 3. Consensus Algorithms
 
-Consensus = getting multiple nodes to **agree on a value** despite failures.
+Consensus = getting multiple nodes to **agree on a value** despite failures. (<abbr title="Consensus: a process where multiple distributed nodes agree on a single value or decision, even if some nodes fail or messages are delayed.">what it means</abbr>)
 
 ### Why Consensus Is Hard
 
@@ -77,7 +77,7 @@ Which value wins? How do you know Node C is actually down?
 Can you proceed with just A and B?
 ```
 
-### Paxos (Classical Consensus)
+### <abbr title="Paxos: a consensus algorithm that ensures distributed nodes agree on a value. It is correct but complex; it uses a prepare phase and an accept phase to reach agreement among a majority (quorum).">Paxos</abbr> (Classical Consensus)
 
 The original consensus algorithm (Leslie Lamport, 1989). Two phases:
 
@@ -98,7 +98,7 @@ Key Insight: Requires a MAJORITY (quorum) to agree.
 
 Paxos is correct but notoriously difficult to implement and understand.
 
-### Raft (Understandable Consensus)
+### <abbr title="Raft: a consensus algorithm designed to be easier to understand than Paxos. It uses a leader and replicated log, with leader election and majority voting to agree on state changes.">Raft</abbr> (Understandable Consensus)
 
 Raft was designed to be **easier to understand** than Paxos while providing
 the same guarantees.
@@ -168,7 +168,7 @@ Follower:
 
 **Used by**: etcd, CockroachDB, TiDB, Consul, InfluxDB.
 
-### Byzantine Fault Tolerance (BFT)
+### <abbr title="Byzantine Fault Tolerance (BFT): the ability of a system to keep working even if some nodes act maliciously or send conflicting information, not just crash.">Byzantine Fault Tolerance (BFT)</abbr>
 
 Raft and Paxos assume nodes are **honest** (crash-fault tolerant).
 BFT handles **malicious** nodes that might lie or send conflicting messages.
@@ -229,7 +229,7 @@ Leader ──[lease: 30s]──► etcd/ZooKeeper
           └── If not renewed within 30s → lease expires → new election
 ```
 
-### Split-Brain
+### <abbr title="Split-brain: when two parts of a cluster both believe they are the leader (often due to a network partition), leading to conflicting writes and data divergence.">Split-Brain</abbr>
 
 The most dangerous failure mode in leader election:
 

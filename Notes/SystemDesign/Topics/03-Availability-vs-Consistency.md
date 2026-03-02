@@ -138,14 +138,14 @@ Client ← ERROR / TIMEOUT
 | **Redis** (in cluster mode with specific config) | Can reject writes during partitions |
 | **Zookeeper** | Coordination service — correctness is critical |
 | **Etcd** | Kubernetes config store — must be consistent |
-| **Traditional RDBMS** (PostgreSQL, MySQL) | ACID transactions require consistency |
+| **Traditional <abbr title="Relational Database Management System: a database that stores data in structured tables with rows and columns, supporting SQL queries. Examples: PostgreSQL, MySQL, Oracle">RDBMS</abbr>** (PostgreSQL, MySQL) | <abbr title="ACID: Atomicity (all or nothing), Consistency (data is always valid), Isolation (transactions don't interfere), Durability (committed data survives crashes). The gold standard for reliable transactions.">ACID</abbr> transactions require consistency |
 
 ### Good For
 
 - **Financial systems:** Bank transfers, payment processing
 - **Inventory management:** Can't sell the same item twice
 - **Booking systems:** Can't double-book a hotel room or flight seat
-- **Coordination services:** Leader election, distributed locks
+| **Coordination services:** <abbr title="Leader election: the process by which distributed nodes agree on one node to act as the 'leader' or primary coordinator — critical for avoiding conflicting decisions">Leader election</abbr>, <abbr title="Distributed locks: a mechanism to ensure only one node at a time can perform a specific operation across a distributed system, preventing race conditions">distributed locks</abbr> |
 
 ---
 
@@ -172,7 +172,7 @@ Client ← Response (possibly stale data)
 | System | Why AP? |
 |--------|---------|
 | **Cassandra** | High availability for writes across data centers |
-| **CouchDB** | Multi-master replication, eventual consistency |
+| **CouchDB** | <abbr title="Multi-master replication: multiple nodes can accept writes simultaneously, then sync later. Highly available but can cause conflicting writes that need resolving.">Multi-master replication</abbr>, eventual consistency |
 | **DynamoDB** | Amazon chose availability for their shopping cart |
 | **DNS** | Domain lookups should always work, even if slightly stale |
 | **Riak** | Distributed key-value store prioritizing uptime |
@@ -212,9 +212,9 @@ you're in distributed territory and must choose CP or AP.
 
 | System | CAP Choice | Reasoning |
 |--------|-----------|-----------|
-| **Google Spanner** | CP (effectively) | Uses TrueTime (atomic clocks + GPS) to achieve consistency globally. Sacrifices some availability during edge cases. |
+| **Google Spanner** | CP (effectively) | Uses <abbr title="TrueTime: Google's globally synchronized clock system using atomic clocks and GPS, allowing Spanner to assign precise timestamps to transactions and guarantee consistency across data centers">TrueTime</abbr> (atomic clocks + GPS) to achieve consistency globally. Sacrifices some availability during edge cases. |
 | **Amazon DynamoDB** | AP (default) / CP (optional) | Shopping cart: always accept writes. But offers "strongly consistent reads" option. |
-| **Cassandra** | AP (tunable) | Tunable consistency: you can ask for quorum reads (more CP) or single-node reads (more AP). |
+| **Cassandra** | AP (tunable) | <abbr title="Tunable consistency: Cassandra lets you set per-query consistency levels — from writing to just one node (fast, risky) to requiring a quorum majority (slower, safer)">Tunable consistency</abbr>: you can ask for <abbr title="Quorum: a majority of nodes (e.g. 2 out of 3) must acknowledge a read/write before it succeeds. Balances speed and safety.">quorum</abbr> reads (more CP) or single-node reads (more AP). |
 | **MongoDB** | CP (default) | Primary handles writes; during primary election, writes are unavailable. |
 | **CockroachDB** | CP | Distributed SQL — consistency is essential for SQL semantics. |
 | **Redis Cluster** | AP (with caveats) | Async replication; during partition, acknowledged writes might be lost. |
@@ -229,7 +229,7 @@ Cassandra example:
     "Write to any one node and acknowledge. Fast but might lose data."
   
   Write with consistency level QUORUM → More CP behavior
-    "Write must be acknowledged by majority of nodes."
+    "Write must be acknowledged by majority (quorum) of nodes."
   
   Write with consistency level ALL → Strong CP behavior
     "Write must be acknowledged by ALL nodes. Slower but safe."
@@ -332,7 +332,7 @@ Ask yourself these questions:
 
 4. A banking system needs strong consistency, but the team wants to use Cassandra for scalability. Is this possible? How would you configure Cassandra's consistency levels (QUORUM reads + QUORUM writes) to achieve it, and what do you sacrifice? [Answer](QnA-Answer-Key.md#3-availability-vs-consistency)
 
-5. Your system experiences a network partition between two data centers. Users in DC-East can still write data. When the partition heals, you discover conflicting writes. How do you resolve them? Compare last-write-wins, vector clocks, and application-level resolution. [Answer](QnA-Answer-Key.md#3-availability-vs-consistency)
+5. Your system experiences a network partition between two data centers. Users in DC-East can still write data. When the partition heals, you discover conflicting writes. How do you resolve them? Compare <abbr title="Last-write-wins: the most recently timestamped write overwrites all others. Simple but can silently discard valid data.">last-write-wins</abbr>, <abbr title="Vector clocks: a data structure that tracks the causal history of updates across nodes, allowing the system to detect and reason about conflicting writes rather than blindly discarding them.">vector clocks</abbr>, and application-level resolution. [Answer](QnA-Answer-Key.md#3-availability-vs-consistency)
 
 6. Why is the CAP theorem often called misleading? Discuss the criticisms by Martin Kleppmann and others who argue that "CP vs AP" is an oversimplification. [Answer](QnA-Answer-Key.md#3-availability-vs-consistency)
 

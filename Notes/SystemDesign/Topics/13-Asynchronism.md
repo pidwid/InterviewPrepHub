@@ -114,8 +114,8 @@ Service C ──push──► │  FIFO (usually)          │ ──pull──�
 | Message        | A unit of work (usually JSON payload)                          |
 | Queue          | Ordered buffer that holds messages                             |
 | Acknowledge    | Consumer tells the queue "I've processed this message"         |
-| Dead Letter Q  | Queue for messages that fail after N retries                   |
-| Visibility Timeout | Duration a message is invisible after being read (prevents duplicate processing) |
+| <abbr title="Dead Letter Queue (DLQ): a special queue where messages are sent after failing to process successfully N times. Instead of being discarded, failed messages go here so engineers can inspect and reprocess them.">Dead Letter Q</abbr>  | Queue for messages that fail after N retries                   |
+| <abbr title="Visibility Timeout: after a consumer reads a message, it becomes temporarily invisible to other consumers for a set duration. If the consumer crashes without acknowledging, the message reappears for another consumer to retry.">Visibility Timeout</abbr> | Duration a message is invisible after being read (prevents duplicate processing) |
 
 ### Message Lifecycle
 
@@ -262,11 +262,11 @@ def register_user(request):
 | Sidekiq      | Ruby     | Threaded, Redis-backed, very fast                   |
 | Bull/BullMQ  | Node.js  | Redis-backed, robust job queue for Node             |
 | Resque       | Ruby     | Redis-backed, created by GitHub                     |
-| Temporal     | Any      | Workflow orchestration engine, durable execution    |
+| <abbr title="Temporal: a workflow orchestration engine that persists the full execution state of long-running workflows. If a worker crashes mid-task, Temporal replays the history and resumes exactly where it left off — providing 'durable execution'.">Temporal</abbr>     | Any      | Workflow orchestration engine, durable execution    |
 
 ---
 
-## 5. Back Pressure
+## 5. <abbr title="Back pressure: a flow control mechanism where consumers signal producers to slow down when they can't keep up with the rate of incoming work. Prevents queues from growing unbounded and crashing the system.">Back Pressure</abbr>
 
 Back pressure is a mechanism to **slow down producers** when consumers can't keep up.
 Without it, queues grow unbounded and eventually crash the system.
@@ -308,7 +308,7 @@ def produce_message(queue, message):
     queue.send(message)
 ```
 
-#### 3. Load Shedding
+#### 3. <abbr title="Load shedding: deliberately rejecting or dropping lower-priority requests when the system is overloaded, in order to protect the system's ability to handle higher-priority work. Better to drop some than to crash entirely.">Load Shedding</abbr>
 
 Intentionally drop low-priority messages when the system is overloaded.
 
@@ -449,7 +449,7 @@ Producers ──► Kafka ──► Consumer Group A (order-processing)
 | Consumer         | Reads messages from topics                                   |
 | Consumer Group   | Set of consumers that divide partition ownership             |
 | Broker           | Kafka server node                                            |
-| Replication Factor | Number of copies of each partition across brokers          |
+| <abbr title="Replication factor: how many copies of each Kafka partition are stored across different brokers. Higher replication improves durability and availability but uses more storage and network bandwidth.">Replication Factor</abbr> | Number of copies of each partition across brokers          |
 
 ### Consumer Groups
 
@@ -529,7 +529,7 @@ Producer                Queue               Consumer
    │    from reply_queue   │                    │
 ```
 
-### Pattern 3: Saga (Distributed Transactions)
+### Pattern 3: <abbr title="Saga: a pattern for distributed transactions where each step is a local transaction and failures are handled by compensating actions (undo steps). Instead of a single ACID transaction across services, you chain smaller steps with rollback logic.">Saga (Distributed Transactions)</abbr>
 
 Coordinate a multi-step business process across services, with compensating
 actions for rollback.
@@ -554,7 +554,7 @@ Two types:
 - **Orchestration**: A central coordinator (saga orchestrator) tells each service
   what to do. Easier to understand and debug.
 
-### Pattern 4: Outbox Pattern
+### Pattern 4: <abbr title="Outbox pattern: store events in a database table (outbox) as part of the same transaction that changes business data. A separate process then publishes those events to a message broker. This guarantees you don't lose events if the service crashes between DB write and publish.">Outbox Pattern</abbr>
 
 Ensures reliable event publishing by writing events to a database table (outbox)
 in the same transaction as the business data, then publishing asynchronously.
@@ -606,11 +606,11 @@ DLQ allows you to:
 
 ---
 
-## 9. Idempotency and Exactly-Once Processing
+## 9. <abbr title="Idempotency: an operation that can be applied multiple times without changing the result after the first time. Critical for message processing where duplicates may occur.">Idempotency</abbr> and Exactly-Once Processing
 
 ### The Problem
 
-In distributed systems, messages can be delivered more than once (at-least-once delivery).
+In distributed systems, messages can be delivered more than once (<abbr title="At-least-once delivery: the system guarantees that a message will be delivered one or more times. It never loses messages but may deliver duplicates, so consumers must be idempotent.">at-least-once delivery</abbr>).
 Processing the same message twice can cause problems.
 
 ```
@@ -630,9 +630,9 @@ Producer ──► Queue ──► Consumer
 
 | Guarantee        | Description                                   | Implementation        |
 |------------------|-----------------------------------------------|-----------------------|
-| At-most-once     | Message delivered 0 or 1 times. May be lost.  | ACK before processing |
-| At-least-once    | Message delivered 1+ times. May be duplicated. | ACK after processing  |
-| Exactly-once     | Message delivered exactly 1 time.             | At-least-once + idempotency |
+| <abbr title="At-most-once: each message is delivered zero or one time. Fast and simple, but messages can be lost if a consumer fails before processing.">At-most-once</abbr>     | Message delivered 0 or 1 times. May be lost.  | ACK before processing |
+| <abbr title="At-least-once: each message is delivered one or more times. Safer (no loss) but duplicates are possible and must be handled by idempotent processing.">At-least-once</abbr>    | Message delivered 1+ times. May be duplicated. | ACK after processing  |
+| <abbr title="Exactly-once: each message is processed one and only one time. True exactly-once is effectively impossible in distributed systems; most systems approximate it with idempotency and transactional processing.">Exactly-once</abbr>     | Message delivered exactly 1 time.             | At-least-once + idempotency |
 
 **True exactly-once delivery is impossible** in distributed systems. What we actually
 implement is "effectively exactly-once" = at-least-once delivery + idempotent processing.

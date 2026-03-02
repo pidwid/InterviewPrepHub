@@ -17,7 +17,7 @@
 
 ## 1. Overview
 
-Data modeling for NoSQL databases is fundamentally different from relational
+Data modeling for <abbr title="NoSQL: databases that don't use the traditional relational table model; they trade SQL flexibility for higher write throughput, horizontal scalability, or schema flexibility (e.g. DynamoDB, Cassandra, MongoDB).">NoSQL</abbr> databases is fundamentally different from relational
 modeling. In SQL, you model your data and worry about access patterns later.
 In NoSQL, you model your data **around your access patterns**.
 
@@ -33,10 +33,10 @@ SQL approach:                      NoSQL approach:
 
 ---
 
-## 2. DynamoDB Single-Table Design
+## 2. <abbr title="DynamoDB Single-Table Design: storing multiple entity types in one DynamoDB table by overloading partition keys (PK) and sort keys (SK) so all access patterns are served with a single table scan or query.">DynamoDB Single-Table Design</abbr>
 
 The practice of storing all entities in a single DynamoDB table using
-carefully designed partition keys (PK) and sort keys (SK).
+carefully designed <abbr title="Partition key (PK): the primary key attribute that DynamoDB hashes to determine which physical partition stores the item. All items with the same PK are co-located.">partition keys (PK)</abbr> and <abbr title="Sort key (SK): a secondary key within a partition that DynamoDB uses to sort and range-query items sharing the same partition key.">sort keys (SK)</abbr>.
 
 ```
 Traditional (multi-table):         Single-table:
@@ -75,7 +75,7 @@ Access Patterns → Key Design:
    → Query on GSI with SK range
 ```
 
-### Global Secondary Index (GSI) Overloading
+### <abbr title="GSI (Global Secondary Index): a DynamoDB index with a different partition key than the base table, allowing queries on non-primary-key attributes.">Global Secondary Index (GSI)</abbr> Overloading
 
 ```
 Main table:
@@ -113,7 +113,7 @@ Avoid single-table when:
 
 ## 3. Cassandra Partition Design
 
-Cassandra's partition key determines which node stores the data.
+<abbr title="Cassandra partition design: in Cassandra, the partition key determines which node in the ring stores the data. A good partition key distributes data evenly and avoids hot partitions.">Cassandra's partition key</abbr> determines which node stores the data.
 Good partition design = even data distribution + efficient queries.
 
 ```
@@ -245,7 +245,7 @@ Periodic:
   Store in a precomputed table / cache.
 ```
 
-### Fan-Out Patterns
+### <abbr title="Fan-out: writing one event to many recipients. Fan-out on write pre-copies data to each recipient's inbox; fan-out on read assembles data at query time.">Fan-Out Patterns</abbr>
 
 ```
 Fan-out on write (Twitter timeline):
@@ -267,7 +267,7 @@ Hybrid (Twitter actual approach):
 
 ## 6. Polymorphic Data Models
 
-Storing different entity types in the same collection.
+<abbr title="Polymorphic data model: storing multiple entity types (articles, videos, podcasts) in a single collection/table, sharing common fields while each type has its own optional fields.">Polymorphic data model</abbr> — storing different entity types in the same collection.
 
 ```
 MongoDB example:
@@ -417,7 +417,7 @@ NoSQL / Event Schemas:
     Read v1 doc → transform to v2 → write back → return v2
 ```
 
-### Backward / Forward Compatibility
+### <abbr title="Backward compatibility: new code can read data written by old code. Forward compatibility: old code can read data written by new code. Both are required for zero-downtime deployments.">Backward / Forward Compatibility</abbr>
 
 ```
 Backward compatible: New code can read OLD data ✓

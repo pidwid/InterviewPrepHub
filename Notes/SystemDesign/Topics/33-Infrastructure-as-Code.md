@@ -17,7 +17,7 @@
 
 ## 1. Overview
 
-Infrastructure as Code (IaC) is the practice of managing infrastructure
+<abbr title="IaC (Infrastructure as Code): managing servers, networks, and databases through version-controlled code files instead of manual console clicks.">Infrastructure as Code (IaC)</abbr> is the practice of managing infrastructure
 (servers, networks, databases) using code files rather than manual processes.
 It's version-controlled, repeatable, and reviewable — just like application code.
 
@@ -47,7 +47,7 @@ Manual provisioning:              Infrastructure as Code:
 | Code review      | PRs for infra changes, just like app code                |
 | Documentation    | The code IS the documentation                            |
 | Speed            | Provision entire environments in minutes                 |
-| Drift detection  | Detect when real infra differs from code                 |
+| <abbr title="Drift detection: identifying when the actual deployed infrastructure has diverged from what the IaC code describes.">Drift detection</abbr>  | Detect when real infra differs from code                 |
 | Disaster recovery| Rebuild entire infrastructure from code                  |
 | Cost tracking    | See what resources exist by reading code                 |
 
@@ -74,16 +74,16 @@ Terraform adds 2 more.              Add loop for 2 more.
 
 | Approach    | Examples                              | Pros                    | Cons                   |
 |------------|---------------------------------------|-------------------------|------------------------|
-| Declarative | Terraform, CloudFormation, Pulumi    | Idempotent, predictable | Learning curve         |
-| Imperative  | AWS SDK, Ansible (partially), scripts| Flexible, familiar      | Drift-prone, fragile   |
+| <abbr title="Declarative IaC: you describe the desired end state; the tool figures out how to get there. Idempotent — applying twice produces the same result.">Declarative</abbr> | Terraform, CloudFormation, Pulumi    | <abbr title="Idempotent: running the same operation multiple times produces the same result with no unintended side-effects.">Idempotent</abbr>, predictable | Learning curve         |
+| <abbr title="Imperative IaC: you write step-by-step instructions for how to create resources. Fragile when run multiple times or when the environment changes.">Imperative</abbr>  | AWS SDK, Ansible (partially), scripts| Flexible, familiar      | Drift-prone, fragile   |
 
 ---
 
 ## 4. Terraform
 
-The most widely-used multi-cloud IaC tool. Open source by HashiCorp.
+The most widely-used multi-cloud <abbr title="IaC (Infrastructure as Code): provisioning and managing cloud resources through version-controlled code rather than manual console actions.">IaC</abbr> tool. Open source by HashiCorp.
 
-### HCL (HashiCorp Configuration Language)
+### <abbr title="HCL (HashiCorp Configuration Language): the declarative language used to write Terraform configurations, defining cloud resources and their relationships.">HCL (HashiCorp Configuration Language)</abbr>
 
 ```hcl
 # Provider configuration
@@ -257,7 +257,7 @@ state management similar to Terraform.
 
 ## 7. State Management
 
-IaC tools track the current state of infrastructure to determine what changes
+IaC tools track the current <abbr title="State file: a JSON file that records the last-known state of every resource Terraform manages, used to compute what changes are needed on the next apply.">state</abbr> of infrastructure to determine what changes
 are needed.
 
 ```
@@ -375,12 +375,12 @@ module "web" {
 | Practice | Description |
 |---------|-------------|
 | Remote state with locking | S3 + DynamoDB (AWS), GCS + locking (GCP) |
-| Use modules | DRY — reuse across environments |
+| Use modules | <abbr title="DRY (Don't Repeat Yourself): write reusable modules once and reference them across dev, staging, and prod environments.">DRY</abbr> — reuse across environments |
 | Separate state per environment | prod, staging, dev each have own state |
 | Plan before apply | Always review `terraform plan` output |
 | Use variables and tfvars | No hardcoded values |
 | Tag everything | Cost tracking, ownership, environment |
-| Limit blast radius | Small, focused state files (not one giant one) |
+| Limit <abbr title="Blast radius: the scope of damage if a Terraform apply goes wrong — smaller state files mean fewer resources at risk from a single bad change.">blast radius</abbr> | Small, focused state files (not one giant one) |
 | Automate with CI/CD | Plan in PR, apply on merge |
 | Use workspaces or directories | Isolate environments |
 | Pin provider versions | Avoid breaking changes from updates |

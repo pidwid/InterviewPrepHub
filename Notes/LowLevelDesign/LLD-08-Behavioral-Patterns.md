@@ -1,6 +1,6 @@
 # Behavioral Design Patterns
 
-> Behavioral patterns define **how objects interact and communicate**. They describe patterns of communication between objects, assigning responsibilities and controlling flow.
+> Behavioral patterns define **how objects interact and communicate**. They describe patterns of communication between objects, assigning responsibilities and controlling flow. (<abbr title="Behavioral patterns: focus on communication and responsibility between objects (e.g., Strategy, Observer, State).">definition</abbr>)
 
 ---
 
@@ -41,16 +41,16 @@
 
 | Pattern | Intent | One-liner |
 |---------|--------|-----------|
-| **Strategy** | Encapsulate interchangeable algorithms | "Swap algorithm at runtime" |
-| **Observer** | One-to-many dependency notification | "When X changes, notify all listeners" |
-| **State** | Object behavior changes with internal state | "Object acts differently per state" |
-| **Command** | Encapsulate a request as an object | "Undo/replay actions" |
-| **Template Method** | Define algorithm skeleton, defer steps | "Same flow, different details" |
-| **Iterator** | Sequential access without exposing internals | `for (item : collection)` |
-| **Chain of Responsibility** | Pass request along a chain of handlers | "Middleware pipeline" |
-| **Mediator** | Central hub for object communication | "Chat room, air traffic control" |
-| **Memento** | Capture and restore object state | "Ctrl+Z / undo" |
-| **Visitor** | Add operations without changing classes | "Double dispatch" |
+| **<abbr title="Strategy: encapsulate interchangeable algorithms and swap them at runtime.">Strategy</abbr>** | Encapsulate interchangeable algorithms | "Swap algorithm at runtime" |
+| **<abbr title="Observer: one-to-many dependency where observers are notified when the subject changes.">Observer</abbr>** | One-to-many dependency notification | "When X changes, notify all listeners" |
+| **<abbr title="State: behavior changes when internal state changes, often via state objects.">State</abbr>** | Object behavior changes with internal state | "Object acts differently per state" |
+| **<abbr title="Command: encapsulate a request as an object so it can be queued, logged, or undone.">Command</abbr>** | Encapsulate a request as an object | "Undo/replay actions" |
+| **<abbr title="Template Method: define a fixed algorithm skeleton with overridable steps.">Template Method</abbr>** | Define algorithm skeleton, defer steps | "Same flow, different details" |
+| **<abbr title="Iterator: provides sequential access to elements without exposing internal representation.">Iterator</abbr>** | Sequential access without exposing internals | `for (item : collection)` |
+| **<abbr title="Chain of Responsibility: pass a request along a chain of handlers until one handles it.">Chain of Responsibility</abbr>** | Pass request along a chain of handlers | "Middleware pipeline" |
+| **<abbr title="Mediator: centralizes communication between objects to reduce direct dependencies.">Mediator</abbr>** | Central hub for object communication | "Chat room, air traffic control" |
+| **<abbr title="Memento: capture and restore an object's internal state without exposing details.">Memento</abbr>** | Capture and restore object state | "Ctrl+Z / undo" |
+| **<abbr title="Visitor: add new operations to a set of classes without modifying those classes (uses double dispatch).">Visitor</abbr>** | Add operations without changing classes | "Double dispatch" |
 
 ---
 

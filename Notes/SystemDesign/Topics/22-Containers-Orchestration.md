@@ -81,7 +81,7 @@ Containers (2015+):
 Containers are not magic. They use two Linux kernel features:
 
 ```
-Namespaces (isolation):
+<abbr title="Namespaces: Linux kernel feature that isolates what a container can see (processes, network, filesystem, users).">Namespaces</abbr> (isolation):
   What a container can SEE.
   
   ┌─────────────────────────────────────────────────┐
@@ -98,7 +98,7 @@ Namespaces (isolation):
   Container thinks it has PID 1, its own hostname, its own network stack.
   It can't see other containers' processes or files.
 
-Cgroups (resource limits):
+<abbr title="Cgroups (control groups): Linux kernel feature that limits CPU, memory, and I/O resources per container.">Cgroups</abbr> (resource limits):
   What a container can USE.
   
   - CPU: Max 2 cores
@@ -169,7 +169,7 @@ USER appuser
 CMD ["python", "main.py"]
 ```
 
-### Multi-Stage Builds
+### <abbr title="Multi-stage builds: use one stage to compile/build and a separate minimal stage to run, keeping final images small.">Multi-Stage Builds</abbr>
 
 ```dockerfile
 # Build stage (has compilers, build tools — large)
@@ -306,7 +306,7 @@ With orchestration (Kubernetes handles all of this):
 
 ## 6. Kubernetes Core Concepts
 
-### Pod
+### <abbr title="Pod: the smallest deployable unit in Kubernetes. It groups one or more containers that share network and storage.">Pod</abbr>
 
 The smallest deployable unit. Contains one or more containers that share
 networking and storage.
@@ -343,7 +343,7 @@ spec:
         periodSeconds: 5
 ```
 
-### Deployment
+### <abbr title="Deployment: manages a set of identical Pods and handles rolling updates and rollbacks.">Deployment</abbr>
 
 Manages a set of identical Pods. Handles rollouts and rollbacks.
 
@@ -374,7 +374,7 @@ spec:
             - containerPort: 8080
 ```
 
-### Service
+### <abbr title="Service: stable virtual IP and DNS name that load-balances traffic to a set of Pods.">Service</abbr>
 
 Provides a stable network endpoint for a set of Pods. Pods come and go;
 the Service IP stays the same.
@@ -418,7 +418,7 @@ spec:
 | LoadBalancer  | Creates a cloud load balancer (AWS ALB, GCP LB)        |
 | ExternalName  | Maps to an external DNS name                           |
 
-### ConfigMap & Secrets
+### <abbr title="ConfigMap: stores non-sensitive configuration. Secret: stores sensitive data (base64-encoded, not encrypted by default).">ConfigMap & Secrets</abbr>
 
 ```yaml
 # ConfigMap (non-sensitive configuration)
@@ -440,7 +440,7 @@ data:
   DB_PASSWORD: cGFzc3dvcmQxMjM=    # echo -n 'password123' | base64
 ```
 
-### Horizontal Pod Autoscaler (HPA)
+### <abbr title="Horizontal Pod Autoscaler (HPA): automatically scales the number of Pods up/down based on metrics like CPU or memory.">Horizontal Pod Autoscaler (HPA)</abbr>
 
 ```yaml
 apiVersion: autoscaling/v2

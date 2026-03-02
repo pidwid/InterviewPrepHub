@@ -28,9 +28,9 @@ A **class** is a blueprint that defines the structure (fields) and behavior (met
 |---------|-------------|
 | **Class** | Template defining fields + methods |
 | **Object** | Runtime instance created from a class |
-| **Constructor** | Special method called at object creation |
+| **<abbr title="Constructor: a special method that runs when you create a new object, used to initialize fields.">Constructor</abbr>** | Special method called at object creation |
 | **`this` / `self`** | Reference to the current instance |
-| **Static members** | Belong to the class itself, not instances |
+| **<abbr title="Static members: fields or methods that belong to the class itself, shared by all instances (not per-object).">Static members</abbr>** | Belong to the class itself, not instances |
 
 ### Example
 
@@ -118,7 +118,7 @@ public class StripeProcessor implements PaymentProcessor {
 
 ---
 
-## 4. Encapsulation
+## 4. <abbr title="Encapsulation: bundling data with the methods that operate on it, while hiding internal state behind a public API.">Encapsulation</abbr>
 
 Encapsulation is **bundling data and the methods that operate on that data** together, while **restricting direct access** to internal state.
 
@@ -168,7 +168,7 @@ public class Temperature {
 
 ---
 
-## 5. Abstraction
+## 5. <abbr title="Abstraction: exposing only the essential behavior while hiding implementation details.">Abstraction</abbr>
 
 Abstraction is about **exposing only what is necessary** and hiding the implementation details. It answers: *"What does this do?"* without revealing *"How does it do it?"*
 
@@ -208,7 +208,7 @@ public class SmtpEmailService implements EmailService {
 
 ---
 
-## 6. Inheritance
+## 6. <abbr title="Inheritance: a class (child) derives from another class (parent) and reuses or overrides its fields and methods. Represents an IS-A relationship.">Inheritance</abbr>
 
 Inheritance allows a class to **derive from another class**, inheriting its fields and methods. The child class can **extend or override** parent behavior.
 
@@ -266,7 +266,7 @@ public class ElectricVehicle extends Vehicle {
 
 ---
 
-## 7. Polymorphism
+## 7. <abbr title="Polymorphism: the same interface or method call can behave differently depending on the object's actual type.">Polymorphism</abbr>
 
 Polymorphism means **"many forms"** — the same method call behaves differently depending on the object type.
 

@@ -17,9 +17,9 @@
 
 ## 1. Overview
 
-Any platform with user-generated content (UGC) needs content moderation.
+Any platform with <abbr title="UGC (User-Generated Content): any content — text, images, video, comments — created and posted by users rather than the platform itself.">user-generated content (UGC)</abbr> needs content moderation.
 This system prevents abuse, protects users, and ensures compliance with
-laws (GDPR, CSAM regulations, Digital Services Act).
+laws (<abbr title="GDPR: EU's General Data Protection Regulation — governs how personal data of EU citizens must be collected, stored, and processed.">GDPR</abbr>, <abbr title="CSAM: Child Sexual Abuse Material — illegal content whose detection and removal is legally mandated in most jurisdictions.">CSAM</abbr> regulations, <abbr title="Digital Services Act (DSA): EU regulation requiring large online platforms to take down illegal content quickly and be transparent about moderation decisions.">Digital Services Act</abbr>).
 
 ```
 Scale of the problem:
@@ -65,7 +65,7 @@ Scale of the problem:
 
 ## 3. Automated Detection
 
-### Text Classification
+### <abbr title="Text classification: an NLP task that assigns a category (e.g. hate speech, spam, safe) to a piece of text using rule-based filters or ML models like BERT.">Text Classification</abbr>
 
 ```
 NLP Pipeline:
@@ -310,7 +310,7 @@ Hybrid:
 |-----------|-------------|
 | Context-dependent | "Kill it!" — harmful or gaming slang? |
 | Language diversity | Hate speech varies across 100+ languages |
-| Adversarial evasion | "H@te" instead of "Hate", Unicode tricks |
+| <abbr title="Adversarial evasion: bad actors deliberately obfuscate harmful content (e.g. 'H@te', zero-width spaces, homoglyphs) to bypass automated filters.">Adversarial evasion</abbr> | "H@te" instead of "Hate", Unicode tricks |
 | False positives | Removing legitimate content harms free expression |
 | False negatives | Missing harmful content harms users |
 | Scale | Billions of pieces of content per day |
@@ -318,7 +318,7 @@ Hybrid:
 | Legal requirements | Vary by country (EU DSA, US Section 230) |
 | Cost | Human reviewers + ML infrastructure is expensive |
 
-### Precision vs Recall Trade-off
+### <abbr title="Precision: of all items flagged as harmful, what fraction actually were? High precision = few false positives. Recall: of all genuinely harmful items, what fraction did we catch? High recall = few false negatives.">Precision vs Recall Trade-off</abbr>
 
 ```
 High precision, low recall:
@@ -343,7 +343,7 @@ High recall, low precision:
 |----------|---------|
 | Multi-layer approach | Automated (fast) + human (nuanced) + feedback loop |
 | Cascade classifiers | Fast/cheap first, expensive/accurate second |
-| Hash databases for known-bad content | PhotoDNA for CSAM is standard and often legally required |
+| Hash databases for known-bad content | <abbr title="PhotoDNA: Microsoft's perceptual hashing technology that creates a unique hash (signature) of known CSAM images so copies can be detected even after minor edits.">PhotoDNA</abbr> for CSAM is standard and often legally required |
 | Human review is still essential | ML can't handle nuance, context, cultural differences |
 | Graduated enforcement | Warning → restriction → suspension → ban |
 | Appeals process is required | Different reviewer, transparent process |

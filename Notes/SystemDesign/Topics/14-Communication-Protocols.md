@@ -44,7 +44,7 @@ protocol affects latency, throughput, developer experience, and system complexit
 
 ---
 
-## 2. OSI Model Quick Reference
+## 2. <abbr title="Open Systems Interconnection: a 7-layer model that describes how data moves across a network">OSI</abbr> Model Quick Reference
 
 | Layer | Name         | Protocol Examples          | Purpose                         |
 |-------|-------------|----------------------------|---------------------------------|
@@ -62,7 +62,7 @@ For system design, you mainly care about layers **4** (TCP/UDP) and **7** (HTTP,
 
 ## 3. TCP (Transmission Control Protocol)
 
-TCP provides **reliable, ordered, error-checked** delivery of data between applications.
+TCP provides **reliable, ordered, error-checked** delivery of data between applications. (<abbr title="Transmission Control Protocol: a connection-oriented transport protocol that guarantees delivery, ordering, and error checking.">TCP</abbr>)
 
 ### Three-Way Handshake
 
@@ -109,7 +109,7 @@ Client                    Server
 
 ---
 
-## 4. UDP (User Datagram Protocol)
+## 4. <abbr title="User Datagram Protocol: a connectionless transport protocol that sends packets without guaranteeing delivery, order, or retries. Extremely low overhead and low latency.">UDP</abbr>
 
 UDP provides **connectionless, best-effort** delivery. No handshake, no guarantees.
 
@@ -144,7 +144,7 @@ No connection setup, no ACKs, no retransmission.
 - **IoT sensors**: Lightweight, high-frequency data
 - **VoIP**: Real-time voice communication
 
-### QUIC (HTTP/3)
+### <abbr title="QUIC: a modern transport protocol built on UDP that combines transport and security (TLS) in one handshake. It provides multiplexed streams without TCP head-of-line blocking and is the foundation of HTTP/3.">QUIC (HTTP/3)</abbr>
 
 QUIC is a modern protocol built **on top of UDP** that provides TCP-like reliability
 with lower latency.
@@ -161,7 +161,7 @@ TCP+TLS handshake:              QUIC handshake:
   Total: 3 RTTs
 ```
 
-Key advantages: No head-of-line blocking, faster connection setup,
+Key advantages: No <abbr title="Head-of-line blocking: when a single lost packet delays all subsequent packets behind it. In TCP, this can stall an entire connection until the missing packet is retransmitted.">head-of-line blocking</abbr>, faster connection setup,
 connection migration (works across IP changes, e.g., Wi-Fi → cellular).
 
 ---
@@ -268,7 +268,7 @@ POST   /users/123/orders      → Create order for user 123
 | Filtering                    | `GET /users?status=active&role=admin`              |
 | Sorting                      | `GET /users?sort=-created_at` (descending)         |
 | Error responses               | `{"error": {"code": "NOT_FOUND", "message": "..."}}` |
-| HATEOAS (links)              | Include links to related resources in responses    |
+| <abbr title="HATEOAS (Hypermedia as the Engine of Application State): a REST principle where responses include links to related actions/resources, allowing clients to discover next steps dynamically.">HATEOAS</abbr> (links)              | Include links to related resources in responses    |
 
 ### REST Pagination Patterns
 
@@ -362,7 +362,7 @@ Client                                    Server
 
 ---
 
-## 8. gRPC
+## 8. <abbr title="gRPC: Google's Remote Procedure Call framework that uses Protocol Buffers and HTTP/2 for high-performance, strongly-typed service-to-service communication">gRPC</abbr>
 
 gRPC is Google's high-performance RPC framework. It uses **Protocol Buffers** (protobuf)
 for serialization and **HTTP/2** for transport.
@@ -461,7 +461,7 @@ message GetUserRequest {
 
 ---
 
-## 9. GraphQL
+## 9. <abbr title="GraphQL: a query language and runtime for APIs where clients specify exactly the fields they need. The server returns precisely that shape of data, reducing over- and under-fetching.">GraphQL</abbr>
 
 GraphQL is a query language for APIs. Clients specify exactly what data they need,
 eliminating over-fetching and under-fetching.
@@ -564,7 +564,7 @@ type Subscription {
 
 ---
 
-## 10. WebSockets
+## 10. <abbr title="WebSockets: a protocol that upgrades an HTTP connection to a persistent, full-duplex channel where the client and server can send messages to each other at any time.">WebSockets</abbr>
 
 WebSockets provide **full-duplex, bidirectional** communication over a single
 long-lived TCP connection.
@@ -627,7 +627,7 @@ Libraries: **Socket.io**, **ws** (Node.js), **Django Channels**, **Action Cable*
 
 ---
 
-## 11. Server-Sent Events (SSE)
+## 11. <abbr title="Server-Sent Events (SSE): a simple HTTP-based protocol where the server keeps a connection open and continuously sends events to the client. One-way (server → client) and built on standard HTTP.">Server-Sent Events (SSE)</abbr>
 
 SSE provides a **one-way** channel from server to client over HTTP.
 Simpler than WebSockets when you only need server → client updates.

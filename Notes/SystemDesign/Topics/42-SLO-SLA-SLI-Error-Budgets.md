@@ -17,7 +17,7 @@
 
 ## 1. Overview
 
-SLI, SLO, and SLA form a framework (popularized by Google SRE) for defining,
+<abbr title="SLI (Service Level Indicator): a quantitative measurement of service behaviour, e.g. the fraction of successful requests.">SLI</abbr>, <abbr title="SLO (Service Level Objective): an internal reliability target expressed as a percentage over a rolling window, e.g. 99.95% of requests succeed within 200ms.">SLO</abbr>, and <abbr title="SLA (Service Level Agreement): a contractual promise to customers with defined consequences (credits, refunds) if the committed reliability level is missed.">SLA</abbr> form a framework (popularized by Google <abbr title="SRE (Site Reliability Engineering): a discipline that applies software engineering principles to operations, using SLIs/SLOs/error budgets to balance reliability with development velocity.">SRE</abbr>) for defining,
 measuring, and managing service reliability. They answer: "How reliable should
 our service be, and how do we know if we're meeting that target?"
 
@@ -168,7 +168,7 @@ SLA vs SLO:
 
 ## 5. Error Budgets
 
-The amount of unreliability you're **allowed** based on your SLO.
+The <abbr title="Error budget: the allowed amount of unreliability derived from your SLO. If your SLO is 99.9%, your error budget is 0.1% — roughly 43 minutes of downtime per month.">error budget</abbr> is the amount of unreliability you're **allowed** based on your SLO.
 
 ```
 Error Budget = 1 - SLO
@@ -242,7 +242,7 @@ With error budgets:
 Traditional alerting (threshold-based) creates noise. SLO-based alerting
 focuses on what matters: **are we burning through our error budget too fast?**
 
-### Burn Rate
+### <abbr title="Burn rate: how fast you're consuming your error budget relative to the expected pace. Burn rate 1 = consuming at exactly the expected rate; burn rate 10 = consuming 10× faster, exhausting budget in 3 days instead of 30.">Burn Rate</abbr>
 
 ```
 Burn rate = how fast you're consuming your error budget.
@@ -435,7 +435,7 @@ Agenda:
 | SLI = what you measure | Ratio of good events to total events |
 | SLO = what you target | Internal reliability goal (stricter than SLA) |
 | SLA = what you promise | External contract with consequences |
-| Error budgets align teams | Shared language between dev and SRE |
+| Error budgets align teams | Shared language between dev and <abbr title="SRE (Site Reliability Engineering): a role/discipline that owns reliability targets, on-call response, and uses error budgets to negotiate the balance between new features and stability.">SRE</abbr> |
 | Error budget policies drive decisions | Healthy budget → ship fast. Exhausted → feature freeze |
 | SLO-based alerting reduces noise | Alert on burn rate, not raw thresholds |
 | Start with 2-3 SLOs per service | Availability + latency covers most cases |

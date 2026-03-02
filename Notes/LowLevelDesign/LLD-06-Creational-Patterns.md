@@ -1,6 +1,6 @@
 # Creational Design Patterns
 
-Creational design patterns deal with **object creation mechanisms** — how objects are instantiated. Instead of creating objects directly with `new`, these patterns provide flexibility, control, and decoupling in how objects are constructed.
+Creational design patterns deal with **object creation mechanisms** — how objects are instantiated. Instead of creating objects directly with `new`, these patterns provide flexibility, control, and decoupling in how objects are constructed. (<abbr title="Creational patterns: focus on how objects are created (e.g., Singleton, Factory, Builder) so construction is flexible and controlled.">definition</abbr>)
 
 ---
 
@@ -13,7 +13,7 @@ Creational design patterns deal with **object creation mechanisms** — how obje
 
 ---
 
-## 1. Singleton Pattern
+## 1. <abbr title="Singleton: ensures a class has exactly one instance and provides a global access point to it.">Singleton Pattern</abbr>
 
 ### Intent
 Ensure a class has **exactly one instance** and provide a global point of access to it.
@@ -137,7 +137,7 @@ A: Singleton can implement interfaces, be lazily initialized, and be passed as a
 
 ---
 
-## 2. Factory Method Pattern
+## 2. <abbr title="Factory Method: defines an interface for creating objects, but lets subclasses decide which concrete class to instantiate.">Factory Method Pattern</abbr>
 
 ### Intent
 Define an interface for creating objects, but let **subclasses** decide which class to instantiate. Factory Method defers instantiation to subclasses.
@@ -269,7 +269,7 @@ A: Simple Factory uses a single method with conditional logic. Factory Method us
 
 ---
 
-## 3. Abstract Factory Pattern
+## 3. <abbr title="Abstract Factory: creates families of related objects without specifying their concrete classes. Keeps product variants consistent.">Abstract Factory Pattern</abbr>
 
 ### Intent
 Provide an interface for creating **families of related objects** without specifying their concrete classes.
@@ -396,7 +396,7 @@ app.render();
 
 ---
 
-## 4. Builder Pattern
+## 4. <abbr title="Builder: constructs complex objects step by step, allowing optional parameters and different representations without huge constructors.">Builder Pattern</abbr>
 
 ### Intent
 Construct complex objects **step by step**. Allow the same construction process to create different representations.
@@ -410,7 +410,7 @@ Building a house: you don't call a constructor with 20 parameters. Instead, you 
 - When you need to create different representations of the same object
 - Immutable objects that need many fields set at creation time
 
-### Anti-Pattern: Telescoping Constructor
+### <abbr title="Telescoping constructor: a constructor with many parameters (often booleans) that is hard to read and easy to misuse.">Anti-Pattern: Telescoping Constructor</abbr>
 
 ```java
 // BAD — which parameter is which?
@@ -567,7 +567,7 @@ A: `StringBuilder`, `Stream.Builder`, `HttpRequest.newBuilder()`, `Locale.Builde
 
 ---
 
-## 5. Prototype Pattern
+## 5. <abbr title="Prototype: creates new objects by cloning an existing instance, useful when object creation is expensive.">Prototype Pattern</abbr>
 
 ### Intent
 Create new objects by **cloning** an existing object (the prototype), rather than creating from scratch.

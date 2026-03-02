@@ -71,7 +71,7 @@ everything is down.
 
 ## 3. Layer 4 (Transport) Load Balancing
 
-Layer 4 LBs operate at the **transport layer** (TCP/UDP). They route traffic based on **IP addresses and port numbers** without inspecting the content of the request.
+Layer 4 LBs operate at the **<abbr title="Transport layer (OSI Layer 4): the part of the network stack responsible for end-to-end communication between hosts. It uses protocols like TCP (reliable) and UDP (fast, unreliable) and knows about ports, but not about HTTP or application content.">transport layer</abbr>** (TCP/UDP). They route traffic based on **IP addresses and port numbers** without inspecting the content of the request.
 
 ```
 How L4 works:
@@ -83,7 +83,7 @@ Client sends TCP packet:
 L4 Load Balancer:
   1. Looks at: source IP, dest IP, source port, dest port
   2. Does NOT read: HTTP headers, cookies, URL path, body
-  3. Performs NAT (Network Address Translation):
+  3. Performs <abbr title="NAT (Network Address Translation): rewrites the destination IP address in a packet so it is forwarded to a backend server, while appearing to the client as if it came from the load balancer's IP">NAT (Network Address Translation)</abbr>:
      Rewrites destination to: 10.0.1.5:8080 (backend server)
   4. Forwards the raw TCP packets
 
@@ -467,7 +467,7 @@ A single load balancer is a **single point of failure.** Solutions:
   │ Servers │
   └─────────┘
 
-If Active LB dies → Passive takes over its IP (via VRRP/keepalived)
+If Active LB dies → Passive takes over its IP (via <abbr title="VRRP/keepalived: VRRP (Virtual Router Redundancy Protocol) lets two servers share a virtual IP address. Keepalived is the Linux tool that implements VRRP — when the active server fails, the passive one claims the IP within seconds.">VRRP/keepalived</abbr>)
 ```
 
 ### Active-Active LBs
@@ -554,7 +554,7 @@ Software load balancers (Nginx, HAProxy, Envoy) are the **standard choice** for 
 
 1. You have a microservices architecture with 200+ services. Would you use a single centralized load balancer, per-service load balancers, or client-side load balancing (like gRPC)? Discuss the trade-offs of each. [Answer](QnA-Answer-Key.md#8-load-balancers)
 
-2. Explain the difference between L4 and L7 load balancing with concrete examples. When would L4 be faster but L7 be necessary? What about L3 (DSR — Direct Server Return)? [Answer](QnA-Answer-Key.md#8-load-balancers)
+2. Explain the difference between L4 and L7 load balancing with concrete examples. When would L4 be faster but L7 be necessary? What about L3 (<abbr title="DSR (Direct Server Return): an advanced load balancing mode where the backend server sends responses directly to the client without going back through the load balancer, reducing LB bandwidth and latency. The LB only handles incoming requests.">DSR — Direct Server Return</abbr>)? [Answer](QnA-Answer-Key.md#8-load-balancers)
 
 3. Your load balancer uses round-robin, but one server is consistently slower than others, causing request queuing. How would you detect this, and which algorithm would fix it? Compare least connections, weighted RR, and adaptive algorithms. [Answer](QnA-Answer-Key.md#8-load-balancers)
 
@@ -562,7 +562,7 @@ Software load balancers (Nginx, HAProxy, Envoy) are the **standard choice** for 
 
 5. An interviewer says: "The load balancer itself is a single point of failure." Walk through exactly how you make load balancing highly available — discuss DNS round-robin, BGP anycast, VRRP/keepalived, and cloud-native solutions (ALB, NLB). [Answer](QnA-Answer-Key.md#8-load-balancers)
 
-6. You need to do a rolling deployment of a new version. How does the load balancer participate? Discuss health checks, connection draining, blue-green deployments, and canary routing at the LB level. [Answer](QnA-Answer-Key.md#8-load-balancers)
+6. You need to do a rolling deployment of a new version. How does the load balancer participate? Discuss health checks, <abbr title="Connection draining: before removing a server from the load balancer pool, allow existing connections to finish naturally rather than cutting them off, preventing in-flight requests from failing">connection draining</abbr>, <abbr title="Blue-green deployments: run two identical production environments (blue = current, green = new). Switch all traffic from blue to green at once. Easy rollback: just switch back. Zero downtime but requires double infrastructure.">blue-green deployments</abbr>, and canary routing at the LB level. [Answer](QnA-Answer-Key.md#8-load-balancers)
 
 7. Compare hardware load balancers (F5), software load balancers (HAProxy, NGINX), and cloud-native load balancers (AWS ALB/NLB). When would a company still buy a hardware LB in 2025? [Answer](QnA-Answer-Key.md#8-load-balancers)
 

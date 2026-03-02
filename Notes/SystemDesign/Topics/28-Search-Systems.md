@@ -39,7 +39,7 @@ Search engine approach:
 
 ---
 
-## 2. Inverted Index
+## 2. <abbr title="Inverted index: maps each term to the list of documents containing it, enabling fast lookup.">Inverted Index</abbr>
 
 The foundational data structure of search. Maps every word (term) to the list
 of documents that contain it.
@@ -179,14 +179,14 @@ Input: "The Quick Brown Fox's Jumping!"
 | Stemming       | Reduce words to root form                          | "running" → "run"          |
 | Lemmatization  | Linguistically reduce to base form                 | "better" → "good"          |
 | Synonyms       | Map related words                                  | "laptop" ↔ "notebook"      |
-| N-grams        | Generate substrings for partial matching           | "fox" → ["fo","ox","fox"]  |
-| Edge N-grams   | N-grams from the start (for autocomplete)          | "fox" → ["f","fo","fox"]   |
+| <abbr title="N-grams: contiguous sequences of N characters used for partial matching (e.g., 3-grams).">N-grams</abbr>        | Generate substrings for partial matching           | "fox" → ["fo","ox","fox"]  |
+| <abbr title="Edge N-grams: N-grams from the start of a token, useful for autocomplete.">Edge N-grams</abbr>   | N-grams from the start (for autocomplete)          | "fox" → ["f","fo","fox"]   |
 
 ---
 
 ## 5. Ranking & Relevance
 
-### TF-IDF (Term Frequency - Inverse Document Frequency)
+### <abbr title="TF-IDF: term frequency–inverse document frequency. Scores terms higher when they appear often in a doc but are rare across the corpus.">TF-IDF (Term Frequency - Inverse Document Frequency)</abbr>
 
 ```
 TF(t, d) = (# of times term t appears in doc d) / (total terms in d)
@@ -206,7 +206,7 @@ Example (10,000 docs):
   → Documents matching "rare" get higher scores
 ```
 
-### BM25 (Best Matching 25)
+### <abbr title="BM25: a modern ranking formula that improves TF-IDF by adding term frequency saturation and document length normalization.">BM25 (Best Matching 25)</abbr>
 
 The modern standard. Improves on TF-IDF with saturation and length normalization.
 

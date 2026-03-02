@@ -19,7 +19,7 @@
 
 In a single-process application, you use mutexes or synchronized blocks.
 In a distributed system with multiple processes/servers accessing shared
-resources, you need **distributed locks**.
+resources, you need **<abbr title="Distributed lock: a lock that coordinates access to a shared resource across multiple machines.">distributed locks</abbr>**.
 
 ```
 Without distributed lock:           With distributed lock:
@@ -183,7 +183,7 @@ class RedisLock:
         self.client.eval(script, 1, self.key, self.token, additional_time * 1000)
 ```
 
-### Problem: Single Redis Instance = SPOF
+### Problem: Single Redis Instance = <abbr title="SPOF (Single Point of Failure): one component whose failure brings down the whole system.">SPOF</abbr>
 
 ```
 If Redis crashes while a lock is held:
@@ -199,7 +199,7 @@ If Redis uses async replication:
 
 ---
 
-## 5. Redlock Algorithm
+## 5. <abbr title="Redlock: Redis's distributed lock algorithm that requires a majority of independent Redis nodes to grant the lock.">Redlock Algorithm</abbr>
 
 Martin Kleppmann vs Salvatore Sanfilippo (Redis author) debate.
 Designed to address single-instance Redis lock failures.
@@ -342,7 +342,7 @@ If client crashes → heartbeat stops → lease expires → key deleted
 
 ---
 
-## 8. Fencing Tokens
+## 8. <abbr title="Fencing tokens: monotonically increasing tokens issued with locks so stale lock holders can't write.">Fencing Tokens</abbr>
 
 The solution to the GC-pause problem with locks.
 

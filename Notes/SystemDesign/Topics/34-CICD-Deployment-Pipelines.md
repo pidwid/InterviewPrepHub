@@ -17,7 +17,7 @@
 
 ## 1. Overview
 
-CI/CD automates the path from code commit to production deployment.
+<abbr title="CI/CD (Continuous Integration / Continuous Delivery or Deployment): automating the build, test, and release process so code changes reach production quickly and reliably.">CI/CD</abbr> automates the path from code commit to production deployment.
 It's the backbone of modern software delivery — enabling teams to ship
 frequently, safely, and reliably.
 
@@ -57,7 +57,7 @@ CI Pipeline:
 | Practice              | Why                                           |
 |----------------------|-----------------------------------------------|
 | Commit frequently    | Small changes are easier to debug              |
-| Trunk-based development | Short-lived branches → less merge pain     |
+| <abbr title="Trunk-based development: everyone commits small changes directly to a single main branch (trunk) to avoid long-lived feature branches and painful merges.">Trunk-based development</abbr> | Short-lived branches → less merge pain     |
 | Fast feedback loops  | CI should complete in < 10 minutes             |
 | Fix broken builds immediately | Broken main branch blocks everyone    |
 | Run tests in parallel | Reduce CI time                               |
@@ -192,16 +192,16 @@ Similar to canary, but routes specific users (not random %):
 
 | Strategy    | Downtime | Rollback Speed | Resource Cost | Risk  |
 |------------|---------|---------------|--------------|-------|
-| Rolling    | Zero    | Slow           | Low          | Medium|
-| Blue-Green | Zero    | Instant        | 2x           | Low   |
-| Canary     | Zero    | Fast           | Low          | Very Low|
+| <abbr title="Rolling deployment: replaces instances one at a time, so old and new versions run simultaneously during the rollout.">Rolling</abbr>    | Zero    | Slow           | Low          | Medium|
+| <abbr title="Blue-Green deployment: two identical environments (blue=current, green=new); switch traffic instantly at the load balancer for zero-downtime and instant rollback.">Blue-Green</abbr> | Zero    | Instant        | 2x           | Low   |
+| <abbr title="Canary deployment: routes a small percentage of traffic to the new version first; roll out gradually after validating metrics.">Canary</abbr>     | Zero    | Fast           | Low          | Very Low|
 | Recreate   | Yes     | Slow           | 1x           | High  |
 
 ---
 
 ## 5. Feature Flags
 
-Decouple deployment from release. Deploy code without activating features.
+Decouple deployment from release. Deploy code without activating features. <abbr title="Feature flags: runtime toggles that let you ship code to production but control whether it's visible to users, enabling gradual rollouts and instant rollback without a redeploy.">Feature flags</abbr> let you turn features on/off without redeploying.
 
 ```
 Code is deployed but feature is off:
@@ -259,7 +259,7 @@ Best practice:
 
 ## 6. GitOps
 
-Git as the single source of truth for both application code AND infrastructure.
+<abbr title="GitOps: using Git as the single source of truth for both application code and infrastructure; a GitOps operator continuously reconciles the live cluster state with what's declared in Git.">GitOps</abbr> — Git as the single source of truth for both application code AND infrastructure.
 
 ```
 Traditional:                       GitOps:
@@ -290,8 +290,8 @@ Traditional:                       GitOps:
 
 | Tool     | Description                       |
 |---------|-----------------------------------|
-| ArgoCD  | K8s-native CD, UI, multi-cluster  |
-| Flux    | CNCF project, lightweight         |
+| <abbr title="ArgoCD: a Kubernetes-native GitOps continuous delivery tool that reconciles cluster state with Git-stored manifests, with a web UI for visibility.">ArgoCD</abbr>  | K8s-native CD, UI, multi-cluster  |
+| <abbr title="Flux: a lightweight CNCF GitOps operator that watches Git repos and automatically applies changes to Kubernetes clusters.">Flux</abbr>    | CNCF project, lightweight         |
 
 ### GitOps Principles
 
@@ -325,10 +325,10 @@ Artifact registries:
   Multi:   JFrog Artifactory, GitHub Packages
 ```
 
-### Versioning Artifacts
+### <abbr title="Artifact versioning: tagging built artifacts (Docker images, JARs) with a unique, immutable identifier so deployments are reproducible and rollbacks are reliable.">Versioning Artifacts</abbr>
 
 ```
-Semantic Versioning: MAJOR.MINOR.PATCH
+| Semantic Versioning: MAJOR.MINOR.PATCH
   1.0.0 → 1.0.1 (patch: bug fix)
   1.0.0 → 1.1.0 (minor: new feature, backward compatible)
   1.0.0 → 2.0.0 (major: breaking change)
@@ -425,5 +425,5 @@ Supply chain security:
 | Testing pyramid: many unit, few E2E | Fast feedback loop is critical |
 | Pipeline should be < 10 min | Otherwise developers don't wait for it |
 | Immutable, versioned artifacts | Never deploy "latest" to production |
-| Security is part of the pipeline | Shift left — scan early, scan often |
+| Security is part of the pipeline | <abbr title="Shift left: move testing and security checks earlier in the pipeline (toward the developer) to catch issues when they're cheapest to fix.">Shift left</abbr> — scan early, scan often |
 | Canary + feature flags + observability | The holy trinity of safe deployments |

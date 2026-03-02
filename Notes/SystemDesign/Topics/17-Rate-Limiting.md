@@ -17,7 +17,7 @@
 
 Rate limiting controls how many requests a client can make to an API within
 a given time window. It protects services from abuse, ensures fair usage,
-and prevents cascading failures.
+and prevents <abbr title="Cascading failure: when a failure in one service triggers overload or failures in dependent services, causing a chain reaction that brings down large parts of the system.">cascading failures</abbr>.
 
 ```
 Without rate limiting:             With rate limiting:
@@ -46,7 +46,7 @@ Client ──► 10,000 req/sec ──► API  Client ──► 10,000 req/sec �
 
 ## 3. Rate Limiting Algorithms
 
-### 3.1 Fixed Window Counter
+### 3.1 <abbr title="Fixed window counter: count requests in a fixed time window (e.g., per minute). The count resets at each window boundary. Simple, but can allow bursts at the boundary.">Fixed Window Counter</abbr>
 
 Divide time into fixed windows and count requests per window.
 
@@ -70,7 +70,7 @@ Problem — Boundary Burst:
 **Pros**: Simple, O(1) memory per key.
 **Cons**: Burst at window boundaries, allows 2x rate briefly.
 
-### 3.2 Sliding Window Log
+### 3.2 <abbr title="Sliding window log: track the timestamp of every request and count only those within the last N seconds. Accurate but memory-intensive.">Sliding Window Log</abbr>
 
 Store the timestamp of every request. Count timestamps within the window.
 
@@ -114,7 +114,7 @@ If weighted count ≥ 10 → REJECT
 **Pros**: Low memory (2 counters per key), reasonable accuracy.
 **Cons**: Approximation (not exact).
 
-### 3.4 Token Bucket
+### 3.4 <abbr title="Token bucket: a rate limiting algorithm where tokens refill at a steady rate into a bucket. Each request consumes one token. Allows bursts up to the bucket capacity, while enforcing an average rate over time.">Token Bucket</abbr>
 
 Tokens accumulate at a fixed rate. Each request costs one token.
 Allows controlled bursts up to bucket capacity.
@@ -144,7 +144,7 @@ Time  Tokens  Action
 **Cons**: Slightly more complex to implement.
 **Used by**: AWS API Gateway, Stripe, many production systems.
 
-### 3.5 Leaky Bucket
+### 3.5 <abbr title="Leaky bucket: a rate limiting algorithm that processes requests at a constant rate. Incoming requests are queued; if the queue is full, new requests are rejected. Smooths traffic but can increase latency during bursts.">Leaky Bucket</abbr>
 
 Requests enter a queue processed at a fixed rate. Queue overflow → reject.
 

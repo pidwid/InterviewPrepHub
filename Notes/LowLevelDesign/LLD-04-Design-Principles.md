@@ -16,7 +16,7 @@
 
 ---
 
-## 1. DRY — Don't Repeat Yourself
+## 1. <abbr title="DRY (Don't Repeat Yourself): avoid duplicating the same knowledge or logic in multiple places. If a rule changes, you should only need to update it in one spot.">DRY — Don't Repeat Yourself</abbr>
 
 > **Every piece of knowledge must have a single, unambiguous, authoritative representation in a system.**
 
@@ -65,7 +65,7 @@ public class TaxCalculator {
 
 ---
 
-## 2. KISS — Keep It Simple, Stupid
+## 2. <abbr title="KISS (Keep It Simple, Stupid): prefer the simplest solution that solves the problem. Avoid over-engineering.">KISS — Keep It Simple, Stupid</abbr>
 
 > **The simplest solution that works is usually the best.**
 
@@ -109,7 +109,7 @@ public static String reverseString(String s) {
 
 ---
 
-## 3. YAGNI — You Aren't Gonna Need It
+## 3. <abbr title="YAGNI (You Aren't Gonna Need It): don't build features until there is a real requirement. Avoid speculative complexity.">YAGNI — You Aren't Gonna Need It</abbr>
 
 > **Don't implement something until it is actually needed.**
 
@@ -217,7 +217,7 @@ public class Duck {
 
 ---
 
-## 5. Law of Demeter (LoD)
+## 5. <abbr title="Law of Demeter (LoD): a method should only talk to its immediate collaborators, not to objects returned by other objects (avoid long chains like a.b().c().d()).">Law of Demeter (LoD)</abbr>
 
 > **"Don't talk to strangers."** A method should only call methods on: itself, its parameters, objects it creates, or its direct fields.
 

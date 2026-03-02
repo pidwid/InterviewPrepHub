@@ -1,6 +1,6 @@
 # UML Diagrams
 
-> UML (Unified Modeling Language) diagrams are the visual language of Low-Level Design. In interviews, you'll draw class diagrams and sequence diagrams to communicate your design clearly and quickly.
+> <abbr title="Unified Modeling Language: a standard way to visualize software design using diagrams.">UML</abbr> diagrams are the visual language of Low-Level Design. In interviews, you'll draw class diagrams and sequence diagrams to communicate your design clearly and quickly.
 
 ---
 
@@ -30,7 +30,7 @@
 
 ---
 
-## 2. Class Diagrams
+## 2. <abbr title="Class diagram: shows classes, their fields/methods, and relationships. Used to visualize the static structure of a system.">Class Diagrams</abbr>
 
 Class diagrams show the **static structure** of a system: classes, their attributes, methods, and relationships.
 
@@ -89,7 +89,7 @@ Class diagrams show the **static structure** of a system: classes, their attribu
 
 ---
 
-## 3. Use Case Diagrams
+## 3. <abbr title="Use case diagram: shows actors (users or external systems) and the actions or goals they can perform within the system boundary.">Use Case Diagrams</abbr>
 
 Use case diagrams identify **actors** (users/systems) and the **actions** they can perform.
 
@@ -128,7 +128,7 @@ Use case diagrams identify **actors** (users/systems) and the **actions** they c
 
 ---
 
-## 4. Sequence Diagrams
+## 4. <abbr title="Sequence diagram: shows how objects interact over time, with messages ordered from top to bottom.">Sequence Diagrams</abbr>
 
 Sequence diagrams show **how objects interact over time** — the order of method calls and responses.
 
@@ -168,7 +168,7 @@ Sequence diagrams show **how objects interact over time** — the order of metho
 
 ---
 
-## 5. Activity Diagrams
+## 5. <abbr title="Activity diagram: shows workflow steps, decisions, and parallel paths. Useful for business processes and algorithm flows.">Activity Diagrams</abbr>
 
 Activity diagrams show **workflow/process flow** — similar to flowcharts but with support for parallelism and swim lanes.
 
@@ -219,7 +219,7 @@ Activity diagrams show **workflow/process flow** — similar to flowcharts but w
 
 ---
 
-## 6. State Machine Diagrams
+## 6. <abbr title="State machine diagram: shows the states an object can be in and how it transitions between those states based on events.">State Machine Diagrams</abbr>
 
 State machine diagrams show **the states an object can be in** and the **transitions** between them.
 

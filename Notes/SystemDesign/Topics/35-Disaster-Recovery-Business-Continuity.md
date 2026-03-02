@@ -17,8 +17,8 @@
 
 ## 1. Overview
 
-Disaster Recovery (DR) is the process of restoring systems after a failure.
-Business Continuity (BC) is the broader strategy of keeping operations running
+<abbr title="DR (Disaster Recovery): the process of restoring systems and data after a failure event such as an outage, data corruption, or natural disaster.">Disaster Recovery (DR)</abbr> is the process of restoring systems after a failure.
+<abbr title="BC (Business Continuity): the broader organizational strategy for keeping critical operations running during and after a disaster, not just the IT systems.">Business Continuity (BC)</abbr> is the broader strategy of keeping operations running
 during and after a disaster. Every SA must be able to design for both.
 
 ```
@@ -38,7 +38,7 @@ Key question: "What happens when X fails?"
 
 ## 2. RPO and RTO
 
-The two most critical metrics in disaster recovery.
+The two most critical metrics in disaster recovery: <abbr title="RPO (Recovery Point Objective): the maximum acceptable data loss, expressed as a time window — e.g., RPO=1h means you must back up at least every hour.">RPO</abbr> and <abbr title="RTO (Recovery Time Objective): the maximum acceptable downtime — e.g., RTO=15min means systems must be restored within 15 minutes of a failure.">RTO</abbr>.
 
 ```
                           Disaster
@@ -74,7 +74,7 @@ The two most critical metrics in disaster recovery.
 
 ## 3. DR Strategies
 
-Listed from cheapest/slowest recovery to most expensive/fastest recovery.
+Listed from cheapest/slowest recovery to most expensive/fastest recovery. Strategies include <abbr title="Pilot Light: only the database replica runs in the DR region; all other infrastructure is off and spun up only on failover.">Pilot Light</abbr>, <abbr title="Warm Standby: a scaled-down but fully functional version of the production stack runs in the DR region at all times, ready to scale up.">Warm Standby</abbr>, and full <abbr title="Multi-Site Active-Active: both regions serve live traffic simultaneously; if one fails the other absorbs 100% with near-zero RTO/RPO.">Multi-Site Active-Active</abbr>.
 
 ### 3.1 Backup and Restore
 
@@ -192,7 +192,7 @@ Differential Backup:
   Pro: Faster restore than incremental. Con: Grows over time.
 ```
 
-### The 3-2-1 Backup Rule
+### The <abbr title="3-2-1 Backup Rule: keep 3 copies of data, on 2 different storage media, with 1 copy stored offsite (different region or facility).">3-2-1 Backup Rule</abbr>
 
 ```
 3 copies of your data
@@ -285,7 +285,7 @@ Services with built-in cross-region replication:
 
 ## 7. Chaos Engineering
 
-Intentionally injecting failures to test system resilience.
+<abbr title="Chaos Engineering: intentionally injecting failures (killing instances, adding network latency, simulating AZ outages) in production to discover weaknesses before real disasters do.">Chaos Engineering</abbr> — intentionally injecting failures to test system resilience.
 
 ```
 Principle: "The best way to test disaster recovery is to create disasters."
@@ -373,7 +373,7 @@ Next test: 2024-04-15
 
 | Test Type          | Frequency  | Description                          |
 |-------------------|-----------|--------------------------------------|
-| Tabletop exercise | Quarterly | Walk through runbook verbally        |
+| <abbr title="Tabletop exercise: a verbal walkthrough of a DR runbook with stakeholders, without actually triggering any systems — used to identify gaps in the plan.">Tabletop exercise</abbr> | Quarterly | Walk through runbook verbally        |
 | Component failover| Monthly   | Fail over one DB or service          |
 | Full DR drill     | Annually  | Simulate complete region failure     |
 | Chaos experiments | Weekly    | Random failure injection             |
@@ -381,7 +381,7 @@ Next test: 2024-04-15
 
 ---
 
-## 9. Business Continuity Planning
+## 9. <abbr title="BCP (Business Continuity Planning): organizational planning to ensure critical operations continue during and after a disaster, covering people, processes, and systems.">Business Continuity Planning</abbr>
 
 ```
 Business Impact Analysis (BIA):

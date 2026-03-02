@@ -37,6 +37,8 @@ Structured data:                  Unstructured data:
 
 ## 2. File vs Block vs Object Storage
 
+<abbr title="File storage: hierarchical files/folders (NFS). Block storage: raw blocks for disks/VMs (EBS). Object storage: flat key+object with metadata (S3)."></abbr>
+
 ```
 ┌──────────────┬──────────────────┬──────────────────┬────────────────────┐
 │              │  File Storage    │  Block Storage   │  Object Storage    │
@@ -174,7 +176,7 @@ LIST after PUT → object appears immediately ✓
 | Transfer Accel.  | Use CloudFront edge locations for faster uploads       |
 | Multipart upload | Upload large objects in parallel parts                 |
 
-### Multipart Upload
+### <abbr title="Multipart upload: split a large object into parts uploaded in parallel, then assembled by S3. Improves speed and retryability.">Multipart Upload</abbr>
 
 ```
 For objects > 5 GB (recommended for > 100 MB):
@@ -249,6 +251,8 @@ Open-source implementation inspired by GFS:
 
 ### Replication vs Erasure Coding
 
+<abbr title="Erasure coding: split data into data+parity chunks so the original can be reconstructed if some chunks are lost. Lower storage overhead than full replication.">Erasure coding</abbr> trades CPU and rebuild time for cheaper storage.
+
 ```
 3x Replication:
   Object (1 MB) → 3 copies → 3 MB total storage
@@ -291,7 +295,7 @@ Scrubbing:
 
 ## 7. Content Addressing & Deduplication
 
-### Content-Addressable Storage (CAS)
+### <abbr title="Content-addressable storage (CAS): store objects by their content hash so identical content maps to the same address.">Content-Addressable Storage (CAS)</abbr>
 
 ```
 Instead of naming objects by path, name them by content hash:

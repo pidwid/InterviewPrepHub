@@ -1,6 +1,6 @@
 # Dependency Injection & Inversion of Control
 
-> Dependency Injection (DI) is a design technique where an object receives its dependencies from the outside rather than creating them internally. Inversion of Control (IoC) is the broader principle — you invert who controls the creation and binding of dependencies.
+> <abbr title="Dependency Injection (DI): pass dependencies into a class rather than creating them inside. Inversion of Control (IoC): the framework controls object creation and lifecycle, calling your code when needed.">Dependency Injection (DI)</abbr> is a design technique where an object receives its dependencies from the outside rather than creating them internally. Inversion of Control (IoC) is the broader principle — you invert who controls the creation and binding of dependencies.
 
 ---
 
@@ -157,7 +157,7 @@ public class ReportService implements FormatterAware {
 
 ---
 
-## 4. Inversion of Control (IoC)
+## 4. <abbr title="Inversion of Control (IoC): a design principle where the framework or container controls object creation and calls your code, rather than your code controlling the flow.">Inversion of Control (IoC)</abbr>
 
 > IoC is the principle. DI is one implementation of IoC.
 
@@ -186,7 +186,7 @@ Inverted Control Flow (IoC):
 | Strategy Pattern       | Framework calls your strategy implementation             |
 | Event-Driven / Observer| Framework notifies your listeners                        |
 
-### DI vs Service Locator
+### <abbr title="Service Locator: a global registry that classes query to get dependencies. DI pushes dependencies in, making them explicit and easier to test.">DI vs Service Locator</abbr>
 
 ```java
 // Service Locator — class pulls its own dependencies

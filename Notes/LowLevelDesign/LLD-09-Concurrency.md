@@ -23,7 +23,7 @@
 
 ## 1. Introduction to Concurrency
 
-Concurrency is about **managing multiple tasks that can make progress** within overlapping time periods. It doesn't necessarily mean they run simultaneously.
+Concurrency is about **managing multiple tasks that can make progress** within overlapping time periods. It doesn't necessarily mean they run simultaneously. (<abbr title="Concurrency: multiple tasks make progress over time (possibly interleaving). Parallelism: tasks literally run at the same time on multiple cores.">quick distinction</abbr>)
 
 | Concept | Definition |
 |---------|------------|
@@ -140,7 +140,7 @@ String result = future.get();  // Blocks until complete
 
 ## 5. Race Conditions and Critical Sections
 
-A **race condition** occurs when two threads access shared data and the outcome depends on the order of execution.
+A **race condition** occurs when two threads access shared data and the outcome depends on the order of execution. (<abbr title="Race condition: the result changes depending on timing/order of threads, often causing inconsistent or incorrect state.">definition</abbr>)
 
 ### ❌ Race Condition
 
@@ -194,7 +194,7 @@ public class AtomicCounter {
 
 ## 6. Synchronization Primitives
 
-### Mutex (synchronized / ReentrantLock)
+### <abbr title="Mutex: a mutual exclusion lock that allows only one thread to enter a critical section at a time (e.g., synchronized, ReentrantLock in Java).">Mutex</abbr> (synchronized / ReentrantLock)
 
 A **mutex** provides mutual exclusion — only one thread can hold it at a time.
 
@@ -226,7 +226,7 @@ public class BankAccount {
 }
 ```
 
-### Semaphore
+### <abbr title="Semaphore: a synchronization primitive that allows up to N threads to access a resource at the same time using permits.">Semaphore</abbr>
 
 A **semaphore** allows up to N threads to access a resource simultaneously.
 
@@ -255,7 +255,7 @@ public class ConnectionPool {
 }
 ```
 
-### Condition Variables
+### <abbr title="Condition variables: allow threads to wait until a condition becomes true, then be signaled to proceed.">Condition Variables</abbr>
 
 **Condition variables** allow threads to wait for a specific condition to become true.
 
@@ -376,7 +376,7 @@ public class CachedData {
 }
 ```
 
-### Compare-and-Swap (CAS)
+### <abbr title="Compare-and-Swap (CAS): an atomic CPU instruction that updates a value only if it matches an expected value. Used for lock-free algorithms.">Compare-and-Swap (CAS)</abbr>
 
 Lock-free synchronization using atomic operations:
 
@@ -398,7 +398,7 @@ public class CASCounter {
 
 ## 8. Deadlock, Livelock, and Starvation
 
-### Deadlock
+### <abbr title="Deadlock: two or more threads are waiting on each other for locks, so none can proceed.">Deadlock</abbr>
 
 Two or more threads waiting for each other to release locks.
 
@@ -433,11 +433,11 @@ public class SafeTransfer {
 }
 ```
 
-### Livelock
+### <abbr title="Livelock: threads keep reacting to each other and changing state, but no progress is made (busy but stuck).">Livelock</abbr>
 
 Threads actively respond to each other but make no progress (like two people in a hallway dodging the same way).
 
-### Starvation
+### <abbr title="Starvation: a thread is perpetually denied resources or CPU time because others keep winning. Fair locks or scheduling can help.">Starvation</abbr>
 
 A thread never gets CPU time because higher-priority threads monopolize the scheduler. Use `ReentrantLock(true)` for fair locking.
 

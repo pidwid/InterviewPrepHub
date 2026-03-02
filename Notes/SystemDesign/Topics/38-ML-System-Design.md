@@ -30,7 +30,7 @@
 ## 1. Overview
 
 ML System Design sits at the intersection of system design and machine learning.
-Interviews at top companies (especially FAANG) increasingly ask:
+Interviews at top companies (especially <abbr title="FAANG: Facebook (Meta), Amazon, Apple, Netflix, and Google — commonly used to refer to top-tier tech companies with rigorous system design interviews.">FAANG</abbr>) increasingly ask:
 "Design the recommendation system for YouTube" or "Design a spam detection system."
 
 ```
@@ -89,7 +89,7 @@ Traditional System Design:        ML System Design adds:
 
 ## 3. Feature Engineering & Feature Stores
 
-### What is a Feature Store?
+### What is a <abbr title="Feature Store: a centralised repository that stores, versions, and serves ML features for both training (offline) and inference (online), preventing training-serving skew.">Feature Store</abbr>?
 
 ```
 Feature = an input signal to a model.
@@ -281,7 +281,7 @@ Control (Model A - current):     Treatment (Model B - new):
 
 ---
 
-## 7. ML Pipelines (MLOps)
+## 7. ML Pipelines (<abbr title="MLOps: applying DevOps practices (CI/CD, monitoring, version control) to machine learning workflows — training, evaluation, deployment, and retraining.">MLOps</abbr>)
 
 ```
 MLOps = DevOps for ML
@@ -303,7 +303,7 @@ MLOps Tools:
   └── Monitoring: Evidently AI, WhyLabs, custom
 ```
 
-### Model Monitoring
+### Model Monitoring (<abbr title="Data drift: when the statistical distribution of input features in production diverges from what the model was trained on, degrading prediction quality.">Data drift</abbr> &amp; <abbr title="Concept drift: when the relationship between input features and the target variable changes over time, making the trained model less accurate.">Concept drift</abbr>)
 
 ```
 Types of drift:
@@ -357,7 +357,7 @@ Amazon, Netflix, Google, TikTok all have data flywheels.
 
 ## 9. Common ML System Designs
 
-### Recommendation System
+### <abbr title="Recommendation System: an ML system that predicts what items (videos, products, posts) a user is likely to engage with, typically using a two-stage retrieve-then-rank architecture.">Recommendation System</abbr>
 
 ```
 Two-stage approach:
@@ -414,7 +414,7 @@ Challenge: Extreme class imbalance (0.1% fraud)
 |----------|---------|
 | ML system ≠ just the model | Infra around the model is 90% of the work |
 | Feature stores prevent training-serving skew | Same feature computation for offline and online |
-| Two-stage retrieval + ranking | Standard pattern for recommendations and search |
+| <abbr title="Two-stage retrieval + ranking: first stage quickly narrows millions of candidates to ~1000 using lightweight signals; second stage ranks those with a heavier ML model.">Two-stage retrieval + ranking</abbr> | Standard pattern for recommendations and search |
 | A/B testing validates everything | Never ship a model without measuring real impact |
 | Monitor for data and concept drift | Models degrade over time — detect and retrain |
 | Batch for most, online for time-sensitive | Not everything needs real-time inference |

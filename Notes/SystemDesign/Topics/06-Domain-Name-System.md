@@ -97,8 +97,8 @@ DNS is organized as a **hierarchical tree:**
 ### The Root Zone
 
 - **13 root server clusters** worldwide (named A through M)
-- Each "server" is actually a cluster of many machines using anycast
-- Maintained by organizations like ICANN, IANA, VeriSign, NASA, etc.
+- Each "server" is actually a cluster of many machines using <abbr title="Anycast: a network routing technique where the same IP address is assigned to multiple servers in different locations. Traffic is automatically routed to the nearest one, improving speed and resilience.">anycast</abbr>
+- Maintained by organizations like <abbr title="ICANN: Internet Corporation for Assigned Names and Numbers — the non-profit that coordinates the global DNS, IP addresses, and internet naming standards">ICANN</abbr>, IANA, VeriSign, NASA, etc.
 - They don't know every domain — they only know who handles each TLD
 
 ### TLD Servers
@@ -123,7 +123,7 @@ DNS is organized as a **hierarchical tree:**
 | **CNAME** | Creates an **alias** (one hostname points to another) | `blog.example.com → example.wordpress.com` |
 | **NS** | Specifies the **authoritative nameservers** for a domain | `example.com NS ns1.dnsimple.com` |
 | **MX** | Specifies the **mail servers** for a domain | `example.com MX mail.example.com (priority 10)` |
-| **TXT** | Stores **arbitrary text** (often used for verification, SPF, DKIM) | `example.com TXT "v=spf1 include:_spf.google.com"` |
+| **TXT** | Stores **arbitrary text** (often used for verification, <abbr title="SPF (Sender Policy Framework): a DNS record that lists which mail servers are allowed to send email on behalf of your domain, helping prevent email spoofing">SPF</abbr>, <abbr title="DKIM (DomainKeys Identified Mail): adds a digital signature to outgoing emails so receivers can verify the email wasn't tampered with in transit">DKIM</abbr>) | `example.com TXT "v=spf1 include:_spf.google.com"` |
 | **SRV** | Specifies a **host and port** for a service | `_sip._tcp.example.com SRV 10 60 5060 server.example.com` |
 | **SOA** | **Start of Authority** — metadata about the zone (serial number, refresh rate) | Admin info, refresh intervals |
 | **PTR** | **Reverse DNS** — maps an IP address back to a hostname | `34.216.184.93 → www.example.com` |
@@ -300,8 +300,8 @@ DNS Health Check:
 ### Mitigations
 
 - **Redundancy:** Use multiple DNS providers (e.g., Route 53 + CloudFlare)
-- **DNSSEC:** Cryptographic signing of DNS records to prevent tampering
-- **DNS over HTTPS (DoH):** Encrypt DNS queries to prevent snooping
+- **<abbr title="DNSSEC (DNS Security Extensions): adds cryptographic signatures to DNS records. Resolvers can verify that records came from the legitimate authoritative server and haven't been tampered with">DNSSEC</abbr>:** Cryptographic signing of DNS records to prevent tampering
+- **<abbr title="DNS over HTTPS (DoH): sends DNS queries over an encrypted HTTPS connection instead of plain text UDP, preventing ISPs or attackers from seeing what domains you're looking up">DNS over HTTPS (DoH)</abbr>:** Encrypt DNS queries to prevent snooping
 - **Low TTLs before migrations:** Reduce TTL to 60s before making DNS changes
 - **Anycast:** Distribute DNS servers globally to resist DDoS
 
@@ -349,13 +349,13 @@ DNS Health Check:
 
 5. You set a TTL of 5 minutes for a DNS record, but after changing the IP, some users are still hitting the old IP 2 hours later. Why? Discuss recursive resolver caching, client-side caching, and Java's notorious DNS caching. [Answer](QnA-Answer-Key.md#6-domain-name-system)
 
-6. How would you implement DNS-based global server load balancing (GSLB) for a multi-region deployment? Compare latency-based routing, geolocation routing, and weighted routing. [Answer](QnA-Answer-Key.md#6-domain-name-system)
+6. How would you implement <abbr title="GSLB (Global Server Load Balancing): distributes traffic across servers in different geographic regions using DNS, directing users to the best available region based on latency, health, or location">DNS-based global server load balancing (GSLB)</abbr> for a multi-region deployment? Compare latency-based routing, geolocation routing, and weighted routing. [Answer](QnA-Answer-Key.md#6-domain-name-system)
 
 7. An attacker is performing a DNS cache poisoning attack against your service. What is happening, and how do DNSSEC and DNS-over-HTTPS (DoH) mitigate this? [Answer](QnA-Answer-Key.md#6-domain-name-system)
 
 8. Your startup is choosing between using Route 53, Cloudflare DNS, and running your own BIND servers. Compare them on reliability, latency, cost, and features. [Answer](QnA-Answer-Key.md#6-domain-name-system)
 
-9. In a microservices environment, you need service discovery. Compare DNS-based service discovery (e.g., Consul DNS) vs a service registry (e.g., Eureka) vs a service mesh (e.g., Istio). When does DNS fall short? [Answer](QnA-Answer-Key.md#6-domain-name-system)
+9. In a microservices environment, you need service discovery. Compare DNS-based service discovery (e.g., <abbr title="Consul: a service networking tool that provides service discovery, health checking, and a DNS interface so services can find each other by name rather than hard-coded IP addresses">Consul DNS</abbr>) vs a service registry (e.g., <abbr title="Eureka: Netflix's open-source service registry where microservices register themselves on startup and discover other services by name, without needing DNS changes">Eureka</abbr>) vs a service mesh (e.g., <abbr title="Istio: a service mesh that handles service-to-service communication, security, and observability by injecting a sidecar proxy alongside each service, bypassing DNS for internal routing">Istio</abbr>). When does DNS fall short? [Answer](QnA-Answer-Key.md#6-domain-name-system)
 
 10. The Dyn DDoS attack in 2016 took down Twitter, GitHub, and Netflix. How did a DNS attack cascade into application-level outages, and what architectural lesson should every system designer learn from it? [Answer](QnA-Answer-Key.md#6-domain-name-system)
 

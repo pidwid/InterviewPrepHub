@@ -21,10 +21,10 @@
 
 | Relationship | Strength | Lifecycle | Keyword | UML Arrow |
 |-------------|----------|-----------|---------|-----------|
-| **Dependency** | Weakest | None | "uses" | Dashed arrow `-->` |
-| **Association** | Weak | Independent | "knows about" | Solid line `—` |
-| **Aggregation** | Medium | Independent | "has-a" (shared) | Open diamond `◇—` |
-| **Composition** | Strongest | Dependent | "has-a" (owned) | Filled diamond `◆—` |
+| **<abbr title="Dependency: a temporary 'uses' relationship where one class depends on another for a single operation, usually via parameters or local variables.">Dependency</abbr>** | Weakest | None | "uses" | Dashed arrow `-->` |
+| **<abbr title="Association: a long-lived 'knows about' relationship where two classes are aware of each other but have independent lifecycles.">Association</abbr>** | Weak | Independent | "knows about" | Solid line `—` |
+| **<abbr title="Aggregation: a shared 'has-a' relationship where the part can exist independently of the whole.">Aggregation</abbr>** | Medium | Independent | "has-a" (shared) | Open diamond `◇—` |
+| **<abbr title="Composition: a strong 'has-a' relationship where the part cannot exist without the whole; the whole owns the part's lifecycle.">Composition</abbr>** | Strongest | Dependent | "has-a" (owned) | Filled diamond `◆—` |
 
 The key question: **What happens to the child when the parent is destroyed?**
 
@@ -208,7 +208,7 @@ Does the child make sense without the parent?
 
 ---
 
-## 7. Multiplicity
+## 7. <abbr title="Multiplicity: the number of instances that can participate in a relationship (e.g., one-to-many, many-to-many).">Multiplicity</abbr>
 
 Multiplicity describes **how many objects participate** in a relationship.
 
