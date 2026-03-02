@@ -320,6 +320,13 @@
   color: var(--revise);
 }
 
+.st-bookmark-dot {
+  font-size: 0.65rem;
+  line-height: 1;
+  flex-shrink: 0;
+  opacity: 0.8;
+}
+
 /* ── Dimmed state (topic outside time filter scope) ── */
 .st-topic--dimmed {
   opacity: 0.25;

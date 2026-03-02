@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useBookmarks } from "../store/useBookmarks";
 
 function phaseProgress(phase, progress) {
   const total = phase.topics.length;
@@ -80,6 +81,7 @@ function isTopicInScope(topicId, topic, timeKey) {
 }
 
 export default function SkillTreeRoadmap({ progress, roadmapPhases, allTopics, onTopicClick }) {
+  const { hasBookmark } = useBookmarks();
   const topicMap = useMemo(
     () => Object.fromEntries((allTopics || []).map((t) => [t.id, t])),
     [allTopics],
@@ -215,6 +217,9 @@ export default function SkillTreeRoadmap({ progress, roadmapPhases, allTopics, o
                         {status === "done" ? "✓" : status === "revise" ? "↻" : tIdx + 1}
                       </span>
                       <span className="st-topic-name">{topic.title}</span>
+                      {hasBookmark(topic.noteFile || topic.solutionFile) && (
+                        <span className="st-bookmark-dot" title="Study marker set">🔖</span>
+                      )}
                       {status !== "not_started" && (
                         <span className={`st-topic-status st-topic-status--${status}`}>
                           {status === "done" ? "Done" : "Revise"}

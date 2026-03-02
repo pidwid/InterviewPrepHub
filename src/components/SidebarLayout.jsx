@@ -1,5 +1,6 @@
 import { useState, useRef, useMemo, useCallback, useEffect } from "react";
 import MarkdownRenderer, { getContent } from "./MarkdownRenderer";
+import { useBookmarks } from "../store/useBookmarks";
 import InlinePractice, {
   topicHasQuestions,
   getQuestionCount,
@@ -27,6 +28,7 @@ function SidebarCategory({
   onSelect,
   isExpanded,
   onToggle,
+  hasBookmarkFn,
 }) {
   const done = cat.topics.filter((t) => progress[t.id] === "done").length;
   const total = cat.topics.length;
@@ -66,6 +68,9 @@ function SidebarCategory({
                   {STATUS_ICON[status]}
                 </span>
                 <span className="sb-topic-name">{topic.title}</span>
+                {hasBookmarkFn?.(topic.noteFile || topic.solutionFile) && (
+                  <span className="sb-bookmark-dot" title="Study marker inside">🔖</span>
+                )}
                 {topic.priority && (
                   <span
                     className={`sb-priority sb-priority--${topic.priority}`}
@@ -102,7 +107,14 @@ function YouTubeEmbed({ videoId }) {
 }
 
 // ── Content Panel ───────────────────────────────────────────────────────────
-function ContentPanel({ topic, status, onSetStatus, scrollRef }) {
+function ContentPanel({
+  topic,
+  status,
+  onSetStatus,
+  scrollRef,
+  getBookmark,
+  onSetBookmark,
+}) {
   const [activeTab, setActiveTab] = useState("notes");
 
   // Reset to notes tab and scroll to top when topic changes
@@ -184,6 +196,30 @@ function ContentPanel({ topic, status, onSetStatus, scrollRef }) {
         </div>
       </div>
 
+      {/* Bookmark banner */}
+      {activeTab === "notes" && getBookmark?.(targetFile) && (
+        <div className="sb-bookmark-banner">
+          <span className="sb-bookmark-banner-icon">🔖</span>
+          <span className="sb-bookmark-banner-text">Study marker set</span>
+          <button
+            className="sb-bookmark-banner-jump"
+            onClick={() => {
+              const el = document.getElementById(getBookmark(targetFile));
+              if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+            }}
+          >
+            Jump to marker ↓
+          </button>
+          <button
+            className="sb-bookmark-banner-clear"
+            onClick={() => onSetBookmark(targetFile, null)}
+            title="Clear marker"
+          >
+            ×
+          </button>
+        </div>
+      )}
+
       {/* Content body */}
       {activeTab === "video" ? (
         <div className="sb-content-body">
@@ -192,7 +228,12 @@ function ContentPanel({ topic, status, onSetStatus, scrollRef }) {
       ) : activeTab === "notes" ? (
         <div className="sb-content-body markdown-body">
           {content ? (
-            <MarkdownRenderer content={content} />
+            <MarkdownRenderer
+              content={content}
+              noteFile={targetFile}
+              bookmarkedHeadingId={getBookmark?.(targetFile)}
+              onSetBookmark={onSetBookmark}
+            />
           ) : (
             <div className="sb-no-content">
               <p>No notes available for this topic yet.</p>
@@ -223,6 +264,7 @@ export default function SidebarLayout({
   onTopicSelect,
 }) {
   const mainRef = useRef(null);
+  const { getBookmark, setBookmark, hasBookmark } = useBookmarks();
   const [activeTopic, setActiveTopic] = useState(null);
   const [expandedCats, setExpandedCats] = useState(() => {
     // Start with first category expanded
@@ -380,6 +422,7 @@ export default function SidebarLayout({
                   onSelect={handleSelectTopic}
                   isExpanded={expandedCats.has(cat.id)}
                   onToggle={() => toggleCategory(cat.id)}
+                  hasBookmarkFn={hasBookmark}
                 />
               ))}
               {filteredCategories.length === 0 && (
@@ -406,6 +449,8 @@ export default function SidebarLayout({
           status={activeStatus}
           onSetStatus={setStatus}
           scrollRef={mainRef}
+          getBookmark={getBookmark}
+          onSetBookmark={setBookmark}
         />
       </main>
     </div>

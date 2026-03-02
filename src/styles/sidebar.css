@@ -605,3 +605,66 @@
     padding: 1rem;
   }
 }
+
+/* ─── Sidebar bookmark indicator ───────────────────────────────────────────── */
+
+.sb-bookmark-dot {
+  font-size: 0.65rem;
+  line-height: 1;
+  flex-shrink: 0;
+  opacity: 0.75;
+}
+
+/* ─── Bookmark banner (page content view) ───────────────────────────── */
+
+.sb-bookmark-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 1.5rem;
+  background: color-mix(in srgb, var(--accent) 10%, var(--surface));
+  border-bottom: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.sb-bookmark-banner-icon {
+  font-size: 0.9rem;
+}
+
+.sb-bookmark-banner-text {
+  font-weight: 500;
+  color: var(--text);
+}
+
+.sb-bookmark-banner-jump {
+  background: none;
+  border: 1px solid color-mix(in srgb, var(--accent) 50%, transparent);
+  border-radius: 5px;
+  color: var(--accent);
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.sb-bookmark-banner-jump:hover {
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
+}
+
+.sb-bookmark-banner-clear {
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 4px;
+  opacity: 0.6;
+  transition: opacity 0.15s;
+}
+
+.sb-bookmark-banner-clear:hover {
+  opacity: 1;
+}

@@ -194,3 +194,53 @@ letter-spacing: 0.04em;
         padding: 0.65rem 1rem;
         font-size: 0.8rem;
     }
+
+/* ─── Study Marker (bookmark headings) ──────────────────────────────────── */
+
+.heading-row {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    /* pull the margin from the inner heading so the row itself spaces correctly */
+}
+
+/* Let the heading tag grow and keep its own styles via .markdown-body */
+.heading-row__tag {
+    flex: 1;
+    min-width: 0;
+    /* reset margins that markdown-body applies — spacing comes from the parent */
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+.study-marker-btn {
+    flex-shrink: 0;
+    background: none;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    line-height: 1;
+    padding: 3px 8px 3px 6px;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+    color: inherit;
+}
+
+/* Show button when the row is hovered */
+.heading-row:hover .study-marker-btn {
+    opacity: 1;
+}
+
+/* Active bookmark — always visible with a subtle highlight */
+.study-marker-btn--active {
+    opacity: 1 !important;
+    background: color-mix(in srgb, var(--accent) 15%, transparent);
+    border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+}
+
+.study-marker-btn:hover {
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
+    border-color: color-mix(in srgb, var(--accent) 30%, transparent);
+}
