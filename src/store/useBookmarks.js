@@ -1,18 +1,13 @@
-import { useState, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { bookmarkStorage, getStorageMode } from "./storageMiddleware";
 
-const STORAGE_KEY = "prep_bookmarks";
-
-function load() {
+function loadLocal() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = localStorage.getItem("prep_bookmarks");
     return raw ? JSON.parse(raw) : {};
   } catch {
     return {};
   }
-}
-
-function persist(data) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
 
 /**
@@ -20,43 +15,50 @@ function persist(data) {
  * bookmarks shape: { [noteFile: string]: headingId: string }
  */
 export function useBookmarks() {
-  const [bookmarks, setBookmarks] = useState(load);
+  // Sync init from localStorage for instant render.
+  // In turso mode, start empty and load async below.
+  const [bookmarks, setBookmarks] = useState(() =>
+    getStorageMode() === "local" ? loadLocal() : {},
+  );
+
+  // When in turso mode, fetch all bookmarks from Turso on mount
+  useEffect(() => {
+    if (getStorageMode() !== "turso") return;
+    bookmarkStorage.getAll().then(setBookmarks);
+  }, []);
 
   const setBookmark = useCallback((noteFile, headingId) => {
     if (!headingId) {
-      // Treat null / undefined / "" as a clear
+      // Treat null / undefined / '' as a clear
       setBookmarks((prev) => {
         const next = { ...prev };
         delete next[noteFile];
-        persist(next);
         return next;
       });
+      bookmarkStorage.remove(noteFile);
       return;
     }
-    setBookmarks((prev) => {
-      const next = { ...prev, [noteFile]: headingId };
-      persist(next);
-      return next;
-    });
+    setBookmarks((prev) => ({ ...prev, [noteFile]: headingId }));
+    bookmarkStorage.set(noteFile, headingId);
   }, []);
 
   const clearBookmark = useCallback((noteFile) => {
     setBookmarks((prev) => {
       const next = { ...prev };
       delete next[noteFile];
-      persist(next);
       return next;
     });
+    bookmarkStorage.remove(noteFile);
   }, []);
 
   const getBookmark = useCallback(
     (noteFile) => bookmarks[noteFile] ?? null,
-    [bookmarks]
+    [bookmarks],
   );
 
   const hasBookmark = useCallback(
     (noteFile) => !!bookmarks[noteFile],
-    [bookmarks]
+    [bookmarks],
   );
 
   return { bookmarks, setBookmark, clearBookmark, getBookmark, hasBookmark };

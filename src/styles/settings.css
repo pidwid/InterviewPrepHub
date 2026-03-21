@@ -1,0 +1,433 @@
+/* ─────────────────────────────────────────────
+   settings.css — SettingsDialog styles
+   Uses only CSS variables from index.css.
+   No hardcoded colours, no light/dark overrides
+   needed — the variables handle both themes.
+───────────────────────────────────────────── */
+
+/* Overlay */
+.settings-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+/* Dialog box */
+.settings-dialog {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-md);
+}
+
+/* Header */
+.settings-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem 1rem;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.settings-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--text);
+}
+
+.settings-close-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  color: var(--text-muted);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  line-height: 1;
+  transition: background 0.15s, color 0.15s;
+}
+
+.settings-close-btn:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+
+/* Sections */
+.settings-section {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.settings-section:last-of-type {
+  border-bottom: none;
+}
+
+.settings-section-title {
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin: 0 0 0.4rem;
+}
+
+.settings-section-desc {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin: 0 0 0.9rem;
+  line-height: 1.5;
+}
+
+/* ── Active storage status card ─────────────────────────────────────────── */
+
+.settings-active-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  border-radius: 8px;
+  border: 1.5px solid var(--done);
+  background: var(--done-bg);
+}
+
+.settings-active-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.settings-active-icon {
+  font-size: 1.4rem;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.settings-active-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.settings-active-label {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.settings-active-sub {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-family: monospace;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 280px;
+}
+
+.settings-active-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--done);
+  background: var(--done-bg);
+  border: 1px solid var(--done-border);
+  border-radius: 999px;
+  padding: 0.15rem 0.55rem;
+  flex-shrink: 0;
+}
+
+.settings-edit-btn {
+  padding: 0.4rem 0.9rem;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--surface-hover);
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.settings-edit-btn:hover {
+  background: var(--accent-muted);
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+/* ── Storage mode toggle ─────────────────────────────────────────────────── */
+
+.settings-mode-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+}
+
+.settings-mode-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.85rem 0.5rem;
+  border-radius: 8px;
+  border: 2px solid var(--border);
+  background: var(--surface-hover);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  color: var(--text-muted);
+}
+
+.settings-mode-btn:hover {
+  border-color: var(--accent);
+  background: var(--accent-subtle);
+}
+
+.settings-mode-btn--active {
+  border-color: var(--accent);
+  background: var(--accent-muted);
+  color: var(--text);
+}
+
+.settings-mode-icon {
+  font-size: 1.4rem;
+}
+
+.settings-mode-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.settings-mode-sub {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+/* ── Form fields ─────────────────────────────────────────────────────────── */
+
+.settings-field {
+  margin-bottom: 0.9rem;
+}
+
+.settings-label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-bottom: 0.35rem;
+}
+
+.settings-input {
+  width: 100%;
+  padding: 0.55rem 0.75rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 0.82rem;
+  font-family: monospace;
+  outline: none;
+  transition: border-color 0.15s;
+  box-sizing: border-box;
+}
+
+.settings-input:focus {
+  border-color: var(--accent);
+}
+
+.settings-input::placeholder {
+  color: var(--text-muted);
+}
+
+/* Token reveal wrapper */
+.settings-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.settings-input-wrap .settings-input {
+  padding-right: 2.5rem;
+}
+
+.settings-reveal-btn {
+  position: absolute;
+  right: 0.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  padding: 0.2rem;
+  line-height: 1;
+  transition: color 0.15s;
+}
+
+.settings-reveal-btn:hover {
+  color: var(--text);
+}
+
+/* ── Test connection row ─────────────────────────────────────────────────── */
+
+.settings-test-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.settings-test-btn {
+  padding: 0.45rem 1rem;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--surface-hover);
+  color: var(--text);
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.settings-test-btn:hover:not(:disabled) {
+  background: var(--accent-light);
+  border-color: var(--accent);
+}
+
+.settings-test-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ── Status messages ─────────────────────────────────────────────────────── */
+
+.settings-status {
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.settings-status--ok {
+  color: var(--done);
+}
+
+.settings-status--error {
+  color: var(--error-text);
+}
+
+.settings-status--info {
+  color: var(--text-muted);
+}
+
+/* ── Migration row ───────────────────────────────────────────────────────── */
+
+.settings-migrate-row {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.6rem;
+}
+
+.settings-migrate-btn {
+  flex: 1;
+  min-width: 160px;
+  padding: 0.55rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--surface-hover);
+  color: var(--text);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  text-align: center;
+}
+
+.settings-migrate-btn:hover:not(:disabled) {
+  background: var(--accent-muted);
+  border-color: var(--accent);
+}
+
+.settings-migrate-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ── Footer ──────────────────────────────────────────────────────────────── */
+
+.settings-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.settings-cancel-btn {
+  padding: 0.5rem 1.1rem;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.settings-cancel-btn:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+
+.settings-save-btn {
+  padding: 0.5rem 1.25rem;
+  border-radius: 6px;
+  border: none;
+  background: var(--accent);
+  color: var(--text-on-accent);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.settings-save-btn:hover:not(:disabled) {
+  opacity: 0.88;
+}
+
+.settings-save-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ── Responsive ──────────────────────────────────────────────────────────── */
+
+@media (max-width: 540px) {
+  .settings-dialog {
+    max-height: 100vh;
+    border-radius: 0;
+  }
+
+  .settings-overlay {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .settings-migrate-row {
+    flex-direction: column;
+  }
+}

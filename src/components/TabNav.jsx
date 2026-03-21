@@ -1,3 +1,5 @@
+import { getStorageMode } from "../store/storageMiddleware";
+
 export const TABS = [
   {
     id: "sd",
@@ -20,7 +22,10 @@ export default function TabNav({
   tabStats,
   theme,
   onToggleTheme,
+  onOpenSettings,
 }) {
+  const storageMode = getStorageMode();
+
   return (
     <nav className="tab-nav">
       <div className="tab-nav-inner">
@@ -54,13 +59,28 @@ export default function TabNav({
             </button>
           );
         })}
-        <button
-          className="theme-toggle-btn"
-          onClick={onToggleTheme}
-          title={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
-        >
-          {theme === "dark" ? "\u2600\uFE0F" : "\uD83C\uDF19"}
-        </button>
+        <div className="tab-nav-actions">
+          <button
+            className="theme-toggle-btn"
+            onClick={onToggleTheme}
+            title={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+          >
+            {theme === "dark" ? "\u2600\uFE0F" : "\uD83C\uDF19"}
+          </button>
+          <button
+            className="settings-nav-btn"
+            onClick={onOpenSettings}
+            title="Settings"
+            aria-label="Open settings"
+          >
+            <span className="settings-nav-icon">&#x2699;&#xFE0F;</span>
+            {storageMode === "turso" && (
+              <span className="settings-nav-badge" title="Turso DB active">
+                &#x2601;&#xFE0F;
+              </span>
+            )}
+          </button>
+        </div>
       </div>
     </nav>
   );

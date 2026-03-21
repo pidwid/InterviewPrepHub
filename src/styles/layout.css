@@ -121,9 +121,16 @@ background: var(--tab-accent, var(--accent));
   transition: width 0.4s ease;
 }
 
+/* Right-side nav actions group */
+.tab-nav-actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
 /* Theme toggle button */
 .theme-toggle-btn {
-    margin-left: auto;
     padding: 0.5rem 0.75rem;
     background: var(--surface-hover);
     border: 1px solid var(--border);
@@ -142,4 +149,44 @@ background: var(--tab-accent, var(--accent));
     background: var(--accent-muted);
     border-color: var(--accent);
     transform: scale(1.05);
+}
+
+/* Settings gear button in nav */
+.settings-nav-btn {
+  position: relative;
+  padding: 0.5rem 0.6rem;
+  background: var(--surface-hover);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 1.05rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  line-height: 1;
+  transition: background 0.15s, border-color 0.15s, transform 0.15s;
+}
+
+.settings-nav-btn:hover {
+  background: var(--accent-muted);
+  border-color: var(--accent);
+  transform: scale(1.05);
+}
+
+.settings-nav-icon {
+  display: block;
+  line-height: 1;
+}
+
+/* Small cloud badge when Turso mode is active */
+.settings-nav-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  font-size: 0.6rem;
+  line-height: 1;
+  background: var(--surface);
+  border-radius: 999px;
+  padding: 1px;
 }

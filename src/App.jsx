@@ -3,6 +3,7 @@ import TabNav from "./components/TabNav";
 import Dashboard from "./components/Dashboard";
 import TopicList from "./components/TopicList";
 import NoteViewer from "./components/NoteViewer";
+import SettingsDialog from "./components/SettingsDialog";
 import { useProgress } from "./store/useProgress";
 import { useTheme } from "./store/useTheme";
 import { useNavState } from "./store/useNavState";
@@ -102,15 +103,22 @@ export default function App() {
   const { initial, writeHash } = useNavState();
   const [activeTab, setActiveTab] = useState(initial.tab);
   const { theme, toggleTheme } = useTheme();
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
-  const handleTabChange = useCallback((tab) => {
-    setActiveTab(tab);
-    writeHash(tab, 'roadmap', null);
-  }, [writeHash]);
+  const handleTabChange = useCallback(
+    (tab) => {
+      setActiveTab(tab);
+      writeHash(tab, "roadmap", null);
+    },
+    [writeHash],
+  );
 
-  const handleNavChange = useCallback((tab, dashTab, topicId) => {
-    writeHash(tab, dashTab, topicId);
-  }, [writeHash]);
+  const handleNavChange = useCallback(
+    (tab, dashTab, topicId) => {
+      writeHash(tab, dashTab, topicId);
+    },
+    [writeHash],
+  );
 
   const sdProgress = useProgress("sd", ALL_TOPICS);
   const lldProgress = useProgress("lld", ALL_LLD_TOPICS);
@@ -138,7 +146,7 @@ export default function App() {
     {
       id: "lld",
       allTopics: ALL_LLD_TOPICS,
-      categories: LLD_CATEGORIES.filter(c => !problemCatIds.includes(c.id)),
+      categories: LLD_CATEGORIES.filter((c) => !problemCatIds.includes(c.id)),
       showPractice: true,
       practiceGroups: [
         {
@@ -169,6 +177,7 @@ export default function App() {
         tabStats={tabStats}
         theme={theme}
         onToggleTheme={toggleTheme}
+        onOpenSettings={() => setSettingsOpen(true)}
       />
       <div className="app">
         {SECTIONS.map(
@@ -189,13 +198,23 @@ export default function App() {
                 showPractice={showPractice}
                 practiceGroups={practiceGroups}
                 roadmapPhases={roadmapPhases}
-                initialDashTab={initial.tab === id ? initial.dashTab : undefined}
-                initialTopicId={initial.tab === id ? initial.topicId : undefined}
-                onNavChange={(dashTab, topicId) => handleNavChange(id, dashTab, topicId)}
+                initialDashTab={
+                  initial.tab === id ? initial.dashTab : undefined
+                }
+                initialTopicId={
+                  initial.tab === id ? initial.topicId : undefined
+                }
+                onNavChange={(dashTab, topicId) =>
+                  handleNavChange(id, dashTab, topicId)
+                }
               />
             ) : null,
         )}
       </div>
+
+      {settingsOpen && (
+        <SettingsDialog onClose={() => setSettingsOpen(false)} />
+      )}
     </div>
   );
 }
