@@ -15,6 +15,8 @@ export default function TopicCard({ topic, status, onSetStatus, onOpenNote }) {
             <button
               className="topic-card-title topic-card-title--clickable"
               onClick={() => onOpenNote(topic)}
+              data-ga-event="topic_open"
+              data-ga-label={topic.id}
             >
               {topic.title}
             </button>
@@ -28,9 +30,13 @@ export default function TopicCard({ topic, status, onSetStatus, onOpenNote }) {
           {STATUS_CYCLE.map((s) => (
             <button
               key={s}
-              className={`status-btn status-btn--${s} ${status === s ? "status-btn--active" : ""}`}
+              className={`status-btn status-btn--${s} ${
+                status === s ? "status-btn--active" : ""
+              }`}
               onClick={() => onSetStatus(topic.id, s)}
               title={STATUS_LABELS[s]}
+              data-ga-event="status_change"
+              data-ga-label={`${topic.id}:${s}`}
             >
               {STATUS_LABELS[s]}
             </button>
@@ -41,6 +47,8 @@ export default function TopicCard({ topic, status, onSetStatus, onOpenNote }) {
             className="read-note-btn"
             onClick={() => onOpenNote(topic)}
             title="Read notes"
+            data-ga-event="topic_open"
+            data-ga-label={topic.id}
           >
             &#x1F4D6; Read
           </button>

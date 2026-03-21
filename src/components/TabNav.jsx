@@ -47,6 +47,8 @@ export default function TabNav({
               className={`tab-btn ${isActive ? "tab-btn--active" : ""}`}
               style={{ "--tab-accent": tab.accent }}
               onClick={() => onTabChange(tab.id)}
+              data-ga-event="tab_switch"
+              data-ga-label={tab.id}
             >
               <span className="tab-btn-label">{tab.label}</span>
               <span className="tab-btn-pct">{pct}%</span>
@@ -64,6 +66,8 @@ export default function TabNav({
             className="theme-toggle-btn"
             onClick={onToggleTheme}
             title={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+            data-ga-event="theme_toggle"
+            data-ga-label={theme === "dark" ? "to_light" : "to_dark"}
           >
             {theme === "dark" ? "\u2600\uFE0F" : "\uD83C\uDF19"}
           </button>
@@ -72,6 +76,7 @@ export default function TabNav({
             onClick={onOpenSettings}
             title="Settings"
             aria-label="Open settings"
+            data-ga-event="settings_open"
           >
             <span className="settings-nav-icon">&#x2699;&#xFE0F;</span>
             {storageMode === "turso" && (

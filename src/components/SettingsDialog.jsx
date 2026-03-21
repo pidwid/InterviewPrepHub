@@ -106,7 +106,9 @@ export default function SettingsDialog({ onClose }) {
 
   // Has the user made any unsaved changes?
   const isDirty =
-    mode !== savedMode || url !== savedConfig.url || token !== savedConfig.token;
+    mode !== savedMode ||
+    url !== savedConfig.url ||
+    token !== savedConfig.token;
 
   // Migration requires creds to be present in the draft fields
   const tursoConfigured = url.trim() && token.trim();
@@ -127,6 +129,7 @@ export default function SettingsDialog({ onClose }) {
             className="settings-close-btn"
             onClick={onClose}
             aria-label="Close"
+            data-ga-event="settings_close"
           >
             &#x2715;
           </button>
@@ -145,9 +148,7 @@ export default function SettingsDialog({ onClose }) {
                   {savedMode === "turso" ? "Turso DB" : "Local Storage"}
                 </span>
                 {savedMode === "turso" && savedConfig.url && (
-                  <span className="settings-active-sub">
-                    {savedConfig.url}
-                  </span>
+                  <span className="settings-active-sub">{savedConfig.url}</span>
                 )}
                 {savedMode === "local" && (
                   <span className="settings-active-sub">
@@ -161,6 +162,7 @@ export default function SettingsDialog({ onClose }) {
               <button
                 className="settings-edit-btn"
                 onClick={() => setEditing(true)}
+                data-ga-event="settings_edit"
               >
                 &#x270E; Edit
               </button>
@@ -181,6 +183,8 @@ export default function SettingsDialog({ onClose }) {
                 <button
                   className={`settings-mode-btn ${mode === "local" ? "settings-mode-btn--active" : ""}`}
                   onClick={() => setMode("local")}
+                  data-ga-event="storage_mode_select"
+                  data-ga-label="local"
                 >
                   <span className="settings-mode-icon">&#x1F4BB;</span>
                   <span className="settings-mode-label">Local Storage</span>
@@ -189,10 +193,14 @@ export default function SettingsDialog({ onClose }) {
                 <button
                   className={`settings-mode-btn ${mode === "turso" ? "settings-mode-btn--active" : ""}`}
                   onClick={() => setMode("turso")}
+                  data-ga-event="storage_mode_select"
+                  data-ga-label="turso"
                 >
                   <span className="settings-mode-icon">&#x2601;&#xFE0F;</span>
                   <span className="settings-mode-label">Turso DB</span>
-                  <span className="settings-mode-sub">Synced across devices</span>
+                  <span className="settings-mode-sub">
+                    Synced across devices
+                  </span>
                 </button>
               </div>
             </section>
@@ -258,8 +266,11 @@ export default function SettingsDialog({ onClose }) {
                     className="settings-test-btn"
                     onClick={handleTest}
                     disabled={testStatus === "testing" || !url || !token}
+                    data-ga-event="turso_test"
                   >
-                    {testStatus === "testing" ? "Testing..." : "Test Connection"}
+                    {testStatus === "testing"
+                      ? "Testing..."
+                      : "Test Connection"}
                   </button>
                   {testStatus === "ok" && (
                     <span className="settings-status settings-status--ok">
@@ -290,6 +301,8 @@ export default function SettingsDialog({ onClose }) {
                 className="settings-migrate-btn"
                 onClick={handleMigrateToTurso}
                 disabled={migrateStatus === "running"}
+                data-ga-event="turso_migrate"
+                data-ga-label="push"
               >
                 &#x2191; Push local &rarr; Turso
               </button>
@@ -297,6 +310,8 @@ export default function SettingsDialog({ onClose }) {
                 className="settings-migrate-btn"
                 onClick={handleMigrateToLocal}
                 disabled={migrateStatus === "running"}
+                data-ga-event="turso_migrate"
+                data-ga-label="pull"
               >
                 &#x2193; Pull Turso &rarr; local
               </button>
@@ -323,19 +338,28 @@ export default function SettingsDialog({ onClose }) {
         <div className="settings-footer">
           {editing ? (
             <>
-              <button className="settings-cancel-btn" onClick={handleCancelEdit}>
+              <button
+                className="settings-cancel-btn"
+                onClick={handleCancelEdit}
+                data-ga-event="settings_cancel"
+              >
                 Cancel
               </button>
               <button
                 className="settings-save-btn"
                 onClick={handleSave}
                 disabled={!isDirty}
+                data-ga-event="settings_save"
               >
                 Save &amp; Reload
               </button>
             </>
           ) : (
-            <button className="settings-cancel-btn" onClick={onClose}>
+            <button
+              className="settings-cancel-btn"
+              onClick={onClose}
+              data-ga-event="settings_close"
+            >
               Close
             </button>
           )}

@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from "react";
+import { useCallback, useMemo, useState } from "react";
 import RoadmapSection from "./RoadmapSection";
 import IndexPage from "./IndexPage";
 import SidebarLayout from "./SidebarLayout";
@@ -86,8 +86,12 @@ export default function Dashboard({
           (t) => (
             <button
               key={t.key}
-              className={`dash-tab ${dashTab === t.key ? "dash-tab--active" : ""}`}
+              className={`dash-tab ${
+                dashTab === t.key ? "dash-tab--active" : ""
+              }`}
               onClick={() => handleDashTabChange(t.key)}
+              data-ga-event="dash_tab_switch"
+              data-ga-label={t.key}
             >
               {t.label}
             </button>
@@ -97,6 +101,7 @@ export default function Dashboard({
           <button
             className="ghost-btn ghost-btn--compact"
             onClick={() => onNavigate("all-topics")}
+            data-ga-event="view_all_topics"
           >
             All Topics
           </button>

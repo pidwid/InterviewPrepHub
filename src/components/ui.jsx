@@ -11,7 +11,11 @@ export function ProgressBar({ pctDone, pctRevise, onReset }) {
           Overall Progress &mdash; <strong>{pctDone}% done</strong>
         </div>
         {onReset && (
-          <button className="reset-progress-btn" onClick={onReset}>
+          <button
+            className="reset-progress-btn"
+            onClick={onReset}
+            data-ga-event="progress_reset"
+          >
             &#x21BB; Reset
           </button>
         )}
@@ -65,7 +69,9 @@ export function PriorityBadge({ priority, small }) {
   if (!priority) return null;
   return (
     <span
-      className={`priority-badge priority-badge--${priority}${small ? " priority-badge--small" : ""}`}
+      className={`priority-badge priority-badge--${priority}${
+        small ? " priority-badge--small" : ""
+      }`}
     >
       {priority}
     </span>
@@ -86,8 +92,12 @@ export function FilterBar({ filter, onFilter }) {
       {Object.entries(FILTER_LABELS).map(([key, label]) => (
         <button
           key={key}
-          className={`filter-btn filter-btn--${key} ${filter === key ? "filter-btn--active" : ""}`}
+          className={`filter-btn filter-btn--${key} ${
+            filter === key ? "filter-btn--active" : ""
+          }`}
           onClick={() => onFilter(key)}
+          data-ga-event="status_filter"
+          data-ga-label={key}
         >
           {label}
         </button>

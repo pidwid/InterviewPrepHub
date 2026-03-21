@@ -22,9 +22,15 @@ export default function NoteViewer({ noteFile, title, onClose }) {
     return (
       <div className="note-viewer">
         <div className="note-viewer-header">
-          <button className="back-btn" onClick={onClose}>
+          <button
+            className="back-btn"
+            onClick={onClose}
+            data-ga-event="note_back"
+            data-ga-label={title}
+          >
             &larr; Back
           </button>
+
           <h2 className="note-viewer-title">{title}</h2>
         </div>
         <div className="note-viewer-empty">
@@ -39,7 +45,12 @@ export default function NoteViewer({ noteFile, title, onClose }) {
   return (
     <div className="note-viewer">
       <div className="note-viewer-header">
-        <button className="back-btn" onClick={onClose}>
+        <button
+          className="back-btn"
+          onClick={onClose}
+          data-ga-event="note_back"
+          data-ga-label={title}
+        >
           &larr; Back
         </button>
         <h2 className="note-viewer-title">{title}</h2>
@@ -50,12 +61,16 @@ export default function NoteViewer({ noteFile, title, onClose }) {
           <button
             className={`note-tab ${activeTab === "notes" ? "note-tab--active" : ""}`}
             onClick={() => setActiveTab("notes")}
+            data-ga-event="note_tab"
+            data-ga-label="notes"
           >
             &#x1F4D6; Notes
           </button>
           <button
             className={`note-tab ${activeTab === "practice" ? "note-tab--active" : ""}`}
             onClick={() => setActiveTab("practice")}
+            data-ga-event="note_tab"
+            data-ga-label="practice"
           >
             &#x1F4DD; Practice ({getQnAForTopic(topicNum).questions.length} Qs)
           </button>

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import TabNav from "./components/TabNav";
 import Dashboard from "./components/Dashboard";
 import TopicList from "./components/TopicList";
@@ -9,16 +9,16 @@ import { useTheme } from "./store/useTheme";
 import { useNavState } from "./store/useNavState";
 import { ALL_TOPICS, CATEGORIES, SD_PRACTICE_QUESTIONS } from "./data/topics";
 import {
+  ALL_LLD_PRACTICE,
   ALL_LLD_TOPICS,
   LLD_CATEGORIES,
-  problemCatIds,
-  LLD_EASY_QUESTIONS,
-  LLD_MEDIUM_QUESTIONS,
-  LLD_HARD_QUESTIONS,
   LLD_CONCURRENCY_QUESTIONS,
+  LLD_EASY_QUESTIONS,
   LLD_EXTRA_QUESTIONS,
-  ALL_LLD_PRACTICE,
+  LLD_HARD_QUESTIONS,
+  LLD_MEDIUM_QUESTIONS,
   OOD_PRACTICE_QUESTIONS,
+  problemCatIds,
 } from "./data/lldTopics";
 import { ROADMAP_PHASES } from "./data/roadmap";
 import { LLD_ROADMAP_PHASES } from "./data/lldRoadmap";
@@ -104,6 +104,71 @@ export default function App() {
   const [activeTab, setActiveTab] = useState(initial.tab);
   const { theme, toggleTheme } = useTheme();
   const [settingsOpen, setSettingsOpen] = useState(false);
+
+  useEffect(() => {
+    const canTrack = () => typeof window.gtag === "function";
+
+    const getPagePath = () =>
+      `${window.location.pathname}${window.location.search}${window.location.hash}`;
+
+    const trackEvent = (eventName, params = {}) => {
+      if (!canTrack()) {
+        return;
+      }
+
+      window.gtag("event", eventName, {
+        page_path: getPagePath(),
+        page_title: document.title,
+        page_location: window.location.href,
+        ...params,
+      });
+    };
+
+    const trackPageView = () => trackEvent("page_view");
+
+    trackPageView();
+
+    const onHashChange = () => {
+      trackPageView();
+
+      const [tab, dashTab, topicId] = window.location.hash
+        .replace(/^#/, "")
+        .split("/");
+
+      if (tab) {
+        trackEvent("section_view", {
+          section_name: tab,
+          ...(dashTab ? { dash_tab: dashTab } : {}),
+          ...(topicId ? { topic_id: topicId } : {}),
+        });
+      }
+    };
+
+    const onClick = (event) => {
+      const target = event.target.closest("[data-ga-event]");
+      if (!target) {
+        return;
+      }
+
+      const eventName = target.dataset.gaEvent || "ui_click";
+      const label = target.dataset.gaLabel;
+      const destination =
+        target.getAttribute("href") || target.dataset.gaDestination;
+
+      trackEvent(eventName, {
+        ...(label ? { label } : {}),
+        ...(destination ? { destination } : {}),
+      });
+    };
+
+    window.addEventListener("hashchange", onHashChange);
+    document.addEventListener("click", onClick);
+
+    return () => {
+      window.removeEventListener("hashchange", onHashChange);
+      document.removeEventListener("click", onClick);
+    };
+  }, []);
 
   const handleTabChange = useCallback(
     (tab) => {

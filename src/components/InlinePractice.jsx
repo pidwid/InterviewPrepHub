@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useCallback, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { getQnAForTopic } from "../data/qna";
@@ -54,10 +54,18 @@ export default function InlinePractice({ topicNum }) {
         </div>
       </div>
       <div className="inline-practice-actions">
-        <button className="qna-action-btn" onClick={revealAll}>
+        <button
+          className="qna-action-btn"
+          onClick={revealAll}
+          data-ga-event="practice_reveal_all"
+        >
           Show All Answers
         </button>
-        <button className="qna-action-btn" onClick={hideAll}>
+        <button
+          className="qna-action-btn"
+          onClick={hideAll}
+          data-ga-event="practice_hide_all"
+        >
           Hide All Answers
         </button>
       </div>
@@ -68,16 +76,22 @@ export default function InlinePractice({ topicNum }) {
           return (
             <div
               key={q.id}
-              className={`inline-q-card ${isRevealed ? "inline-q-card--revealed" : ""}`}
+              className={`inline-q-card ${
+                isRevealed ? "inline-q-card--revealed" : ""
+              }`}
             >
               <div
                 className="inline-q-header"
                 onClick={() => toggleReveal(q.id)}
+                data-ga-event="practice_toggle"
+                data-ga-label={q.id}
               >
                 <span className="inline-q-badge">Q{q.num}</span>
                 <p className="inline-q-text">{q.question}</p>
                 <span
-                  className={`inline-q-chevron ${isRevealed ? "inline-q-chevron--open" : ""}`}
+                  className={`inline-q-chevron ${
+                    isRevealed ? "inline-q-chevron--open" : ""
+                  }`}
                 >
                   &#x25BC;
                 </span>
@@ -91,20 +105,28 @@ export default function InlinePractice({ topicNum }) {
                   </div>
                   <div className="inline-q-assess">
                     <button
-                      className={`qna-assess-btn qna-assess-btn--correct ${status === "correct" ? "qna-assess-btn--selected" : ""}`}
+                      className={`qna-assess-btn qna-assess-btn--correct ${
+                        status === "correct" ? "qna-assess-btn--selected" : ""
+                      }`}
                       onClick={(e) => {
                         e.stopPropagation();
                         markAnswer(q.id, "correct");
                       }}
+                      data-ga-event="practice_answer"
+                      data-ga-label={`${q.id}:correct`}
                     >
                       &#x2705; Got it
                     </button>
                     <button
-                      className={`qna-assess-btn qna-assess-btn--incorrect ${status === "incorrect" ? "qna-assess-btn--selected" : ""}`}
+                      className={`qna-assess-btn qna-assess-btn--incorrect ${
+                        status === "incorrect" ? "qna-assess-btn--selected" : ""
+                      }`}
                       onClick={(e) => {
                         e.stopPropagation();
                         markAnswer(q.id, "incorrect");
                       }}
+                      data-ga-event="practice_answer"
+                      data-ga-label={`${q.id}:incorrect`}
                     >
                       &#x274C; Missed it
                     </button>

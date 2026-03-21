@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { STATUS } from '../data/topics';
-import { FilterBar } from './ui';
-import TopicCard from './TopicCard';
+import { useState } from "react";
+import { STATUS } from "../data/topics";
+import { FilterBar } from "./ui";
+import TopicCard from "./TopicCard";
 
 export default function TopicList({
   activeCategoryId,
@@ -34,7 +34,11 @@ export default function TopicList({
   return (
     <div className="topic-list-page">
       <div className="topic-list-header">
-        <button className="back-btn" onClick={onBack}>
+        <button
+          className="back-btn"
+          onClick={onBack}
+          data-ga-event="topics_back"
+        >
           &larr; Dashboard
         </button>
         <h2 className="topic-list-title">
@@ -50,6 +54,8 @@ export default function TopicList({
             key={p}
             className={`filter-btn filter-btn--priority-${p} ${priorityFilter === p ? "filter-btn--priority-active" : ""}`}
             onClick={() => setPriorityFilter(p)}
+            data-ga-event="priority_filter"
+            data-ga-label={p}
           >
             {p === "all"
               ? "All Priorities"

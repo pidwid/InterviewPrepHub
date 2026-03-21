@@ -13,7 +13,15 @@ const STATUS_CLASS = {
   not_started: "index-status--not-started",
 };
 
-export default function IndexPage({ categories, progress, onTopicClick, stats, pctDone, pctRevise, onReset }) {
+export default function IndexPage({
+  categories,
+  progress,
+  onTopicClick,
+  stats,
+  pctDone,
+  pctRevise,
+  onReset,
+}) {
   const [search, setSearch] = useState("");
 
   const filtered = useMemo(() => {
@@ -52,11 +60,13 @@ export default function IndexPage({ categories, progress, onTopicClick, stats, p
             placeholder="Filter topics..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
+            data-ga-event="index_search"
           />
           {search && (
             <button
               className="search-bar-clear"
               onClick={() => setSearch("")}
+              data-ga-event="index_search_clear"
             >
               &times;
             </button>
@@ -78,6 +88,8 @@ export default function IndexPage({ categories, progress, onTopicClick, stats, p
                   className={`index-topic-row ${STATUS_CLASS[status]}`}
                   onClick={() => topic.noteFile && onTopicClick(topic.id)}
                   disabled={!topic.noteFile}
+                  data-ga-event="index_topic_open"
+                  data-ga-label={topic.id}
                 >
                   <span className="index-topic-num">{globalIdx}</span>
                   <span className={`index-topic-dot ${STATUS_CLASS[status]}`}>

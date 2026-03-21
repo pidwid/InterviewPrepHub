@@ -36,7 +36,12 @@ function SidebarCategory({
 
   return (
     <div className={`sb-category ${isExpanded ? "sb-category--open" : ""}`}>
-      <button className="sb-category-header" onClick={onToggle}>
+      <button
+        className="sb-category-header"
+        onClick={onToggle}
+        data-ga-event="category_toggle"
+        data-ga-label={cat.id}
+      >
         <span
           className={`sb-category-chevron ${isExpanded ? "sb-category-chevron--open" : ""}`}
         >
@@ -60,6 +65,8 @@ function SidebarCategory({
                 key={topic.id}
                 className={`sb-topic-item ${isActive ? "sb-topic-item--active" : ""} ${STATUS_CLS[status]}`}
                 onClick={() => onSelect(topic)}
+                data-ga-event="topic_select"
+                data-ga-label={topic.id}
               >
                 <span className="sb-topic-num">
                   {String(idx + 1).padStart(2, "0")}
@@ -69,7 +76,9 @@ function SidebarCategory({
                 </span>
                 <span className="sb-topic-name">{topic.title}</span>
                 {hasBookmarkFn?.(topic.noteFile || topic.solutionFile) && (
-                  <span className="sb-bookmark-dot" title="Study marker inside">🔖</span>
+                  <span className="sb-bookmark-dot" title="Study marker inside">
+                    🔖
+                  </span>
                 )}
                 {topic.priority && (
                   <span
@@ -166,6 +175,8 @@ function ContentPanel({
               onClick={() =>
                 setActiveTab(activeTab === "video" ? "notes" : "video")
               }
+              data-ga-event="content_tab"
+              data-ga-label="video"
             >
               ▶ Video
             </button>
@@ -176,6 +187,8 @@ function ContentPanel({
               onClick={() =>
                 setActiveTab(activeTab === "practice" ? "notes" : "practice")
               }
+              data-ga-event="content_tab"
+              data-ga-label="practice"
             >
               📝 Practice ({questionCount} Qs)
             </button>
@@ -185,6 +198,8 @@ function ContentPanel({
               key={s}
               className={`sb-action-btn sb-action-btn--${s} ${status === s ? "sb-action-btn--active" : ""}`}
               onClick={() => onSetStatus(topic.id, s)}
+              data-ga-event="status_change"
+              data-ga-label={`${topic.id}:${s}`}
             >
               {s === "not_started"
                 ? "Not Started"
@@ -207,6 +222,8 @@ function ContentPanel({
               const el = document.getElementById(getBookmark(targetFile));
               if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
             }}
+            data-ga-event="bookmark_jump"
+            data-ga-label={targetFile}
           >
             Jump to marker ↓
           </button>
@@ -214,6 +231,8 @@ function ContentPanel({
             className="sb-bookmark-banner-clear"
             onClick={() => onSetBookmark(targetFile, null)}
             title="Clear marker"
+            data-ga-event="bookmark_clear"
+            data-ga-label={targetFile}
           >
             ×
           </button>
@@ -385,6 +404,7 @@ export default function SidebarLayout({
                   <button
                     className="sb-quick-review-btn"
                     onClick={pickRandomRevise}
+                    data-ga-event="quick_review"
                   >
                     &#x1F500; Quick Review ({reviseTopics.length})
                   </button>
@@ -400,11 +420,13 @@ export default function SidebarLayout({
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="sb-search-input"
+                data-ga-event="sidebar_search"
               />
               {searchQuery && (
                 <button
                   className="sb-search-clear"
                   onClick={() => setSearchQuery("")}
+                  data-ga-event="sidebar_search_clear"
                 >
                   ×
                 </button>
@@ -438,6 +460,8 @@ export default function SidebarLayout({
         className="sb-edge-collapse"
         onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
         title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+        data-ga-event="sidebar_toggle"
+        data-ga-label={sidebarCollapsed ? "expand" : "collapse"}
       >
         {sidebarCollapsed ? "»" : "«"}
       </button>
