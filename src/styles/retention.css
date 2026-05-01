@@ -1,0 +1,279 @@
+/* Phase 3 retention features — review queue, streak heatmap, flashcards.
+   Styles share variables (var(--bg), var(--border), var(--accent)) with
+   the rest of the app for theming consistency. */
+
+/* ── Review Queue ──────────────────────────────────────────────────────── */
+.review-queue {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.review-queue-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 12px;
+}
+
+.review-queue-header h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.review-queue-count {
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: rgba(229, 62, 62, 0.15);
+  color: #e53e3e;
+  font-weight: 600;
+}
+
+.review-queue-empty {
+  margin: 0;
+  font-size: 0.85rem;
+  opacity: 0.6;
+}
+
+/* Stack the reused .st-topic buttons vertically inside the queue */
+.review-queue-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.review-queue-more {
+  text-align: center;
+  font-size: 0.8rem;
+  opacity: 0.5;
+  padding: 6px 0 0;
+  margin: 0;
+}
+
+/* ── Streak Heatmap (lives inline in .stats-progress-row) ─────────────── */
+.streak-heatmap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.6rem 0.75rem;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.streak-stats {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.streak-stat {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 0.3rem;
+  white-space: nowrap;
+}
+
+.streak-stat-value {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.streak-stat-label {
+  font-size: 0.7rem;
+  opacity: 0.6;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.streak-grid {
+  width: 100%;
+  height: auto;
+  display: block;
+  max-height: 70px;
+}
+
+.sh-cell--0 { fill: rgba(127, 127, 127, 0.18); }
+.sh-cell--1 { fill: #9be9a8; }
+.sh-cell--2 { fill: #40c463; }
+.sh-cell--3 { fill: #30a14e; }
+.sh-cell--4 { fill: #216e39; }
+
+/* ── Flashcards ────────────────────────────────────────────────────────── */
+.fc-dialog {
+  width: min(720px, 92vw);
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.fc-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.85rem;
+}
+
+.fc-progress {
+  font-weight: 600;
+}
+
+.fc-topic {
+  flex: 1;
+  opacity: 0.6;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fc-close {
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  cursor: pointer;
+  color: inherit;
+  line-height: 1;
+}
+
+.fc-card {
+  padding: 24px;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 16px;
+}
+
+.fc-question {
+  font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.fc-answer {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  white-space: pre-wrap;
+}
+
+.fc-actions {
+  display: flex;
+  gap: 8px;
+  padding: 16px;
+  justify-content: flex-end;
+}
+
+.fc-btn {
+  padding: 8px 16px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: inherit;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.fc-btn:hover {
+  background: rgba(127, 127, 127, 0.1);
+}
+
+.fc-btn--primary {
+  background: var(--accent, #667eea);
+  color: white;
+  border-color: var(--accent, #667eea);
+}
+
+.fc-btn--primary:hover {
+  filter: brightness(1.1);
+  background: var(--accent, #667eea);
+}
+
+.fc-btn--full {
+  margin: 16px;
+  justify-content: center;
+}
+
+.fc-rating {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  padding: 16px;
+}
+
+.fc-btn--hard   { border-color: rgba(229, 62, 62, 0.5); }
+.fc-btn--medium { border-color: rgba(237, 137, 54, 0.5); }
+.fc-btn--easy   { border-color: rgba(72, 187, 120, 0.5); }
+
+.fc-btn kbd {
+  font-size: 0.7rem;
+  padding: 1px 6px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  opacity: 0.6;
+}
+
+/* Dashboard layout — review queue (60%) + quick-refs (40%) */
+.dash-retention-row {
+  display: grid;
+  grid-template-columns: 60fr 40fr;
+  gap: 16px;
+  margin-bottom: 16px;
+  align-items: stretch;
+}
+
+/* Make the review queue card itself stretch to row height */
+.dash-retention-row .review-queue {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Two-column grid of topic buttons inside the queue for better density.
+   align-items: start keeps each button at its natural height instead of
+   stretching to fill the grid track. */
+.dash-retention-row .review-queue-list {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: min-content;
+  align-items: start;
+  gap: 6px;
+  overflow-y: auto;
+}
+
+@media (max-width: 760px) {
+  .dash-retention-row .review-queue-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* When inside the row, let QuickRefs stack vertically and fill the space */
+.dash-retention-row .st-quick-refs {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+}
+
+.dash-retention-row .st-quick-ref {
+  flex: 1;
+}
+
+@media (max-width: 760px) {
+  .dash-retention-row {
+    grid-template-columns: 1fr;
+  }
+}

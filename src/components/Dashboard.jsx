@@ -1,7 +1,9 @@
 import { useCallback, useMemo, useState } from "react";
-import RoadmapSection from "./RoadmapSection";
+import RoadmapSection, { QuickRefs } from "./RoadmapSection";
 import IndexPage from "./IndexPage";
 import SidebarLayout from "./SidebarLayout";
+import ReviewQueue from "./ReviewQueue";
+import StreakHeatmap from "./StreakHeatmap";
 
 const DASHBOARD_TABS = [
   { key: "index", label: "\u{1F4D1} Index" },
@@ -25,6 +27,9 @@ export default function Dashboard({
   initialDashTab,
   initialTopicId,
   onNavChange,
+  review,
+  streak,
+  recordActivity,
 }) {
   const pctDone = stats.total
     ? Math.round((stats.done / stats.total) * 100)
@@ -118,16 +123,36 @@ export default function Dashboard({
             pctDone={pctDone}
             pctRevise={pctRevise}
             onReset={onReset}
+            heatmap={
+              streak ? (
+                <StreakHeatmap state={streak.state} stats={streak.stats} />
+              ) : null
+            }
           />
         )}
         {dashTab === "roadmap" && (
-          <RoadmapSection
-            progress={progress}
-            roadmapPhases={roadmapPhases}
-            allTopics={allTopics}
-            onTopicClick={handleRoadmapTopicClick}
-            onOpenNote={onOpenNote}
-          />
+          <>
+            {review && Object.keys(review.state).length > 0 ? (
+              <div className="dash-retention-row">
+                <ReviewQueue
+                  allTopics={allTopics}
+                  reviewState={review}
+                  onOpenNote={(topicId) => handleRoadmapTopicClick(topicId)}
+                />
+                <QuickRefs onOpenNote={onOpenNote} />
+              </div>
+            ) : null}
+            <RoadmapSection
+              progress={progress}
+              roadmapPhases={roadmapPhases}
+              allTopics={allTopics}
+              onTopicClick={handleRoadmapTopicClick}
+              onOpenNote={onOpenNote}
+              showQuickRefs={
+                !(review && Object.keys(review.state).length > 0)
+              }
+            />
+          </>
         )}
         {dashTab === "categories" && (
           <SidebarLayout
@@ -137,6 +162,7 @@ export default function Dashboard({
             initialTopicId={pendingTopicId}
             onInitialTopicConsumed={() => setPendingTopicId(null)}
             onTopicSelect={(topicId) => onNavChange?.("categories", topicId)}
+            recordActivity={recordActivity}
           />
         )}
         {dashTab === "practice" && showPractice && (
@@ -147,6 +173,7 @@ export default function Dashboard({
             initialTopicId={pendingTopicId}
             onInitialTopicConsumed={() => setPendingTopicId(null)}
             onTopicSelect={(topicId) => onNavChange?.("practice", topicId)}
+            recordActivity={recordActivity}
           />
         )}
       </div>

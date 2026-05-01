@@ -21,6 +21,7 @@ export default function IndexPage({
   pctDone,
   pctRevise,
   onReset,
+  heatmap,
 }) {
   const [search, setSearch] = useState("");
 
@@ -48,6 +49,7 @@ export default function IndexPage({
             pctRevise={pctRevise}
             onReset={onReset}
           />
+          {heatmap}
         </div>
       )}
 

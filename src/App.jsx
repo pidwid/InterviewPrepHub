@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import TabNav from "./components/TabNav";
 import Dashboard from "./components/Dashboard";
 import TopicList from "./components/TopicList";
@@ -6,6 +6,9 @@ import NoteViewer from "./components/NoteViewer";
 import SettingsDialog from "./components/SettingsDialog";
 import SearchPalette from "./components/SearchPalette";
 import { SEARCH_INDEX } from "./data/searchIndex";
+import { useReviewState } from "./store/useReviewState";
+import { useStreakState } from "./store/useStreakState";
+import { STATUS } from "./data/topics";
 import { useProgress } from "./store/useProgress";
 import { useTheme } from "./store/useTheme";
 import { useNavState } from "./store/useNavState";
@@ -36,13 +39,50 @@ function TabSection({
   initialDashTab,
   initialTopicId,
   onNavChange,
+  recordActivity,
+  streak,
 }) {
-  const { progress, setStatus, getStatus, resetAll, stats } = useProgress(
-    namespace,
-    allTopics,
-  );
+  const { progress, setStatus: rawSetStatus, getStatus, resetAll, stats } =
+    useProgress(namespace, allTopics);
+  const review = useReviewState(namespace);
   const [view, setView] = useState("dashboard");
   const [activeNote, setActiveNote] = useState(null);
+
+  // Sync the review queue against the progress source-of-truth.
+  // - Any topic flagged 'revise' is enqueued (or refreshed)
+  // - Any queued topic that is no longer 'revise' is removed
+  // Runs once after progress finishes loading.
+  const backfillDone = useRef(false);
+  useEffect(() => {
+    if (backfillDone.current) return;
+    if (Object.keys(progress).length === 0) return;
+    backfillDone.current = true;
+    for (const [topicId, status] of Object.entries(progress)) {
+      if (status === STATUS.REVISE) review.markForReview(topicId);
+    }
+    // Remove any queued topic that is no longer flagged as revise
+    for (const topicId of Object.keys(review.state)) {
+      if (progress[topicId] !== STATUS.REVISE) review.removeReview(topicId);
+    }
+  }, [progress, review]);
+
+  // Wrap setStatus so that flagging a topic as "revise" auto-enqueues it
+  // for spaced-repetition review. Also records a streak activity.
+  // Status → review queue sync:
+  //   Revise  → enqueue (or refresh dueAt to now)
+  //   Anything else (Done, not_started) → remove from queue
+  const setStatus = useCallback(
+    (topicId, status) => {
+      rawSetStatus(topicId, status);
+      recordActivity?.();
+      if (status === STATUS.REVISE) {
+        review.markForReview(topicId);
+      } else {
+        review.removeReview(topicId);
+      }
+    },
+    [rawSetStatus, recordActivity, review],
+  );
 
   // Scroll to top when switching views
   useEffect(() => {
@@ -66,6 +106,7 @@ function TabSection({
       <NoteViewer
         noteFile={activeNote.noteFile}
         title={activeNote.title}
+        recordActivity={recordActivity}
         onClose={() => setActiveNote(null)}
       />
     );
@@ -80,6 +121,9 @@ function TabSection({
         categories={categories}
         showPractice={showPractice}
         setStatus={setStatus}
+        review={review}
+        streak={streak}
+        recordActivity={recordActivity}
         onOpenNote={(topic) => setActiveNote(topic)}
         roadmapPhases={roadmapPhases}
         allTopics={allTopics}
@@ -118,6 +162,7 @@ export default function App() {
   const { theme, toggleTheme } = useTheme();
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const streak = useStreakState();
 
   // Global Cmd+K / Ctrl+K to open search
   useEffect(() => {
@@ -321,6 +366,8 @@ export default function App() {
                 onNavChange={(dashTab, topicId) =>
                   handleNavChange(id, dashTab, topicId)
                 }
+                recordActivity={streak.recordActivity}
+                streak={streak}
               />
             ) : null,
         )}

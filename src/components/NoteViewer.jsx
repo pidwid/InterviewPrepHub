@@ -6,7 +6,12 @@ import { getContent, loadContent } from "../data/contentLoader";
 import { getQnAForTopic } from "../data/qna";
 import InlinePractice, { getTopicNumFromNoteFile } from "./InlinePractice";
 
-export default function NoteViewer({ noteFile, title, onClose }) {
+export default function NoteViewer({
+  noteFile,
+  title,
+  recordActivity,
+  onClose,
+}) {
   // Read cached content synchronously each render — instant for already-loaded
   // notes. The async path below populates the cache and triggers a re-render.
   const cached = getContent(noteFile);
@@ -17,6 +22,13 @@ export default function NoteViewer({ noteFile, title, onClose }) {
 
   // Note: scroll restore is handled by ReadingProgress (per-note position).
   // We avoid resetting scroll here so refresh resumes where you left off.
+
+  // Record a streak activity after 30s of viewing the note
+  useEffect(() => {
+    if (!recordActivity || !noteFile) return undefined;
+    const t = setTimeout(() => recordActivity(), 30_000);
+    return () => clearTimeout(t);
+  }, [noteFile, recordActivity]);
 
   // Lazy-load the markdown chunk on demand
   useEffect(() => {

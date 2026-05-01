@@ -125,6 +125,7 @@ function ContentPanel({
   scrollRef,
   getBookmark,
   onSetBookmark,
+  recordActivity,
 }) {
   const [activeTab, setActiveTab] = useState("notes");
   const [fetched, setFetched] = useState(null);
@@ -168,6 +169,13 @@ function ContentPanel({
     onScroll();
     return () => el.removeEventListener("scroll", onScroll);
   }, [scrollRef, targetFileForFetch, contentLoaded]);
+
+  // Record a streak activity after 30s of viewing the topic
+  useEffect(() => {
+    if (!recordActivity || !targetFileForFetch) return undefined;
+    const t = setTimeout(() => recordActivity(), 30_000);
+    return () => clearTimeout(t);
+  }, [targetFileForFetch, recordActivity]);
 
   // Lazy-load the markdown chunk for the selected topic
   useEffect(() => {
@@ -345,6 +353,7 @@ export default function SidebarLayout({
   initialTopicId,
   onInitialTopicConsumed,
   onTopicSelect,
+  recordActivity,
 }) {
   const mainRef = useRef(null);
   const { getBookmark, setBookmark, hasBookmark } = useBookmarks();
@@ -539,6 +548,7 @@ export default function SidebarLayout({
           scrollRef={mainRef}
           getBookmark={getBookmark}
           onSetBookmark={setBookmark}
+          recordActivity={recordActivity}
         />
       </main>
     </div>

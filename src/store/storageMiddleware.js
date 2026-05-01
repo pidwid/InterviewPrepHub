@@ -40,11 +40,15 @@ export const TURSO_TOKEN_KEY = "turso_auth_token";
 const PROGRESS_LS_KEY = (ns) => `prep_progress_${ns}`;
 const BOOKMARKS_LS_KEY = "prep_bookmarks";
 const QNA_LS_KEY = "qna_progress";
+const REVIEW_LS_KEY = (ns) => `prep_review_${ns}`;
+const STREAK_LS_KEY = "prep_streak";
 
 // ── Turso row type constants ─────────────────────────────────────────────────
 const T_PROGRESS = "progress";
 const T_BOOKMARK = "bookmark";
 const T_QNA = "qna";
+const T_REVIEW = "review";
+const T_STREAK = "streak";
 
 // ── Config: read/write ───────────────────────────────────────────────────────
 
@@ -182,7 +186,7 @@ export const progressStorage = {
       const data = raw ? JSON.parse(raw) : {};
       data[topicId] = status;
       localStorage.setItem(PROGRESS_LS_KEY(namespace), JSON.stringify(data));
-    } catch {}
+    } catch { /* ignore */ }
   },
 
   async reset(namespace) {
@@ -195,7 +199,7 @@ export const progressStorage = {
           sql: "DELETE FROM user_data WHERE type = ? AND key LIKE ?",
           args: [T_PROGRESS, `${namespace}:%`],
         });
-      } catch {}
+      } catch { /* ignore */ }
       return;
     }
     localStorage.removeItem(PROGRESS_LS_KEY(namespace));
@@ -241,7 +245,7 @@ export const bookmarkStorage = {
           sql: UPSERT_SQL,
           args: [T_BOOKMARK, noteFile, headingId],
         });
-      } catch {}
+      } catch { /* ignore */ }
       return;
     }
     try {
@@ -249,7 +253,7 @@ export const bookmarkStorage = {
       const data = raw ? JSON.parse(raw) : {};
       data[noteFile] = headingId;
       localStorage.setItem(BOOKMARKS_LS_KEY, JSON.stringify(data));
-    } catch {}
+    } catch { /* ignore */ }
   },
 
   async remove(noteFile) {
@@ -262,7 +266,7 @@ export const bookmarkStorage = {
           sql: "DELETE FROM user_data WHERE type = ? AND key = ?",
           args: [T_BOOKMARK, noteFile],
         });
-      } catch {}
+      } catch { /* ignore */ }
       return;
     }
     try {
@@ -270,7 +274,7 @@ export const bookmarkStorage = {
       const data = raw ? JSON.parse(raw) : {};
       delete data[noteFile];
       localStorage.setItem(BOOKMARKS_LS_KEY, JSON.stringify(data));
-    } catch {}
+    } catch { /* ignore */ }
   },
 };
 
@@ -313,7 +317,7 @@ export const qnaStorage = {
           sql: UPSERT_SQL,
           args: [T_QNA, questionId, result],
         });
-      } catch {}
+      } catch { /* ignore */ }
       return;
     }
     try {
@@ -321,7 +325,135 @@ export const qnaStorage = {
       const data = raw ? JSON.parse(raw) : {};
       data[questionId] = result;
       localStorage.setItem(QNA_LS_KEY, JSON.stringify(data));
-    } catch {}
+    } catch { /* ignore */ }
+  },
+};
+
+// ── Review queue storage ─────────────────────────────────────────────────────
+//
+// Shape: { [topicId]: { lastReviewed, dueAt, reviewCount } }
+// Turso key format: '{namespace}:{topicId}', value = JSON.stringify(entry)
+
+export const reviewStorage = {
+  async getAll(namespace) {
+    if (getStorageMode() === "turso") {
+      const client = await _getClient();
+      if (!client) return {};
+      try {
+        await _ensureSchema(client);
+        const prefix = `${namespace}:`;
+        const result = await client.execute({
+          sql: "SELECT key, value FROM user_data WHERE type = ? AND key LIKE ?",
+          args: [T_REVIEW, `${prefix}%`],
+        });
+        return Object.fromEntries(
+          result.rows.map((r) => [r.key.slice(prefix.length), JSON.parse(r.value)]),
+        );
+      } catch {
+        return {};
+      }
+    }
+    try {
+      const raw = localStorage.getItem(REVIEW_LS_KEY(namespace));
+      return raw ? JSON.parse(raw) : {};
+    } catch {
+      return {};
+    }
+  },
+
+  async set(namespace, topicId, entry) {
+    if (getStorageMode() === "turso") {
+      const client = await _getClient();
+      if (!client) return;
+      try {
+        await _ensureSchema(client);
+        await client.execute({
+          sql: UPSERT_SQL,
+          args: [T_REVIEW, `${namespace}:${topicId}`, JSON.stringify(entry)],
+        });
+      } catch { /* ignore */ }
+      return;
+    }
+    try {
+      const raw = localStorage.getItem(REVIEW_LS_KEY(namespace));
+      const data = raw ? JSON.parse(raw) : {};
+      data[topicId] = entry;
+      localStorage.setItem(REVIEW_LS_KEY(namespace), JSON.stringify(data));
+    } catch { /* ignore */ }
+  },
+
+  async remove(namespace, topicId) {
+    if (getStorageMode() === "turso") {
+      const client = await _getClient();
+      if (!client) return;
+      try {
+        await _ensureSchema(client);
+        await client.execute({
+          sql: "DELETE FROM user_data WHERE type = ? AND key = ?",
+          args: [T_REVIEW, `${namespace}:${topicId}`],
+        });
+      } catch { /* ignore */ }
+      return;
+    }
+    try {
+      const raw = localStorage.getItem(REVIEW_LS_KEY(namespace));
+      const data = raw ? JSON.parse(raw) : {};
+      delete data[topicId];
+      localStorage.setItem(REVIEW_LS_KEY(namespace), JSON.stringify(data));
+    } catch { /* ignore */ }
+  },
+};
+
+// ── Streak / activity log storage ────────────────────────────────────────────
+//
+// Shape: { 'YYYY-MM-DD': activityCount }
+// Turso key format: 'YYYY-MM-DD', value = stringified count
+
+export const streakStorage = {
+  async getAll() {
+    if (getStorageMode() === "turso") {
+      const client = await _getClient();
+      if (!client) return {};
+      try {
+        await _ensureSchema(client);
+        const result = await client.execute({
+          sql: "SELECT key, value FROM user_data WHERE type = ?",
+          args: [T_STREAK],
+        });
+        return Object.fromEntries(
+          result.rows.map((r) => [r.key, parseInt(r.value, 10) || 0]),
+        );
+      } catch {
+        return {};
+      }
+    }
+    try {
+      const raw = localStorage.getItem(STREAK_LS_KEY);
+      return raw ? JSON.parse(raw) : {};
+    } catch {
+      return {};
+    }
+  },
+
+  async set(dateKey, count) {
+    if (getStorageMode() === "turso") {
+      const client = await _getClient();
+      if (!client) return;
+      try {
+        await _ensureSchema(client);
+        await client.execute({
+          sql: UPSERT_SQL,
+          args: [T_STREAK, dateKey, String(count)],
+        });
+      } catch { /* ignore */ }
+      return;
+    }
+    try {
+      const raw = localStorage.getItem(STREAK_LS_KEY);
+      const data = raw ? JSON.parse(raw) : {};
+      data[dateKey] = count;
+      localStorage.setItem(STREAK_LS_KEY, JSON.stringify(data));
+    } catch { /* ignore */ }
   },
 };
 
@@ -347,7 +479,7 @@ export async function migrateLocalToTurso() {
       for (const [topicId, status] of Object.entries(data)) {
         stmts.push({ sql: UPSERT_SQL, args: [T_PROGRESS, `${ns}:${topicId}`, status] });
       }
-    } catch {}
+    } catch { /* ignore */ }
   }
 
   // Bookmarks
@@ -357,7 +489,7 @@ export async function migrateLocalToTurso() {
     for (const [noteFile, headingId] of Object.entries(data)) {
       stmts.push({ sql: UPSERT_SQL, args: [T_BOOKMARK, noteFile, headingId] });
     }
-  } catch {}
+  } catch { /* ignore */ }
 
   // QnA
   try {
@@ -366,7 +498,30 @@ export async function migrateLocalToTurso() {
     for (const [qId, result] of Object.entries(data)) {
       stmts.push({ sql: UPSERT_SQL, args: [T_QNA, qId, result] });
     }
-  } catch {}
+  } catch { /* ignore */ }
+
+  // Review queue (per namespace)
+  for (const ns of ["sd", "lld"]) {
+    try {
+      const raw = localStorage.getItem(REVIEW_LS_KEY(ns));
+      const data = raw ? JSON.parse(raw) : {};
+      for (const [topicId, entry] of Object.entries(data)) {
+        stmts.push({
+          sql: UPSERT_SQL,
+          args: [T_REVIEW, `${ns}:${topicId}`, JSON.stringify(entry)],
+        });
+      }
+    } catch { /* ignore */ }
+  }
+
+  // Streak / activity log
+  try {
+    const raw = localStorage.getItem(STREAK_LS_KEY);
+    const data = raw ? JSON.parse(raw) : {};
+    for (const [day, count] of Object.entries(data)) {
+      stmts.push({ sql: UPSERT_SQL, args: [T_STREAK, day, String(count)] });
+    }
+  } catch { /* ignore */ }
 
   if (stmts.length > 0) {
     await client.batch(stmts, "write");
@@ -397,7 +552,7 @@ export async function migrateTursoToLocal() {
         result.rows.map((r) => [r.key.slice(prefix.length), r.value]),
       );
       localStorage.setItem(PROGRESS_LS_KEY(ns), JSON.stringify(data));
-    } catch {}
+    } catch { /* ignore */ }
   }
 
   // Bookmarks
@@ -408,7 +563,7 @@ export async function migrateTursoToLocal() {
     });
     const data = Object.fromEntries(result.rows.map((r) => [r.key, r.value]));
     localStorage.setItem(BOOKMARKS_LS_KEY, JSON.stringify(data));
-  } catch {}
+  } catch { /* ignore */ }
 
   // QnA
   try {
@@ -418,5 +573,32 @@ export async function migrateTursoToLocal() {
     });
     const data = Object.fromEntries(result.rows.map((r) => [r.key, r.value]));
     localStorage.setItem(QNA_LS_KEY, JSON.stringify(data));
-  } catch {}
+  } catch { /* ignore */ }
+
+  // Review queue (split by namespace prefix)
+  for (const ns of ["sd", "lld"]) {
+    try {
+      const prefix = `${ns}:`;
+      const result = await client.execute({
+        sql: "SELECT key, value FROM user_data WHERE type = ? AND key LIKE ?",
+        args: [T_REVIEW, `${prefix}%`],
+      });
+      const data = Object.fromEntries(
+        result.rows.map((r) => [r.key.slice(prefix.length), JSON.parse(r.value)]),
+      );
+      localStorage.setItem(REVIEW_LS_KEY(ns), JSON.stringify(data));
+    } catch { /* ignore */ }
+  }
+
+  // Streak / activity log
+  try {
+    const result = await client.execute({
+      sql: "SELECT key, value FROM user_data WHERE type = ?",
+      args: [T_STREAK],
+    });
+    const data = Object.fromEntries(
+      result.rows.map((r) => [r.key, parseInt(r.value, 10) || 0]),
+    );
+    localStorage.setItem(STREAK_LS_KEY, JSON.stringify(data));
+  } catch { /* ignore */ }
 }
