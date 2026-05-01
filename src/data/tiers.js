@@ -64,6 +64,9 @@ const T2_LLD_NEW = new Set([
   'lld-hashmap',
   'lld-concurrency-notes',
   'lld-thread-pool',
+  'lld-stripe-payment',          // commonly asked at fintech / marketplace
+  'lld-distributed-counter',     // staff-level data-structure problem
+  'lld-notification-throttler',  // ubiquitous at consumer companies
 ]);
 const T2_LLD = new Set([...T1_LLD, ...T2_LLD_NEW]);
 
@@ -93,6 +96,8 @@ const T3_LLD_NEW = new Set([
   'lld-in-memory-cache',
   'lld-cp-blocking-queue',
   'lld-cp-concurrent-hashmap',
+  'lld-order-matching',          // specialized fintech / HFT
+  'lld-versioned-doc-store',     // specialized; Notion / Figma / Git-like systems
 ]);
 const T3_LLD = new Set([...T2_LLD, ...T3_LLD_NEW]);
 

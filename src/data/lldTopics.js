@@ -155,6 +155,11 @@ export const LLD_CATEGORIES = [
       { id: 'lld-spreadsheet',         title: 'Design a Spreadsheet (Excel)', solutionFile: 'Solution-Spreadsheet.md' },
       { id: 'lld-logistics',           title: 'Design a Logistics / Delivery System', solutionFile: 'Solution-Logistics.md' },
       { id: 'lld-survey',              title: 'Design a Survey System (Google Forms)',    solutionFile: 'Solution-Survey.md' },
+      { id: 'lld-stripe-payment',      title: 'Design a Stripe-style Payment Processor',  solutionFile: 'Solution-Stripe-Payment-Processor.md' },
+      { id: 'lld-order-matching',      title: 'Design an Order Matching Engine (CLOB)',   solutionFile: 'Solution-Order-Matching-Engine.md' },
+      { id: 'lld-distributed-counter', title: 'Design a Distributed Counter',             solutionFile: 'Solution-Distributed-Counter.md' },
+      { id: 'lld-notification-throttler', title: 'Design a Notification Throttler',       solutionFile: 'Solution-Notification-Throttler.md' },
+      { id: 'lld-versioned-doc-store', title: 'Design a Versioned Document Store (Git-style)', solutionFile: 'Solution-Versioned-Document-Store.md' },
     ],
   },
   {
