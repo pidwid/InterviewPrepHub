@@ -1,182 +1,151 @@
-# 🛠️ Design Bowling Alley Scoring (LLD)
+# 🛠️ Design a Bowling Alley System (LLD)
 
-Designing a Bowling Alley scoring system looks simple on the surface but is notoriously tricky because of how "Strikes" and "Spares" retroactively affect the scoring of previous frames. It tests your ability to model sequential state arrays and look-ahead algorithms.
-
----
+> **Sources**: [USBC — *Tenpin Bowling Rules*](https://bowl.com/Rulebook/) (frame structure, strike/spare bonuses, 10th-frame rules); Robert C. Martin — *Bowling Game Kata* (https://kata-log.rocks/bowling-kata-kata) — the canonical TDD exercise for bowling-score logic; Kent Beck — *TDD by Example*.
 
 ## 1. Requirements
 
-### Functional Requirements
-- **Match:** A bowling match consists of 1 to N players.
-- **Frames:** Each player gets 10 frames per game.
-- **Rolls:** In each frame, a player gets 2 rolls to knock down 10 pins. (Unless they get a strike on the first roll).
-- **10th Frame Special Rule:** If a player bowls a Strike or Spare in the 10th frame, they get up to 3 rolls total in that frame.
-- **Scoring:** The system must accurately calculate the score, factoring in bonus points for Spares and Strikes.
+### Functional
+- Manage **multiple lanes** in a bowling alley.
+- Each lane hosts **sequential games**; one active game per lane at a time.
+- A game has 1–N **players**, each with **10 frames**.
+- Track per-frame scoring with the bowling rules:
+  - **Strike** (10 pins on roll 1): bonus = next 2 rolls.
+  - **Spare** (10 pins after roll 2): bonus = next 1 roll.
+  - **10th frame**: 3 rolls if strike or spare (so the bonus is well-defined).
+- Game state lifecycle: `WAITING_FOR_PLAYERS → IN_PROGRESS → FINISHED`.
+- Display a live scoreboard.
+- Equipment **rental** (shoes, balls).
 
----
+### Non-Functional
+- **Bowling-rules correctness is the entire interview** — get it provably right.
+- Multiple **concurrent games** on different lanes.
+- Time-based pricing (rate per hour).
 
-## 2. Core Entities (Objects)
+## 2. Core Entities
 
-- `Game` (Manages players and orchestrates the match)
-- `Player`
-- `Frame` (Base class) -> `TenthFrame` (Special subclass)
-- `Roll` / `ScoreCard`
+| Entity | Key Fields |
+|---|---|
+| `BowlingAlley` | `lanes[]`, `staff[]`, `pricePerHourMinor` |
+| `Lane` | `id`, `status: AVAILABLE/IN_USE/MAINTENANCE`, `currentGame?` |
+| `Game` | `lane`, `players[]`, `state`, `startedAt`, `finishedAt` |
+| `Player` | `id`, `name`, `frames[10]` |
+| `Frame` | `rollOne`, `rollTwo?`, `rollThree?` (10th only), derived `isStrike`, `isSpare`, `isComplete` |
+| `Roll` | `pinsKnocked: 0..10` |
+| `Equipment` (abstract) | shared base for rentals |
+| `Ball` | `weightLbs`, `color` |
+| `Shoes` | `size` |
+| `RentalInventory` | thread-safe set of currently-available `Equipment` |
 
----
+### Relationships
+`BowlingAlley` 1—M `Lane` · `Lane` 1—M `Game` (sequential, one active) · `Game` 1—M `Player` · `Player` 1—10 `Frame` · `Frame` 1—3 `Roll`.
 
-## 3. Class Diagram / Relationships
+## 3. Class Diagram
 
 ```mermaid
 classDiagram
-    class Game {
-        -List~Player~ players
-        -int currentPlayerIndex
-        -int currentFrameOutput
-        +roll(pinsDown)
-        +getWinner()
-    }
-
-    class Player {
-        -String name
-        -List~Frame~ frames
-        +addRoll(pinsDown)
-        +getScore()
-    }
-
-    class Frame {
-        -int[] rolls
-        -int rollCount
-        +isStrike()
-        +isSpare()
-        +isComplete()
-    }
-
-    class TenthFrame {
-        // Overrides isComplete() to allow 3 rolls
-    }
-
-    Game "1" *-- "many" Player
-    Player "1" *-- "10" Frame
+  class BowlingAlley
+  class Lane { +status; +currentGame }
+  class Game { +state }
+  class Player { +frames[10] }
+  class Frame { +rollOne; +rollTwo?; +rollThree?; +isStrike(); +isSpare() }
+  class ScoringStrategy { <<interface>> +score(player) }
+  class StandardScoring
+  class CandlepinScoring
+  BowlingAlley "1" --> "*" Lane
+  Lane "1" --> "*" Game
+  Game "1" --> "*" Player
+  Player "1" --> "10" Frame
+  Game --> ScoringStrategy
+  ScoringStrategy <|.. StandardScoring
+  ScoringStrategy <|.. CandlepinScoring
 ```
 
----
-
-## 4. Key Algorithms / Design Patterns
-
-### 1. Frame Representation
-
-A standard frame holds up to 2 rolls. 
+## 4. Key Methods
 
 ```java
-public class Frame {
-    protected int[] rolls = new int[2];
-    protected int currentRoll = 0;
+GameId BowlingAlley.bookLane(LaneId, List<Player>);
+void   Game.startGame();
+void   Game.recordRoll(PlayerId, int pinsKnocked);   // throws if invalid (e.g., 11 pins)
+List<FrameScore> Game.getScoreboard();               // running totals per player
+void   Game.finishGame();
+```
 
-    public void addRoll(int pins) {
-        rolls[currentRoll++] = pins;
-    }
+## 5. The Scoring Algorithm (the crux)
 
-    public boolean isStrike() {
-        return currentRoll > 0 && rolls[0] == 10;
-    }
+```java
+int calculateTotalScore(Player p) {
+  int total = 0;
+  Frame[] f = p.frames;          // 10 frames
 
-    public boolean isSpare() {
-        return currentRoll == 2 && (rolls[0] + rolls[1] == 10) && !isStrike();
+  for (int i = 0; i < 10; i++) {
+    if (f[i].isStrike()) {
+      total += 10 + nextTwoRolls(p, i);          // cross-frame lookahead
+    } else if (f[i].isSpare()) {
+      total += 10 + nextOneRoll(p, i);
+    } else if (f[i].isComplete()) {
+      total += f[i].rollOne + f[i].rollTwo;
+    } else {
+      // game still in progress — leave running total partial
+      break;
     }
+  }
+  // 10th-frame bonus rolls are stored INSIDE f[9] (rollTwo, rollThree)
+  // and are not double-counted by nextTwoRolls(); see helpers below.
+  return total;
+}
 
-    public boolean isComplete() {
-        return isStrike() || currentRoll == 2;
-    }
-    
-    public int getBaseScore() {
-        return rolls[0] + rolls[1];
-    }
+int nextOneRoll(Player p, int idx) {
+  if (idx == 9) return p.frames[9].rollTwo;     // already in 10th frame
+  return p.frames[idx + 1].rollOne;
+}
+
+int nextTwoRolls(Player p, int idx) {
+  if (idx == 9) return p.frames[9].rollTwo + safe(p.frames[9].rollThree);
+  Frame next = p.frames[idx + 1];
+  if (idx == 8) {                                // strike in 9th: 1st bonus from 10th's roll1, 2nd from 10th's roll2
+    return next.rollOne + safe(next.rollTwo);
+  }
+  if (next.isStrike()) {                         // strike followed by strike: skip to frame after next
+    return 10 + p.frames[idx + 2].rollOne;
+  }
+  return next.rollOne + safe(next.rollTwo);
 }
 ```
 
-**The 10th Frame:**
-The 10th frame is special. If you get a Strike or a Spare, you get a 3rd roll. We use inheritance here to cleanly alter the `isComplete()` logic without cluttering the base class with `if (frameNumber == 10)` logic.
+**Why the 10th frame is special**: a strike in frame 10 needs 2 more rolls to compute its bonus; a spare needs 1. So frame 10 stores up to 3 rolls **internally** — keeping the bonus formula well-defined without needing an 11th frame.
 
-```java
-public class TenthFrame extends Frame {
-    public TenthFrame() {
-        rolls = new int[3]; // The 10th frame can have 3 rolls
-    }
+**Sanity tests** (use these as fixtures — they exercise every edge case):
+| Game | Score |
+|---|---|
+| All gutter balls (20 zeros) | 0 |
+| All ones (20 ones) | 20 |
+| One spare in frame 1, then 8 + 8s | 150 |
+| **Perfect game** (12 strikes) | **300** |
 
-    @Override
-    public boolean isComplete() {
-        if (isStrike() || isSpare()) {
-            return currentRoll == 3; // Gets bonus roll
-        }
-        return currentRoll == 2; // Normal 2 rolls
-    }
-}
-```
+## 6. Design Patterns
 
-### 2. The Look-Ahead Scoring Algorithm
+| Pattern | Where | Why |
+|---|---|---|
+| **State** | `Game.state` (`WAITING → IN_PROGRESS → FINISHED`) | Block illegal operations (e.g., recording a roll on a `FINISHED` game). |
+| **Strategy** | `ScoringStrategy` (`Standard` / `Candlepin` / `Duckpin`) | Different bowling variants share the same `Game` shell. |
+| **Observer** | `ScoreboardListener` notified after each `recordRoll` | Decouple game logic from display. |
+| **Command** | `RecordRollCommand` (with `undo`) | Recover from operator typos at the kiosk. |
+| **Factory** | `FrameFactory.create(frameNumber)` returns the special 10th-frame implementation | Avoid `if (frame == 10)` scattered everywhere. |
+| **Composite** | `Game` aggregates `Player`s; `Player` aggregates `Frame`s; `Frame` aggregates `Roll`s | Uniform `getScore()` traversal. |
 
-This is the hardest part of the interview. You cannot easily calculate the score of Frame 1 until Frame 2 (and sometimes Frame 3) happens.
-The cleanest way to calculate the score is to iterate through the list of frames and use look-ahead logic by querying the *subsequent* frames.
+## 7. Concurrency
+- Different lanes run **independent** `Game` instances — no cross-lane locking needed.
+- **Within a lane**, `recordRoll` is single-threaded by definition (one user records).
+- **Shared inventory**: `RentalInventory.checkout(Equipment)` and `return(Equipment)` synchronize on the inventory set; or use `ConcurrentHashMap<EquipmentId, Status>` with `replace(id, AVAILABLE, RENTED)`.
 
-```java
-public class Player {
-    private List<Frame> frames = new ArrayList<>();
-    
-    // ... setup 9 Frames and 1 TenthFrame ...
+## 8. Edge Cases & Validation
+- `pinsKnocked ∈ [0, 10]`; `rollOne + rollTwo ≤ 10` for frames 1–9.
+- A double-throw on a strike frame is invalid (recordRoll should auto-advance after a strike, except in frame 10).
+- A player joining mid-game ⇒ rejected; new player must wait for the next game.
+- Lane in `MAINTENANCE` rejects `bookLane`.
 
-    public int getScore() {
-        int totalScore = 0;
-
-        for (int i = 0; i < 10; i++) {
-            Frame current = frames.get(i);
-            totalScore += current.getBaseScore();
-
-            if (current.isStrike() && i < 9) {
-                // Strike Bonus: Next two rolls
-                Frame next = frames.get(i + 1);
-                totalScore += next.roles[0];
-                
-                if (next.isStrike() && i < 8) {
-                    // Two strikes in a row, need to look two frames ahead
-                    totalScore += frames.get(i + 2).rolls[0];
-                } else if (next.rolls.length > 1) {
-                    totalScore += next.rolls[1];
-                }
-            } 
-            else if (current.isSpare() && i < 9) {
-                // Spare Bonus: Next one roll
-                totalScore += frames.get(i + 1).rolls[0];
-            }
-        }
-        return totalScore;
-    }
-}
-```
-
-### 3. Alternative Approach (Array of Rolls)
-
-If modeling classes like `Frame` and `TenthFrame` seems too complex, a common alternative algorithmic approach is to completely discard the concept of a "Frame" object, and just maintain a flat `int[] rolls = new int[21]`. 
-
-Scoring then becomes a simple array pointer traversal:
-
-```java
-public int scoreGame(int[] rolls) {
-    int score = 0;
-    int rollIndex = 0;
-    
-    for (int frame = 0; frame < 10; frame++) {
-        if (rolls[rollIndex] == 10) { // Strike
-            score += 10 + rolls[rollIndex + 1] + rolls[rollIndex + 2];
-            rollIndex += 1;
-        } else if (rolls[rollIndex] + rolls[rollIndex + 1] == 10) { // Spare
-            score += 10 + rolls[rollIndex + 2];
-            rollIndex += 2;
-        } else { // Normal
-            score += rolls[rollIndex] + rolls[rollIndex + 1];
-            rollIndex += 2;
-        }
-    }
-    return score;
-}
-```
-*Note: In an Object-Oriented Design interview, the interviewer usually prefers the rich class-based approach (Frame objects), but this algorithmic array approach is faster to write if you're strapped for time or doing a pure algo interview.*
+## 9. Sources / Cross-Refs
+- LLD-08 Behavioral Patterns (State, Strategy, Observer, Command)
+- LLD-06 Creational Patterns (Factory)
+- Robert C. Martin — Bowling Game Kata
+- USBC Tenpin Bowling Rules
