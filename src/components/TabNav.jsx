@@ -31,7 +31,11 @@ export default function TabNav({
     <nav className="tab-nav">
       <div className="tab-nav-inner">
         <div className="tab-nav-brand-container">
-          <img src="/logo.svg" alt="Logo" className="tab-nav-logo" />
+          <img
+            src={`${import.meta.env.BASE_URL}logo.svg`}
+            alt="Logo"
+            className="tab-nav-logo"
+          />
           <span className="tab-nav-brand">Interview Prep Hub</span>
         </div>
         {TABS.map((tab) => {
