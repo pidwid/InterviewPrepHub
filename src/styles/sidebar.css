@@ -510,21 +510,33 @@
   max-width: 800px;
 }
 
-/* Section headings — plain, non-sticky for readability */
-.sb-content-body h2,
-.sb-content-body h3,
-.sb-content-body h4 {
-  padding-top: 0.6rem;
-  padding-bottom: 0.5rem;
+/* Sticky section headings while scrolling — original implementation,
+   restored. `top` value pins them flush below the sticky content header. */
+/* Headings live inside .heading-row wrappers (from MarkdownRenderer).
+   We make the wrapper sticky so it pins as a single unit (heading + study
+   marker button). H3 and H4 stack below H2 so they don't all overlap. */
+.sb-content-body .heading-row {
+  position: sticky;
+  z-index: 5;
+  background: var(--bg);
+  padding-top: 0.4rem;
+  padding-bottom: 0.4rem;
   border-bottom: 1px solid color-mix(in srgb, var(--border) 40%, transparent);
 }
 
-.sb-content-body h3 {
-  top: calc(52px + 2.4rem); /* stack below h2 */
+/* Pin H2 wrapper just below the sticky content header (with small 3px gap) */
+.sb-content-body .heading-row:has(h2) {
+  top: 53px;
 }
 
-.sb-content-body h4 {
-  top: calc(52px + 4.4rem); /* stack below h3 */
+/* H3 stacks just below H2 */
+.sb-content-body .heading-row:has(h3) {
+  top: calc(53px + 2.4rem);
+}
+
+/* H4 stacks below H3 */
+.sb-content-body .heading-row:has(h4) {
+  top: calc(53px + 4.4rem);
 }
 
 .sb-no-content {
@@ -660,8 +672,11 @@
 .sb-bookmark-banner-clear:hover {
   opacity: 1;
 }
-/* ── Reading progress bar (top of content panel) ───────────────────────── */
+/* ── Reading progress bar (sticky to top of scroll container) ──────────── */
 .sb-progress {
+  position: sticky;
+  top: 0;
+  z-index: 11; /* above .sb-content-header (z=10) so it sits on the very top */
   height: 3px;
   background: transparent;
   overflow: hidden;
@@ -671,4 +686,9 @@
   height: 100%;
   background: var(--accent, #667eea);
   transition: width 0.05s linear;
+}
+
+/* Push content header down so the sticky progress bar isn't covered */
+.sb-progress + .sb-content-header {
+  top: 3px;
 }

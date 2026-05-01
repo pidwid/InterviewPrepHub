@@ -130,26 +130,28 @@ function ContentPanel({
   const [fetched, setFetched] = useState(null);
   const [scrollPct, setScrollPct] = useState(0);
 
-  // Reset to notes tab and scroll to top when topic changes
+  // Reset tab to "notes" when topic changes (scroll restore handles position)
   const topicId = topic?.id;
   const prevTopicRef = useState({ id: null });
   if (topicId && topicId !== prevTopicRef[0].id) {
     prevTopicRef[0].id = topicId;
     if (activeTab !== "notes") setActiveTab("notes");
-    scrollRef?.current?.scrollTo(0, 0);
   }
 
   // Save & restore scroll position per topic on the inner scroll container.
   // Also drives the reading progress bar.
   const targetFileForFetch = topic?.noteFile || topic?.solutionFile;
+  // Re-run restore when content finishes loading (so DOM is tall enough)
+  const contentLoaded = !!getContent(targetFileForFetch);
   useEffect(() => {
     const el = scrollRef?.current;
     if (!el || !targetFileForFetch) return undefined;
-    // Restore previous position (after a frame so content is laid out)
     const saved = sessionStorage.getItem(`sb-scroll:${targetFileForFetch}`);
-    if (saved) {
-      requestAnimationFrame(() => el.scrollTo(0, parseInt(saved, 10)));
-    }
+    const targetY = saved ? parseInt(saved, 10) : 0;
+    // Wait for content + paint, then jump to saved position
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => el.scrollTo(0, targetY));
+    });
     let ticking = false;
     const onScroll = () => {
       if (ticking) return;
@@ -165,7 +167,7 @@ function ContentPanel({
     el.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
     return () => el.removeEventListener("scroll", onScroll);
-  }, [scrollRef, targetFileForFetch]);
+  }, [scrollRef, targetFileForFetch, contentLoaded]);
 
   // Lazy-load the markdown chunk for the selected topic
   useEffect(() => {
