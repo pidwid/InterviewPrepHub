@@ -118,6 +118,11 @@ export function useReviewState(namespace) {
     .sort(([, a], [, b]) => a.dueAt - b.dueAt)
     .map(([topicId, v]) => ({ topicId, ...v }));
 
+  const clearAll = useCallback(() => {
+    setState({});
+    reviewStorage.clear(namespace);
+  }, [namespace]);
+
   return {
     state,
     dueTopics,
@@ -126,5 +131,6 @@ export function useReviewState(namespace) {
     snoozeReview,
     resetReview,
     removeReview,
+    clearAll,
   };
 }

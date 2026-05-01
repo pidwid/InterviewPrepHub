@@ -81,7 +81,12 @@ export function useStreakState() {
     });
   }, []);
 
+  const clearAll = useCallback(() => {
+    setState({});
+    streakStorage.clear();
+  }, []);
+
   const stats = useMemo(() => calcStreaks(state), [state]);
 
-  return { state, stats, recordActivity };
+  return { state, stats, recordActivity, clearAll };
 }

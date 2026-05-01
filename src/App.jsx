@@ -137,10 +137,15 @@ function TabSection({
         onReset={() => {
           if (
             window.confirm(
-              "Reset all progress for this section? This cannot be undone.",
+              "Reset all progress for this section? This clears statuses, the review queue, and 'started' indicators. (Streak history is preserved.) This cannot be undone.",
             )
           ) {
             resetAll();
+            review.clearAll();
+            viewed.clearAll();
+            // Reset back-fill so the queue stays empty until the user
+            // marks something Revise again
+            backfillDone.current = true;
           }
         }}
       />

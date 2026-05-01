@@ -5,25 +5,33 @@ function lookupTopic(topicId, allTopics) {
   return allTopics.find((t) => t.id === topicId);
 }
 
-// Compact card shown on the Dashboard. Lists ALL topics in the review
-// queue (most-overdue first). Reuses the existing .st-topic button styling
-// so the look matches the roadmap topic cards.
-export default function ReviewQueue({ allTopics, reviewState, onOpenNote }) {
+// Compact card shown on the Dashboard. Lists topics whose progress flag
+// is currently 'revise' (progress is the single source of truth).
+// reviewState provides only the scheduling layer (dueAt timestamps).
+export default function ReviewQueue({
+  allTopics,
+  progress,
+  reviewState,
+  onOpenNote,
+}) {
   const items = useMemo(() => {
-    return Object.entries(reviewState.state || {})
-      .map(([topicId, entry]) => {
+    const reviseIds = Object.entries(progress)
+      .filter(([, status]) => status === "revise")
+      .map(([id]) => id);
+    return reviseIds
+      .map((topicId) => {
         const t = lookupTopic(topicId, allTopics);
         if (!t) return null;
         return {
           id: topicId,
           title: t.title,
           noteFile: t.noteFile || t.solutionFile,
-          dueAt: entry.dueAt,
+          dueAt: reviewState.state?.[topicId]?.dueAt ?? Date.now(),
         };
       })
       .filter(Boolean)
       .sort((a, b) => a.dueAt - b.dueAt);
-  }, [reviewState.state, allTopics]);
+  }, [progress, reviewState.state, allTopics]);
 
   if (items.length === 0) {
     return (

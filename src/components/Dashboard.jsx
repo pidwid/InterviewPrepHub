@@ -133,26 +133,37 @@ export default function Dashboard({
         )}
         {dashTab === "roadmap" && (
           <>
-            {review && Object.keys(review.state).length > 0 ? (
-              <div className="dash-retention-row">
-                <ReviewQueue
-                  allTopics={allTopics}
-                  reviewState={review}
-                  onOpenNote={(topicId) => handleRoadmapTopicClick(topicId)}
-                />
-                <QuickRefs onOpenNote={onOpenNote} />
-              </div>
-            ) : null}
-            <RoadmapSection
-              progress={progress}
-              roadmapPhases={roadmapPhases}
-              allTopics={allTopics}
-              onTopicClick={handleRoadmapTopicClick}
-              onOpenNote={onOpenNote}
-              showQuickRefs={
-                !(review && Object.keys(review.state).length > 0)
-              }
-            />
+            {(() => {
+              const reviseCount = Object.values(progress).filter(
+                (s) => s === "revise",
+              ).length;
+              const showQueue = review && reviseCount > 0;
+              return (
+                <>
+                  {showQueue ? (
+                    <div className="dash-retention-row">
+                      <ReviewQueue
+                        allTopics={allTopics}
+                        progress={progress}
+                        reviewState={review}
+                        onOpenNote={(topicId) =>
+                          handleRoadmapTopicClick(topicId)
+                        }
+                      />
+                      <QuickRefs onOpenNote={onOpenNote} />
+                    </div>
+                  ) : null}
+                  <RoadmapSection
+                    progress={progress}
+                    roadmapPhases={roadmapPhases}
+                    allTopics={allTopics}
+                    onTopicClick={handleRoadmapTopicClick}
+                    onOpenNote={onOpenNote}
+                    showQuickRefs={!showQueue}
+                  />
+                </>
+              );
+            })()}
           </>
         )}
         {dashTab === "categories" && (

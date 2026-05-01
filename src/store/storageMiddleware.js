@@ -402,6 +402,22 @@ export const reviewStorage = {
       localStorage.setItem(REVIEW_LS_KEY(namespace), JSON.stringify(data));
     } catch { /* ignore */ }
   },
+
+  async clear(namespace) {
+    if (getStorageMode() === "turso") {
+      const client = await _getClient();
+      if (!client) return;
+      try {
+        await _ensureSchema(client);
+        await client.execute({
+          sql: "DELETE FROM user_data WHERE type = ? AND key LIKE ?",
+          args: [T_REVIEW, `${namespace}:%`],
+        });
+      } catch { /* ignore */ }
+      return;
+    }
+    localStorage.removeItem(REVIEW_LS_KEY(namespace));
+  },
 };
 
 // ── Streak / activity log storage ────────────────────────────────────────────
@@ -454,6 +470,22 @@ export const streakStorage = {
       data[dateKey] = count;
       localStorage.setItem(STREAK_LS_KEY, JSON.stringify(data));
     } catch { /* ignore */ }
+  },
+
+  async clear() {
+    if (getStorageMode() === "turso") {
+      const client = await _getClient();
+      if (!client) return;
+      try {
+        await _ensureSchema(client);
+        await client.execute({
+          sql: "DELETE FROM user_data WHERE type = ?",
+          args: [T_STREAK],
+        });
+      } catch { /* ignore */ }
+      return;
+    }
+    localStorage.removeItem(STREAK_LS_KEY);
   },
 };
 

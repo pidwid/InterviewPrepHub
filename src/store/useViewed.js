@@ -45,5 +45,14 @@ export function useViewed(namespace) {
     [viewed],
   );
 
-  return { markViewed, isViewed, viewed };
+  const clearAll = useCallback(() => {
+    setViewed(new Set());
+    try {
+      localStorage.removeItem(LS_KEY(namespace));
+    } catch {
+      /* ignore */
+    }
+  }, [namespace]);
+
+  return { markViewed, isViewed, viewed, clearAll };
 }
