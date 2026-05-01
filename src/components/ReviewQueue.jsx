@@ -1,4 +1,11 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
+
+// Stable "now" for the lifetime of this render — keeps useMemo deps pure.
+function useNow() {
+  const [now] = useState(() => Date.now());
+  return now;
+}
+import { STATUS } from "../data/topics";
 
 // Resolve a topicId → topic record using the supplied allTopics list.
 function lookupTopic(topicId, allTopics) {
@@ -14,9 +21,10 @@ export default function ReviewQueue({
   reviewState,
   onOpenNote,
 }) {
+  const now = useNow();
   const items = useMemo(() => {
     const reviseIds = Object.entries(progress)
-      .filter(([, status]) => status === "revise")
+      .filter(([, status]) => status === STATUS.REVISE)
       .map(([id]) => id);
     return reviseIds
       .map((topicId) => {
@@ -26,12 +34,12 @@ export default function ReviewQueue({
           id: topicId,
           title: t.title,
           noteFile: t.noteFile || t.solutionFile,
-          dueAt: reviewState.state?.[topicId]?.dueAt ?? Date.now(),
+          dueAt: reviewState.state?.[topicId]?.dueAt ?? now,
         };
       })
       .filter(Boolean)
       .sort((a, b) => a.dueAt - b.dueAt);
-  }, [progress, reviewState.state, allTopics]);
+  }, [progress, reviewState.state, allTopics, now]);
 
   if (items.length === 0) {
     return (

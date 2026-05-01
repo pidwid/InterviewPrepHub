@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { STATUS } from "../data/topics";
 import { StatCards, ProgressBar } from "./ui";
 
 const STATUS_DOT = {
@@ -83,7 +84,7 @@ export default function IndexPage({
           <div className="index-topic-list">
             {cat.topics.map((topic) => {
               globalIdx++;
-              const status = progress[topic.id] || "not_started";
+              const status = progress[topic.id] || STATUS.NOT_STARTED;
               return (
                 <button
                   key={topic.id}

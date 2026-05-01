@@ -1,11 +1,12 @@
 import { useMemo, useState } from "react";
+import { STATUS } from "../data/topics";
 import { useBookmarks } from "../store/useBookmarks";
 
 function phaseProgress(phase, progress) {
   const total = phase.topics.length;
   if (total === 0) return { done: 0, revise: 0, total, pct: 0 };
-  const done = phase.topics.filter((id) => progress[id] === "done").length;
-  const revise = phase.topics.filter((id) => progress[id] === "revise").length;
+  const done = phase.topics.filter((id) => progress[id] === STATUS.DONE).length;
+  const revise = phase.topics.filter((id) => progress[id] === STATUS.REVISE).length;
   return { done, revise, total, pct: Math.round((done / total) * 100) };
 }
 
@@ -204,7 +205,7 @@ export default function SkillTreeRoadmap({ progress, roadmapPhases, allTopics, o
                 {phase.topics.map((tid, tIdx) => {
                   const topic = topicMap[tid];
                   if (!topic) return null;
-                  const status = progress[tid] || "not_started";
+                  const status = progress[tid] || STATUS.NOT_STARTED;
                   const inScope = isTopicInScope(tid, topic, timeFilter);
                   return (
                     <button
@@ -214,15 +215,15 @@ export default function SkillTreeRoadmap({ progress, roadmapPhases, allTopics, o
                       title={inScope ? "Open in Categories" : `Skip for ${TIME_OPTIONS.find(o => o.key === timeFilter)?.label} prep`}
                     >
                       <span className={`st-topic-dot st-topic-dot--${status}`}>
-                        {status === "done" ? "✓" : status === "revise" ? "↻" : tIdx + 1}
+                        {status === STATUS.DONE ? "✓" : status === STATUS.REVISE ? "↻" : tIdx + 1}
                       </span>
                       <span className="st-topic-name">{topic.title}</span>
                       {hasBookmark(topic.noteFile || topic.solutionFile) && (
                         <span className="st-bookmark-dot" title="Study marker set">🔖</span>
                       )}
-                      {status !== "not_started" && (
+                      {status !== STATUS.NOT_STARTED && (
                         <span className={`st-topic-status st-topic-status--${status}`}>
-                          {status === "done" ? "Done" : "Revise"}
+                          {status === STATUS.DONE ? "Done" : "Revise"}
                         </span>
                       )}
                     </button>

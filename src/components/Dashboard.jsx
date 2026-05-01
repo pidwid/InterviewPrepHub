@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
+import { STATUS } from "../data/topics";
 import RoadmapSection, { QuickRefs } from "./RoadmapSection";
 import IndexPage from "./IndexPage";
 import SidebarLayout from "./SidebarLayout";
@@ -135,7 +136,7 @@ export default function Dashboard({
           <>
             {(() => {
               const reviseCount = Object.values(progress).filter(
-                (s) => s === "revise",
+                (s) => s === STATUS.REVISE,
               ).length;
               const showQueue = review && reviseCount > 0;
               return (

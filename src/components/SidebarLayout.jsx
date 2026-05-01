@@ -1,4 +1,5 @@
 import { useState, useRef, useMemo, useCallback, useEffect } from "react";
+import { STATUS } from "../data/topics";
 import MarkdownRenderer from "./MarkdownRenderer";
 import NoteNav from "./NoteNav";
 import { getContent, loadContent } from "../data/contentLoader";
@@ -40,7 +41,7 @@ function SidebarCategory({
   hasBookmarkFn,
   isViewedFn,
 }) {
-  const done = cat.topics.filter((t) => progress[t.id] === "done").length;
+  const done = cat.topics.filter((t) => progress[t.id] === STATUS.DONE).length;
   const total = cat.topics.length;
   const pct = total ? Math.round((done / total) * 100) : 0;
 
@@ -68,7 +69,7 @@ function SidebarCategory({
       {isExpanded && (
         <div className="sb-topic-list">
           {cat.topics.map((topic, idx) => {
-            const status = progress[topic.id] || "not_started";
+            const status = progress[topic.id] || STATUS.NOT_STARTED;
             const isActive = activeTopic?.id === topic.id;
             return (
               <button
@@ -85,7 +86,7 @@ function SidebarCategory({
                   {STATUS_ICON[status]}
                 </span>
                 <span className="sb-topic-name">{topic.title}</span>
-                {isViewedFn?.(topic.id) && status === "not_started" && (
+                {isViewedFn?.(topic.id) && status === STATUS.NOT_STARTED && (
                   <span className="sb-viewed-dot" title="Started — open to continue">
                     ◐
                   </span>
@@ -282,7 +283,7 @@ function ContentPanel({
               📝 Practice ({questionCount} Qs)
             </button>
           )}
-          {["not_started", "revise", "done"].map((s) => (
+          {[STATUS.NOT_STARTED, STATUS.REVISE, STATUS.DONE].map((s) => (
             <button
               key={s}
               className={`sb-action-btn sb-action-btn--${s} ${status === s ? "sb-action-btn--active" : ""}`}
@@ -290,9 +291,9 @@ function ContentPanel({
               data-ga-event="status_change"
               data-ga-label={`${topic.id}:${s}`}
             >
-              {s === "not_started"
+              {s === STATUS.NOT_STARTED
                 ? "Not Started"
-                : s === "revise"
+                : s === STATUS.REVISE
                   ? "↻ Revise"
                   : "✓ Done"}
             </button>
@@ -476,21 +477,21 @@ export default function SidebarLayout({
 
   // Overall stats
   const allTopics = categories.flatMap((c) => c.topics);
-  const totalDone = allTopics.filter((t) => progress[t.id] === "done").length;
+  const totalDone = allTopics.filter((t) => progress[t.id] === STATUS.DONE).length;
   const totalRevise = allTopics.filter(
-    (t) => progress[t.id] === "revise",
+    (t) => progress[t.id] === STATUS.REVISE,
   ).length;
   const totalPct = allTopics.length
     ? Math.round((totalDone / allTopics.length) * 100)
     : 0;
 
   const activeStatus = activeTopic
-    ? progress[activeTopic.id] || "not_started"
-    : "not_started";
+    ? progress[activeTopic.id] || STATUS.NOT_STARTED
+    : STATUS.NOT_STARTED;
 
   // Quick review: pick random revise topic
   const reviseTopics = useMemo(
-    () => allTopics.filter((t) => progress[t.id] === "revise"),
+    () => allTopics.filter((t) => progress[t.id] === STATUS.REVISE),
     [allTopics, progress],
   );
   const pickRandomRevise = () => {
