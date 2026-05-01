@@ -1,6 +1,6 @@
 import { useState, useRef, useMemo, useCallback, useEffect } from "react";
 import MarkdownRenderer from "./MarkdownRenderer";
-import { getContent } from "../data/contentLoader";
+import { getContent, loadContent } from "../data/contentLoader";
 import { useBookmarks } from "../store/useBookmarks";
 import InlinePractice, {
   topicHasQuestions,
@@ -126,6 +126,7 @@ function ContentPanel({
   onSetBookmark,
 }) {
   const [activeTab, setActiveTab] = useState("notes");
+  const [fetched, setFetched] = useState(null);
 
   // Reset to notes tab and scroll to top when topic changes
   const topicId = topic?.id;
@@ -135,6 +136,22 @@ function ContentPanel({
     if (activeTab !== "notes") setActiveTab("notes");
     scrollRef?.current?.scrollTo(0, 0);
   }
+
+  // Lazy-load the markdown chunk for the selected topic
+  const targetFileForFetch = topic?.noteFile || topic?.solutionFile;
+  useEffect(() => {
+    if (!targetFileForFetch) return undefined;
+    if (getContent(targetFileForFetch)) return undefined;
+    let cancelled = false;
+    Promise.resolve()
+      .then(() => loadContent(targetFileForFetch))
+      .then((md) => {
+        if (!cancelled) setFetched({ file: targetFileForFetch, md });
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [targetFileForFetch]);
 
   if (!topic) {
     return (
@@ -149,7 +166,11 @@ function ContentPanel({
   }
 
   const targetFile = topic.noteFile || topic.solutionFile;
-  const content = getContent(targetFile);
+  // Lazy-load markdown chunks. Cached hits are returned synchronously; the
+  // first time a note is opened, fetched.md fills in after a re-render.
+  const cached = getContent(targetFile);
+  const content =
+    cached || (fetched?.file === targetFile ? fetched.md : null);
   const hasQuestions = topicHasQuestions(targetFile);
   const questionCount = hasQuestions ? getQuestionCount(targetFile) : 0;
   const topicNum = getTopicNumFromNoteFile(targetFile);
@@ -254,7 +275,7 @@ function ContentPanel({
               bookmarkedHeadingId={getBookmark?.(targetFile)}
               onSetBookmark={onSetBookmark}
             />
-          ) : (
+          ) : fetched && fetched.file === targetFile && fetched.md === null ? (
             <div className="sb-no-content">
               <p>No notes available for this topic yet.</p>
               {targetFile && (
@@ -262,6 +283,10 @@ function ContentPanel({
                   Create <code>{targetFile}</code> to add content.
                 </p>
               )}
+            </div>
+          ) : (
+            <div className="sb-no-content">
+              <p>Loading…</p>
             </div>
           )}
         </div>
