@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { STATUS } from "../data/topics";
+import { TIERS, getTier } from "../data/tiers";
 import { FilterBar } from "./ui";
 import TopicCard from "./TopicCard";
 
@@ -12,7 +13,7 @@ export default function TopicList({
   onOpenNote,
 }) {
   const [filter, setFilter] = useState("all");
-  const [priorityFilter, setPriorityFilter] = useState("all");
+  const [tierFilter, setTierFilter] = useState("all");
 
   const category = activeCategoryId
     ? categories.find((c) => c.id === activeCategoryId)
@@ -25,8 +26,9 @@ export default function TopicList({
     if (filter !== "all") {
       result = result.filter((t) => getStatus(t.id) === filter);
     }
-    if (priorityFilter !== "all") {
-      result = result.filter((t) => t.priority === priorityFilter);
+    if (tierFilter !== "all") {
+      const max = parseInt(tierFilter, 10);
+      result = result.filter((t) => getTier(t.id) <= max);
     }
     return result;
   }
@@ -49,17 +51,20 @@ export default function TopicList({
       <FilterBar filter={filter} onFilter={setFilter} />
 
       <div className="filter-bar" style={{ marginTop: "-1rem" }}>
-        {["all", "high", "medium", "low"].map((p) => (
+        {[
+          { key: "all", label: "All Tiers" },
+          { key: "1", label: `T1 only (${TIERS[1].label})` },
+          { key: "2", label: `T1–T2 (${TIERS[2].label})` },
+          { key: "3", label: `T1–T3 (${TIERS[3].label})` },
+        ].map((opt) => (
           <button
-            key={p}
-            className={`filter-btn filter-btn--priority-${p} ${priorityFilter === p ? "filter-btn--priority-active" : ""}`}
-            onClick={() => setPriorityFilter(p)}
-            data-ga-event="priority_filter"
-            data-ga-label={p}
+            key={opt.key}
+            className={`filter-btn filter-btn--tier-${opt.key} ${tierFilter === opt.key ? "filter-btn--tier-active" : ""}`}
+            onClick={() => setTierFilter(opt.key)}
+            data-ga-event="tier_filter"
+            data-ga-label={opt.key}
           >
-            {p === "all"
-              ? "All Priorities"
-              : `${p.charAt(0).toUpperCase() + p.slice(1)} Priority`}
+            {opt.label}
           </button>
         ))}
       </div>

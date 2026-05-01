@@ -64,17 +64,52 @@ export function StatCards({ stats }) {
   );
 }
 
-// ── Priority badge ──────────────────────────────────────────────────────────
-export function PriorityBadge({ priority, small }) {
-  if (!priority) return null;
+// ── Tier badge ──────────────────────────────────────────────────────────────
+//
+// Renders the tier of a topic as a small pill. Tier is derived from the
+// topic id (see data/tiers.js) — no per-topic field is required.
+import { getTierMeta } from "../data/tiers";
+
+export function TierBadge({ topicId, small }) {
+  if (!topicId) return null;
+  const meta = getTierMeta(topicId);
   return (
     <span
-      className={`priority-badge priority-badge--${priority}${
-        small ? " priority-badge--small" : ""
+      className={`tier-badge tier-badge--${meta.color}${
+        small ? " tier-badge--small" : ""
       }`}
+      title={`${meta.short} — ${meta.desc}`}
     >
-      {priority}
+      {meta.label}
     </span>
+  );
+}
+
+// ── Tier legend (compact horizontal explainer) ─────────────────────────────
+//
+// Used on Index / Roadmap to explain what tier badges mean at a glance.
+import { TIERS } from "../data/tiers";
+
+export function TierLegend() {
+  return (
+    <div className="tier-legend" role="note">
+      <span className="tier-legend-label">Tiers:</span>
+      {[1, 2, 3, 4].map((t) => {
+        const meta = TIERS[t];
+        return (
+          <span
+            key={t}
+            className={`tier-legend-item tier-badge tier-badge--${meta.color}`}
+            title={meta.desc}
+          >
+            {meta.label}
+          </span>
+        );
+      })}
+      <span className="tier-legend-help">
+        Sized for time available. Hover for details.
+      </span>
+    </div>
   );
 }
 

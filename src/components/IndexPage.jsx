@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { STATUS } from "../data/topics";
-import { StatCards, ProgressBar } from "./ui";
+import { StatCards, ProgressBar, TierBadge, TierLegend } from "./ui";
 
 const STATUS_DOT = {
   done: "✓",
@@ -78,6 +78,8 @@ export default function IndexPage({
         <span className="index-count">{totalTopics} topics</span>
       </div>
 
+      <TierLegend />
+
       {filtered.map((cat) => (
         <div key={cat.id} className="index-category">
           <div className="index-category-title">{cat.title}</div>
@@ -99,13 +101,7 @@ export default function IndexPage({
                     {STATUS_DOT[status]}
                   </span>
                   <span className="index-topic-name">{topic.title}</span>
-                  {topic.priority && (
-                    <span
-                      className={`priority-badge priority-badge--${topic.priority} priority-badge--small`}
-                    >
-                      {topic.priority}
-                    </span>
-                  )}
+                  <TierBadge topicId={topic.id} small />
                   {topic.noteFile && (
                     <span className="index-topic-arrow">›</span>
                   )}

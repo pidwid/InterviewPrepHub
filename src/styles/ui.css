@@ -19,40 +19,48 @@
 }
 
 /* ═══════════════════════════════════════════════
-   Priority Badges
+   Tier Badges (T1 / T2 / T3 / T4)
 ═══════════════════════════════════════════════ */
-.priority-badge {
+/* T1 = red/critical, T2 = amber, T3 = grey, T4 = subtle/muted.
+   See data/tiers.js for tier membership. */
+.tier-badge {
     font-size: 0.62rem;
-    font-weight: 800;
-    padding: 0.12rem 0.45rem;
+    font-weight: 700;
+    padding: 0.12rem 0.5rem;
     border-radius: 999px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.04em;
     white-space: nowrap;
     flex-shrink: 0;
 }
 
-.priority-badge--high {
-    background: var(--priority-high-bg);
-    color: var(--priority-high);
-    border: 1px solid var(--priority-high-border);
+.tier-badge--tier-1 {
+    background: var(--tier-1-bg);
+    color: var(--tier-1);
+    border: 1px solid var(--tier-1-border);
 }
 
-.priority-badge--medium {
-    background: var(--priority-medium-bg);
-    color: var(--priority-medium);
-    border: 1px solid var(--priority-medium-border);
+.tier-badge--tier-2 {
+    background: var(--tier-2-bg);
+    color: var(--tier-2);
+    border: 1px solid var(--tier-2-border);
 }
 
-.priority-badge--low {
-    background: var(--priority-low-bg);
-    color: var(--priority-low);
-    border: 1px solid var(--priority-low-border);
+.tier-badge--tier-3 {
+    background: var(--tier-3-bg);
+    color: var(--tier-3);
+    border: 1px solid var(--tier-3-border);
 }
 
-.priority-badge--small {
-    font-size: 0.6rem;
-    padding: 0.1rem 0.45rem;
+.tier-badge--tier-4 {
+    background: transparent;
+    color: var(--text-muted, #999);
+    border: 1px dashed var(--border-color, #555);
+    opacity: 0.7;
+}
+
+.tier-badge--small {
+    font-size: 0.55rem;
+    padding: 0.08rem 0.4rem;
     margin-left: auto;
 }
 
@@ -250,4 +258,34 @@ background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
 
 .dash-tab-content {
     min-height: 200px;
+}
+
+/* ── Tier legend (inline explainer) ───────────────────────────────────────── */
+.tier-legend {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.55rem 0.85rem;
+    margin: 0.6rem 0 1rem;
+    background: var(--surface-muted, rgba(127, 127, 127, 0.06));
+    border: 1px solid var(--border-color, rgba(127, 127, 127, 0.2));
+    border-radius: 8px;
+    font-size: 0.8rem;
+}
+
+.tier-legend-label {
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.tier-legend-item {
+    cursor: help;
+}
+
+.tier-legend-help {
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    margin-left: auto;
+    font-style: italic;
 }

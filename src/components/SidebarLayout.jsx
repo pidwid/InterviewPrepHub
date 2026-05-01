@@ -4,6 +4,7 @@ import MarkdownRenderer from "./MarkdownRenderer";
 import NoteNav from "./NoteNav";
 import { getContent, loadContent } from "../data/contentLoader";
 import { useBookmarks } from "../store/useBookmarks";
+import { TierBadge } from "./ui";
 import {
   estimateReadMinutes,
   formatReadMinutes,
@@ -96,17 +97,7 @@ function SidebarCategory({
                     🔖
                   </span>
                 )}
-                {topic.priority && (
-                  <span
-                    className={`sb-priority sb-priority--${topic.priority}`}
-                  >
-                    {topic.priority === "high"
-                      ? "!"
-                      : topic.priority === "medium"
-                        ? "•"
-                        : ""}
-                  </span>
-                )}
+                <TierBadge topicId={topic.id} small />
               </button>
             );
           })}
@@ -245,13 +236,7 @@ function ContentPanel({
       <div className="sb-content-header">
         <div className="sb-content-title-area">
           <h1 className="sb-content-title">{topic.title}</h1>
-          {topic.priority && (
-            <span
-              className={`priority-badge priority-badge--${topic.priority} priority-badge--small`}
-            >
-              {topic.priority}
-            </span>
-          )}
+          <TierBadge topicId={topic.id} />
           {content && (
             <span className="sb-read-time" title="Estimated read time">
               {formatReadMinutes(estimateReadMinutes(content))}

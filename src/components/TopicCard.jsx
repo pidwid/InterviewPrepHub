@@ -1,5 +1,5 @@
 import { STATUS, STATUS_LABELS } from "../data/topics";
-import { PriorityBadge } from "./ui";
+import { TierBadge } from "./ui";
 
 const STATUS_CYCLE = [STATUS.NOT_STARTED, STATUS.REVISE, STATUS.DONE];
 
@@ -10,7 +10,7 @@ export default function TopicCard({ topic, status, onSetStatus, onOpenNote }) {
     <div className={`topic-card topic-card--${status}`}>
       <div className="topic-card-info">
         <div className="topic-card-title-row">
-          {topic.priority && <PriorityBadge priority={topic.priority} />}
+          <TierBadge topicId={topic.id} small />
           {hasNote ? (
             <button
               className="topic-card-title topic-card-title--clickable"

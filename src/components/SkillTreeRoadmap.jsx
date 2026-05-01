@@ -1,6 +1,8 @@
 import { useMemo, useState } from "react";
 import { STATUS } from "../data/topics";
+import { TIME_BUDGETS, isInTimeBudget } from "../data/tiers";
 import { useBookmarks } from "../store/useBookmarks";
+import { TierBadge, TierLegend } from "./ui";
 
 function phaseProgress(phase, progress) {
   const total = phase.topics.length;
@@ -10,75 +12,12 @@ function phaseProgress(phase, progress) {
   return { done, revise, total, pct: Math.round((done / total) * 100) };
 }
 
-/*
- * Explicit topic sets for SD time filter, derived from the README study guide.
- * For LLD, fall back to priority-based filtering.
- */
-const SD_1W_IDS = new Set([
-  'note-01', 'note-03', 'note-08', 'note-11', 'note-12',
-  'note-15', 'note-24', 'note-43', 'note-cheatsheet',
-]); // 9 topics (~15-20 hours)
+// Time budget options come from the canonical tier system in data/tiers.js.
+// Each budget maps to a maximum visible tier. See that file for membership.
+const TIME_OPTIONS = TIME_BUDGETS.map((b) => ({ key: b.key, label: b.label }));
 
-const SD_2W_IDS = new Set([
-  ...SD_1W_IDS,
-  'note-02', 'note-04', 'note-05', 'note-06', 'note-10',
-  'note-13', 'note-17', 'note-18', 'note-30', 'note-44',
-]); // 19 topics (~30-40 hours)
-
-const SD_1M_IDS = new Set([
-  ...SD_2W_IDS,
-  'note-07', 'note-09', 'note-14', 'note-16', 'note-19',
-  'note-22', 'note-26', 'note-28', 'note-32', 'note-34',
-  'note-38',
-]); // 30 topics (~60 hours)
-
-const LLD_1W_IDS = new Set([
-  'lld-oop', 'lld-solid', 'lld-uml-diagrams',
-  'lld-creational', 'lld-structural', 'lld-behavioral',
-  'lld-parking-lot', 'lld-lru-cache', 'lld-cheatsheet'
-]); // 9 topics (~15-20 hours)
-
-const LLD_2W_IDS = new Set([
-  ...LLD_1W_IDS,
-  'lld-relationships', 'lld-dependency-injection',
-  'lld-vending-machine', 'lld-elevator', 'lld-hashmap',
-  'lld-tic-tac-toe', 'lld-concurrency-notes', 'lld-thread-pool'
-]); // 17 topics (~30-40 hours)
-
-const LLD_1M_IDS = new Set([
-  ...LLD_2W_IDS,
-  'lld-dry-kiss-yagni', 'lld-concurrency-deep-dive',
-  'lld-pub-sub', 'lld-coffee-vending', 'lld-api-rate-limiter',
-  'lld-chess', 'lld-distributed-id', 'lld-in-memory-cache',
-  'lld-cp-blocking-queue', 'lld-cp-concurrent-hashmap',
-]); // 27 topics (~60 hours)
-
-const TIME_OPTIONS = [
-  { key: "1w",  label: "1 Week (~30h)" },
-  { key: "2w",  label: "2 Weeks (~70h)" },
-  { key: "1m",  label: "1 Month (~120h)" },
-  { key: "all", label: "Comprehensive (All)" },
-];
-
-/**
- * Determine if a topic is in scope for the selected time filter.
- */
-function isTopicInScope(topicId, topic, timeKey) {
-  if (timeKey === "all") return true;
-  
-  const isSD = topicId.startsWith('note-');
-  
-  if (isSD) {
-    if (timeKey === "1w") return SD_1W_IDS.has(topicId);
-    if (timeKey === "2w") return SD_2W_IDS.has(topicId);
-    if (timeKey === "1m") return SD_1M_IDS.has(topicId) || topic.priority === 'high';
-  } else {
-    // LLD or Practice Questions
-    if (timeKey === "1w") return LLD_1W_IDS.has(topicId);
-    if (timeKey === "2w") return LLD_2W_IDS.has(topicId);
-    if (timeKey === "1m") return LLD_1M_IDS.has(topicId) || topic.priority === 'high';
-  }
-  return true;
+function isTopicInScope(topicId, _topic, timeKey) {
+  return isInTimeBudget(topicId, timeKey);
 }
 
 export default function SkillTreeRoadmap({ progress, roadmapPhases, allTopics, onTopicClick }) {
@@ -146,6 +85,7 @@ export default function SkillTreeRoadmap({ progress, roadmapPhases, allTopics, o
           </span>
         )}
       </div>
+      <TierLegend />
 
       {/* Summary */}
       <div className="st-summary">
@@ -218,6 +158,7 @@ export default function SkillTreeRoadmap({ progress, roadmapPhases, allTopics, o
                         {status === STATUS.DONE ? "✓" : status === STATUS.REVISE ? "↻" : tIdx + 1}
                       </span>
                       <span className="st-topic-name">{topic.title}</span>
+                      <TierBadge topicId={topic.id} small />
                       {hasBookmark(topic.noteFile || topic.solutionFile) && (
                         <span className="st-bookmark-dot" title="Study marker set">🔖</span>
                       )}

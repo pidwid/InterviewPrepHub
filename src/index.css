@@ -45,15 +45,15 @@
     --inline-code-bg: rgba(102, 126, 234, 0.15);
     --inline-code-text: #a5b4fc;
   
-    --priority-high: #fc8181;
-    --priority-high-bg: rgba(229, 62, 62, 0.15);
-    --priority-high-border: rgba(229, 62, 62, 0.3);
-    --priority-medium: #ecc94b;
-    --priority-medium-bg: rgba(236, 201, 75, 0.15);
-    --priority-medium-border: rgba(236, 201, 75, 0.3);
-    --priority-low: #a0aec0;
-    --priority-low-bg: rgba(113, 128, 150, 0.15);
-    --priority-low-border: rgba(113, 128, 150, 0.25);
+    --tier-1: #fc8181;
+    --tier-1-bg: rgba(229, 62, 62, 0.15);
+    --tier-1-border: rgba(229, 62, 62, 0.3);
+    --tier-2: #ecc94b;
+    --tier-2-bg: rgba(236, 201, 75, 0.15);
+    --tier-2-border: rgba(236, 201, 75, 0.3);
+    --tier-3: #a0aec0;
+    --tier-3-bg: rgba(113, 128, 150, 0.15);
+    --tier-3-border: rgba(113, 128, 150, 0.25);
   
     --error: #e53e3e;
     --error-text: #fc8181;
@@ -115,15 +115,15 @@
   --inline-code-bg: rgba(90, 103, 216, 0.1);
   --inline-code-text: #5a67d8;
 
-  --priority-high: #e53e3e;
-  --priority-high-bg: rgba(229, 62, 62, 0.08);
-  --priority-high-border: rgba(229, 62, 62, 0.25);
-  --priority-medium: #d69e2e;
-  --priority-medium-bg: rgba(214, 158, 46, 0.08);
-  --priority-medium-border: rgba(214, 158, 46, 0.25);
-  --priority-low: #718096;
-  --priority-low-bg: rgba(113, 128, 150, 0.08);
-  --priority-low-border: rgba(113, 128, 150, 0.2);
+  --tier-1: #e53e3e;
+  --tier-1-bg: rgba(229, 62, 62, 0.08);
+  --tier-1-border: rgba(229, 62, 62, 0.25);
+  --tier-2: #d69e2e;
+  --tier-2-bg: rgba(214, 158, 46, 0.08);
+  --tier-2-border: rgba(214, 158, 46, 0.25);
+  --tier-3: #718096;
+  --tier-3-bg: rgba(113, 128, 150, 0.08);
+  --tier-3-border: rgba(113, 128, 150, 0.2);
 
   --error: #e53e3e;
   --error-text: #c53030;

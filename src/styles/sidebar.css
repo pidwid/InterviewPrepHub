@@ -345,20 +345,6 @@
   text-overflow: ellipsis;
 }
 
-.sb-priority {
-  flex-shrink: 0;
-  font-size: 0.7rem;
-  font-weight: 700;
-}
-
-.sb-priority--high {
-  color: var(--priority-high);
-}
-
-.sb-priority--medium {
-  color: var(--priority-medium);
-}
-
 /* ── Main Content ─────────────────────────────── */
 .sb-main {
   flex: 1;

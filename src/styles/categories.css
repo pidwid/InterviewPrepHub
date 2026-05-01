@@ -105,18 +105,6 @@
   color: var(--text-muted);
 }
 
-/* Priority accent on category cards */
-.category-card--priority-high {
-    border-left: 3px solid var(--priority-high);
-}
-
-.category-card--priority-medium {
-    border-left: 3px solid var(--priority-medium);
-}
-
-.category-card--priority-low {
-    border-left: 3px solid var(--not-started);
-}
 /* ═══════════════════════════════════════════════
    Mini Bar (inside category cards)
 ═══════════════════════════════════════════════ */

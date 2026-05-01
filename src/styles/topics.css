@@ -65,29 +65,29 @@
     background: var(--surface-hover);
 }
 
-/* Priority filter buttons */
-.filter-btn--priority-active.filter-btn--priority-all {
+/* Tier filter buttons (T1 / T2 / T3 / All) */
+.filter-btn--tier-active.filter-btn--tier-all {
     border-color: var(--accent);
     color: var(--accent);
     background: var(--accent-muted);
 }
 
-.filter-btn--priority-active.filter-btn--priority-high {
-    border-color: var(--priority-high);
-    color: var(--priority-high);
-    background: var(--error-bg);
+.filter-btn--tier-active.filter-btn--tier-1 {
+    border-color: var(--tier-1);
+    color: var(--tier-1);
+    background: var(--tier-1-bg);
 }
 
-.filter-btn--priority-active.filter-btn--priority-medium {
-    border-color: var(--priority-medium);
-    color: var(--priority-medium);
-    background: var(--priority-medium-bg);
+.filter-btn--tier-active.filter-btn--tier-2 {
+    border-color: var(--tier-2);
+    color: var(--tier-2);
+    background: var(--tier-2-bg);
 }
 
-.filter-btn--priority-active.filter-btn--priority-low {
-    border-color: var(--priority-low);
-    color: var(--priority-low);
-    background: var(--priority-low-bg);
+.filter-btn--tier-active.filter-btn--tier-3 {
+    border-color: var(--tier-3);
+    color: var(--tier-3);
+    background: var(--tier-3-bg);
 }
 
 /* ═══════════════════════════════════════════════
