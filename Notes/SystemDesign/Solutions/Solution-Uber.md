@@ -120,3 +120,116 @@ Once the driver accepts, the rider needs to see the car moving toward them.
 3. The top driver receives a push notification via their WebSocket to accept the trip.
 4. If accepted, the trip state moves to "En Route" in a durable PostgreSQL/Aurora Trip Database.
 5. The ongoing stream of the Driver's location updates is piped almost directly through the backend to the matched Rider's WebSocket, animating the car on the rider's screen.
+
+---
+
+## Operational Depth (Senior Interview Layer)
+
+### Concurrency & Conflict Resolution — The "Two Dispatchers Race for One Driver"
+The single hardest correctness problem in this system: two dispatcher pods both try to assign Driver D to different rides simultaneously.
+
+**Solution: Optimistic concurrency with a version stamp on the driver row.**
+
+```sql
+UPDATE drivers
+SET status = 'ASSIGNED', current_ride_id = :rideId, version = version + 1
+WHERE driver_id = :did AND status = 'AVAILABLE' AND version = :expectedVersion;
+-- 1 row updated → won the race; 0 rows → lost, try next driver
+```
+
+Backed by a **distributed lock** in Redis (`SETNX driver:{id} {pod} EX 5`) for sub-second arbitration before the DB call, to avoid wasted DB round-trips.
+
+For the higher-throughput **dispatch matching** itself, partition the dispatcher service by geo cell (H3 index). Only one dispatcher pod owns a cell at a time (via ZooKeeper leader election) — so matching within a cell is single-writer and conflict-free by construction.
+
+### Surge Pricing Algorithm
+
+```
+surgeMultiplier(cell) = clamp(1.0,  f(demand/supply, time-of-day, weather), 5.0)
+
+demand  = open ride requests in cell over last 60s
+supply  = available drivers in cell right now
+ratio   = demand / max(supply, 1)
+
+base = 1.0 + 0.5 * (ratio - 1)       // 1.5x at 2:1, 2x at 3:1
+adjusted = base * weatherFactor * eventFactor
+final = clamp(1.0, adjusted, 5.0)    // cap at 5x for fairness/PR
+```
+
+- Recomputed every 30s per cell by a Flink job consuming the request and supply streams.
+- Posted to Redis (`surge:{cellId}` TTL=60s) where the Pricing service reads it.
+- Hard cap and rate-of-change limit prevent jarring jumps; quoted price is locked at request time.
+
+### Database Schema (Trips on Postgres/Aurora)
+
+```sql
+CREATE TABLE trips (
+    trip_id          uuid PRIMARY KEY,
+    rider_id         uuid NOT NULL,
+    driver_id        uuid,
+    state            text NOT NULL,   -- REQUESTED, MATCHED, EN_ROUTE, ARRIVED, IN_RIDE, COMPLETED, CANCELLED
+    pickup_geom      geography(POINT) NOT NULL,
+    dropoff_geom     geography(POINT) NOT NULL,
+    fare_quote_cents int,
+    fare_actual_cents int,
+    surge_multiplier numeric(3,2),
+    created_at       timestamptz DEFAULT now(),
+    completed_at     timestamptz,
+    version          int DEFAULT 0
+);
+CREATE INDEX trips_driver_active ON trips(driver_id) WHERE state IN ('MATCHED','EN_ROUTE','IN_RIDE');
+CREATE INDEX trips_rider_active  ON trips(rider_id)  WHERE state IN ('MATCHED','EN_ROUTE','IN_RIDE');
+```
+
+Driver location history goes to **Cassandra** (write-heavy, append-only); only **current** location lives in Redis.
+
+### State Machine for a Trip
+
+```
+REQUESTED ──match──▶ MATCHED ──driver_arrived──▶ ARRIVED ──rider_in──▶ IN_RIDE ──drop──▶ COMPLETED
+    │                  │                            │                    │
+    ├─ no_drivers ─────┼────── cancel ──────────────┼──── cancel ────────┘
+    ▼                  ▼
+CANCELLED ◀─────────────
+```
+
+Enforced server-side; client transitions are advisory only. Each transition writes to an event log (Kafka topic `trip.events.v1`) for downstream consumers (billing, analytics, ETA recompute, fraud).
+
+### Failure Recovery & Disaster Recovery
+
+| Failure | Impact | Mitigation |
+|---------|--------|------------|
+| Redis (location) down in region | Matching halts | Multi-AZ Redis cluster; hot standby per region; degrade to last known location from Cassandra (≤5s stale) |
+| Postgres primary failure | Cannot create new trips | Aurora multi-AZ failover (~30s); in-flight trips continue on replica reads |
+| Dispatcher pod crash mid-match | Ride request stuck | Idempotent matcher; offer expires after 10s and is re-queued |
+| Kafka broker loss | Event delays | RF=3 with `min.insync.replicas=2`; producers buffer locally up to 30s |
+| Full region outage | Service down in region | Active-active across 2 regions per geo (us-east + us-west); rider DNS routes by latency |
+
+**RPO**: <5s (stream-replicated cross-region) · **RTO**: <2 minutes (DNS failover + dispatcher cold-start).
+
+### Monitoring & Alerting (SLOs)
+
+| SLI | SLO | Alert |
+|-----|-----|-------|
+| Ride request → driver matched p95 | <10s | >20s for 3 min |
+| Location ingest p99 | <100ms | >250ms |
+| WebSocket connect success | ≥99.9% | <99.5% for 5 min |
+| Matching success rate (excl. no-drivers-available) | ≥99.5% | <99% |
+| Surge calc lag | <30s | >60s |
+| Trip event end-to-end (Kafka) | <2s p99 | >5s |
+
+### Deployment Strategy
+- **Cell-based deployment**: each city is an independent cell. Roll new code city-by-city; blast radius = one city.
+- **Canary**: 1% of riders for 1h → 10% for 4h → full. Auto-rollback on SLO burn.
+- **Driver app vs Rider app** versioned independently; backend supports N-2 versions for 30 days.
+- **Schema migrations**: expand → migrate → contract; never break the running fleet.
+
+### Cost & Capacity (rough)
+- 5M active drivers globally pinging every 4s = 1.25M location writes/s (peak 2x).
+- Redis cluster sized to 5M GEO entries × 100B = 500MB hot data. Trivial; the bottleneck is *write* throughput, mitigated by sharding.
+- Cassandra: 1.25M × 200B × 86,400s = 21TB/day raw → 63TB/day with RF=3. Tier out after 90 days.
+- WebSocket fleet: 5M drivers + 1M concurrent riders ≈ 6M connections. At 50k/host = 120 hosts per region.
+
+### Common Trade-Offs to Discuss
+- **SQL vs Redis for location storage** — at 1M+ writes/s a B-tree on a SQL DB cannot keep up; an in-memory geo store (Redis GEO) is the standard choice.
+- **Global vs geo-sharded Redis** — geo-shard per city; cross-city queries don't make sense and a global cluster becomes a write bottleneck.
+- **Global vs local matching** — restrict matching to the same H3 cell or k-ring; otherwise ETAs balloon.

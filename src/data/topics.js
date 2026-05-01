@@ -99,6 +99,13 @@ export const CATEGORIES = [
     ],
   },
   {
+    id: 'workload-patterns',
+    title: 'Workload Patterns',
+    topics: [
+      { id: 'note-45', title: 'Read-Heavy vs Write-Heavy Systems',     noteFile: '45-Read-Heavy-vs-Write-Heavy.md',  priority: 'high' },
+    ],
+  },
+  {
     id: 'deep-dives',
     title: 'Deep Dives & Reference',
     topics: [

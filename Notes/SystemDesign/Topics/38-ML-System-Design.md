@@ -421,3 +421,196 @@ Challenge: Extreme class imbalance (0.1% fraud)
 | The data flywheel is the moat | More data → better model → more users → more data |
 | Latency matters for serving | Quantization, caching, pre-computation keep it fast |
 | Start simple, iterate | Logistic regression → gradient boosting → deep learning |
+
+---
+
+## 11. Distributed Training (Senior Deep Dive)
+
+When a model + dataset don't fit on a single GPU, you need **distributed training**.
+
+### Data Parallelism (most common)
+- Same model replicated on N GPUs/nodes; each gets a different mini-batch.
+- Gradients are averaged across workers each step (`AllReduce`).
+- Frameworks: PyTorch DDP, Horovod, TensorFlow `MirroredStrategy`.
+- **Bottleneck**: gradient sync bandwidth → use NCCL on NVLink, gradient compression, or asynchronous SGD.
+
+### Model Parallelism
+- Model itself split across GPUs (some layers on GPU 0, others on GPU 1).
+- Required for huge models (LLMs > 100B params).
+- **Pipeline parallelism** (GPipe) overlaps the forward/backward pass across stages.
+- **Tensor parallelism** (Megatron-LM) shards individual matrix multiplies.
+
+### Modern LLM Training Stack
+- **3D Parallelism**: data + pipeline + tensor parallelism combined (DeepSpeed, Megatron).
+- **Mixed precision** (bfloat16) for ~2x speed and ~50% memory.
+- **ZeRO** (Zero Redundancy Optimizer) shards optimizer state across workers.
+- **Gradient checkpointing** trades compute for memory.
+
+### Hyperparameter Tuning Infrastructure
+- **Random search** beats grid search in practice.
+- **Bayesian optimization** (Optuna, HyperOpt) is sample-efficient for expensive trials.
+- **Population-Based Training** (PBT) evolves hyperparameters during training.
+- **Ray Tune** / **Vizier** are common orchestration platforms.
+
+---
+
+## 12. Feature Store — Detailed Architecture
+
+A feature store solves **training-serving skew** — the silent killer of ML systems.
+
+```
+┌────────────────┐                       ┌──────────────────┐
+│ Source Systems │                       │  Online Store    │
+│ (DB, Kafka,    │──┬─ Feature Pipeline ▶│  (Redis/Cassandra│◀── Real-time inference
+│  S3, logs)     │  │   (Spark/Flink)    │   <10ms reads)   │
+└────────────────┘  │                    └──────────────────┘
+                    │                    ┌──────────────────┐
+                    └───────────────────▶│  Offline Store   │◀── Training, batch scoring
+                                         │ (Parquet/BigQuery│
+                                         │  Snowflake)      │
+                                         └──────────────────┘
+```
+
+| Concern | How feature stores handle it |
+|---------|------------------------------|
+| **Skew** | Single feature definition produces both online and offline values |
+| **Freshness** | Streaming pipelines write to online store within seconds |
+| **Reuse** | One team's feature is discoverable and consumable by others |
+| **Backfill** | "What would this feature have been at time T?" via point-in-time joins |
+| **Lineage** | Track which features → which models → which decisions |
+
+**Real-world systems**: Feast (open-source), Tecton, Uber Michelangelo, Airbnb Zipline, LinkedIn Feathr.
+
+**Point-in-time correctness**: when joining labels with features for training, you MUST use the feature value as it was at the label's timestamp — not the current value. Future leakage is a top-3 ML bug.
+
+---
+
+## 13. Model Serving Architectures
+
+### Batch (offline) Serving
+- Score all users overnight, store predictions in a key-value store.
+- Read at request time = simple cache lookup.
+- **When to use**: predictions don't depend on real-time context (recommendations refreshed hourly).
+- **Latency budget**: minutes to hours for the batch; <10ms for the lookup.
+
+### Real-Time (online) Serving
+- Model loaded in a server (TensorFlow Serving, TorchServe, Triton, NVIDIA Triton, BentoML).
+- Request → feature lookup → inference → response.
+- **Latency budget**: typically 50-200ms p99.
+- **Tricks for low latency**: model quantization (INT8), distillation, caching feature lookups, batching requests on the server (dynamic batching).
+
+### Streaming Inference
+- Model embedded in a stream processor (Flink, Kafka Streams).
+- Each event → score → emit downstream.
+- Used for fraud detection, anomaly detection, real-time recommendations.
+
+### Edge / On-Device Inference
+- Model runs on the user's device (CoreML, TensorFlow Lite, ONNX Runtime).
+- Pros: zero network latency, privacy.
+- Cons: device limits, harder to update.
+
+### Serving Patterns
+- **Shadow mode**: route traffic to new model, compare to old, don't surface results.
+- **A/B testing**: split traffic; measure business metric (CTR, revenue), not just model accuracy.
+- **Canary deployment**: 1% → 10% → 50% → 100% traffic shift.
+- **Multi-armed bandit**: dynamically allocate traffic to better-performing variant.
+
+---
+
+## 14. Cold-Start Problem
+
+The Achilles heel of recommendation systems.
+
+| Cold-start type | Solution |
+|-----------------|----------|
+| **New user** | Onboarding survey, demographic-based defaults, popularity baseline, contextual bandits |
+| **New item** | Content-based features (text, image embeddings), explore/exploit (bandit), staff curation |
+| **New context** | Hierarchical models (geo → city → user) so unknown contexts inherit from broader scope |
+
+**Two-tower model trick**: train user-tower and item-tower separately. New items only need the item-tower forward pass — no retraining required.
+
+---
+
+## 15. Feedback Loops & The Data Flywheel
+
+The **virtuous cycle**: better model → more user engagement → more data → better model.
+
+But also the **vicious cycle**: model recommends only popular items → other items never get impressions → can never be recommended → popularity bias compounds.
+
+### Mitigation
+- **Exploration**: serve a fraction of random/diverse recommendations (epsilon-greedy, Thompson sampling).
+- **Inverse-propensity-weighted training**: down-weight examples the model would have over-shown anyway.
+- **Counterfactual evaluation**: estimate how a different model *would have* performed using logged data + IPS.
+
+### Position Bias
+- Users click the top result more — not because it's better, but because it's first.
+- Fix: log presented position, model the position effect explicitly, or use randomized ranking for training data collection.
+
+---
+
+## 16. Data Labeling Strategies
+
+| Approach | Cost | Quality | When |
+|----------|------|---------|------|
+| **Implicit feedback** (clicks, dwell time) | Free | Noisy, biased | Recommendations, ranking |
+| **Explicit feedback** (ratings, thumbs) | Low | Sparse | Cold-start, calibration |
+| **In-house annotation** | High | High | Sensitive domains (medical, legal) |
+| **Crowdsourcing** (Mechanical Turk, Scale) | Medium | Variable | General CV/NLP |
+| **Active learning** | Medium | High | Limited budget — label only the uncertain ones |
+| **Weak supervision** (Snorkel) | Low | Medium | Programmatic labeling at scale |
+| **Self-supervised pretraining** | Compute-heavy | Excellent | Foundation models |
+
+---
+
+## 17. MLOps & CI/CD for ML
+
+Unlike software, ML systems have **three** sources of change: code, data, and model.
+
+```
+Data ──▶ Data Pipeline ──▶ Training ──▶ Model Registry ──▶ Serving ──▶ Monitoring
+  ▲          ▲                ▲              ▲                              │
+  └──────────┴────────────────┴──────────────┴──────────────────────────────┘
+                          (everything triggers everything)
+```
+
+| Practice | Tool examples |
+|----------|---------------|
+| **Data versioning** | DVC, LakeFS, Delta Lake |
+| **Experiment tracking** | MLflow, Weights & Biases, Neptune |
+| **Model registry** | MLflow Model Registry, Vertex AI, SageMaker |
+| **Pipeline orchestration** | Airflow, Kubeflow, Prefect, Dagster |
+| **Feature store** | Feast, Tecton |
+| **Model serving** | KServe, BentoML, Triton |
+| **Monitoring** | WhyLabs, Arize, Evidently |
+
+### Reproducibility Checklist
+- [ ] Pinned data version
+- [ ] Pinned code commit
+- [ ] Pinned dependencies (lockfile, container image)
+- [ ] Logged hyperparameters and seed
+- [ ] Logged training metrics
+
+---
+
+## 18. Model Interpretability
+
+Increasingly required (EU AI Act, financial regulations).
+
+| Technique | Use |
+|-----------|-----|
+| **Feature importance** (tree-based) | Quick global explanation |
+| **SHAP values** | Per-prediction explanation, model-agnostic |
+| **LIME** | Local linear approximation |
+| **Attention visualization** | NN/transformer models |
+| **Counterfactual explanations** | "What would change the prediction?" |
+
+---
+
+## 19. Senior Interview Questions (ML SD)
+
+1. *"How would you detect that your fraud model is degrading in production before it causes financial damage?"* — drift detection on input features (KS test), output distribution, business KPI.
+2. *"Walk me through deploying a new ranking model. How do you guarantee it won't tank the homepage CTR?"* — shadow mode → canary → A/B with guardrails → kill switch.
+3. *"You have a 200B parameter LLM that needs to serve at 100 QPS with <500ms p99. Walk me through serving infrastructure."* — quantization, batching, KV cache, tensor parallelism, model sharding.
+4. *"How do you avoid feature leakage when training a model that predicts user churn?"* — point-in-time joins, exclude any feature whose value is influenced by the label.
+5. *"Your recommender is biased toward popular items. How do you fix it?"* — inverse-propensity weighting, exploration noise, calibrated diversity penalties.
+6. *"Why is your offline AUC great but online CTR drops?"* — training-serving skew, feedback loop, distribution shift, off-policy evaluation issues.

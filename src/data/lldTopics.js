@@ -67,6 +67,20 @@ export const LLD_CATEGORIES = [
     ],
   },
   {
+    id: 'lld-architectural-patterns',
+    title: 'Architectural Patterns',
+    topics: [
+      { id: 'lld-arch-patterns', title: 'Architectural Patterns (MVC, MVVM, Hexagonal, Clean, Event Sourcing, CQRS)', noteFile: 'LLD-13-Architectural-Patterns.md', priority: 'high' },
+    ],
+  },
+  {
+    id: 'lld-pattern-anti-patterns',
+    title: 'Pattern Anti-Patterns',
+    topics: [
+      { id: 'lld-when-not-to-use', title: 'When NOT To Use Design Patterns', noteFile: 'LLD-14-When-Not-To-Use-Patterns.md', priority: 'high' },
+    ],
+  },
+  {
     id: 'lld-cheat-sheet',
     title: 'Cheat Sheet & Reference',
     topics: [
@@ -106,6 +120,9 @@ export const LLD_CATEGORIES = [
       { id: 'lld-url-shortener',     title: 'Design a URL Shortener (LLD)',             priority: 'high',   solutionFile: 'Solution-URL-Shortener.md', youtubeId: 'HHUi8F_qAXM' },
       { id: 'lld-text-editor',       title: 'Design a Text Editor / Notepad',           priority: 'medium', solutionFile: 'Solution-Text-Editor.md', youtubeId: 'Hjp4xpDVFww' },
       { id: 'lld-calendar',          title: 'Design a Calendar / Meeting Scheduler',    priority: 'medium', solutionFile: 'Solution-Calendar.md', youtubeId: 'MRx40JVmmF4' },
+      { id: 'lld-meeting-room',     title: 'Design Meeting Room / Calendar Scheduler',  priority: 'high',   solutionFile: 'Solution-Meeting-Room.md' },
+      { id: 'lld-task-scheduler',   title: 'Design a Task / Job Scheduler',             priority: 'high',   solutionFile: 'Solution-Task-Scheduler.md' },
+      { id: 'lld-connect-four',     title: 'Design Connect Four Game',                  priority: 'high',   solutionFile: 'Solution-Connect-Four.md' },
       { id: 'lld-online-auction',   title: 'Design an Online Auction System',          priority: 'low',    solutionFile: 'Solution-Online-Auction.md' },
       { id: 'lld-digital-wallet',   title: 'Design a Digital Wallet Service',          priority: 'low',    solutionFile: 'Solution-Digital-Wallet.md', youtubeId: 'm6DtqSb1BDM' },
       { id: 'lld-airline',          title: 'Design Airline Management System',         priority: 'low',    solutionFile: 'Solution-Airline.md', youtubeId: '5yEoh3toRyE' },

@@ -32,7 +32,7 @@ export const LLD_ROADMAP_PHASES = [
     title: 'Behavioral Patterns',
     week: 'Week 2–3',
     description: 'Strategy, Observer, State, Command — patterns that define how objects communicate and behave.',
-    topics: ['lld-behavioral'],
+    topics: ['lld-behavioral', 'lld-when-not-to-use'],
   },
   {
     id: 'lld-phase-5',
@@ -56,7 +56,7 @@ export const LLD_ROADMAP_PHASES = [
     title: 'Medium LLD Problems',
     week: 'Week 4–6',
     description: 'Tackle medium-complexity designs: Elevator, LRU Cache, Pub-Sub, Hotel/Library Management.',
-    topics: ['lld-elevator', 'lld-lru-cache', 'lld-tic-tac-toe', 'lld-pub-sub', 'lld-atm', 'lld-car-rental', 'lld-hotel-management', 'lld-library', 'lld-linkedin'],
+    topics: ['lld-elevator', 'lld-lru-cache', 'lld-tic-tac-toe', 'lld-pub-sub', 'lld-atm', 'lld-car-rental', 'lld-hotel-management', 'lld-library', 'lld-linkedin', 'lld-meeting-room', 'lld-task-scheduler', 'lld-connect-four', 'lld-arch-patterns'],
   },
   {
     id: 'lld-phase-8',

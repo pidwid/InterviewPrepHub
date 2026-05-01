@@ -318,3 +318,94 @@ When a device reconnects after being offline:
 - **Abuse prevention** — Rate limiting, content filtering, spam detection
 - **Data locality** — Store messages close to users (regional Cassandra clusters)
 - **GDPR compliance** — Message deletion on account close, right to export
+
+---
+
+## Operational Depth (Senior Interview Layer)
+
+### Database Schema (Cassandra)
+
+```sql
+-- Messages partitioned by conversation, clustered by time (DESC for latest-first reads)
+CREATE TABLE messages (
+    conversation_id  uuid,
+    message_id       timeuuid,    -- monotonic + sortable; encodes timestamp
+    sender_id        uuid,
+    body             text,
+    media_url        text,
+    delivery_state   tinyint,     -- 0=sent 1=delivered 2=read
+    created_at       timestamp,
+    PRIMARY KEY ((conversation_id), message_id)
+) WITH CLUSTERING ORDER BY (message_id DESC);
+
+-- User → conversations index for inbox listing
+CREATE TABLE user_conversations (
+    user_id          uuid,
+    last_msg_at      timestamp,
+    conversation_id  uuid,
+    unread_count     int,
+    PRIMARY KEY ((user_id), last_msg_at, conversation_id)
+) WITH CLUSTERING ORDER BY (last_msg_at DESC);
+```
+
+**Why these choices?**
+- Partition by `conversation_id` → all messages of one chat live together; single-partition reads are fast.
+- `timeuuid` gives global ordering with no coordinator; clients can sort locally.
+- Wide-row hot-spotting limit: a single very busy group chat may exceed Cassandra's recommended 100MB partition. Mitigate with **time-bucket sharding**: `((conversation_id, day_bucket), message_id)`.
+
+### Message Ordering at Scale
+- Within a conversation: `timeuuid` preserves order despite clock skew (ties broken by node ID).
+- Across replicas: Cassandra is eventually consistent. For chat, this is usually fine — clients re-sort on `message_id`.
+- For **strict ordering** (e.g., regulated fintech chats), use a single Kafka partition per conversation with `partitioner.class = conversationId`. Order is then deterministic and replayable.
+
+### Sharding Strategy
+- **Chat servers**: shard by `userId` so a user's connection always lands on the same node — simpler presence, single fanout target.
+- **Message storage**: shard by `conversationId` so all reads are single-partition.
+- **Tension**: a message write must update both sender's and recipient's storage views. Solution: write once to `messages` (conversation-keyed) and update `user_conversations` for each participant via async fanout (Kafka).
+
+### Failure Recovery & Disaster Recovery
+
+| Component | Failure | Mitigation |
+|-----------|---------|------------|
+| Chat server crash | All sessions on it drop | Client auto-reconnects; presence TTL on Redis lapses → marked offline; LB routes to a healthy node |
+| Cassandra node down | Reads degrade | RF=3, QUORUM reads; read repair on next access |
+| Kafka broker loss | Notification delay | RF=3 with `min.insync.replicas=2`; producers retry |
+| Region outage | Service unavailable in region | Multi-region active-active with conflict-free `timeuuid` IDs; users re-route via DNS health check |
+
+**RPO**: ~0 (replicated synchronously within region, async cross-region — accept up to 5s loss in disaster).
+**RTO**: <5 minutes via DNS failover + warm-standby region.
+
+### Deployment & Rollout
+- **Blue-green** for chat servers — drain WebSocket connections gracefully (`Connection: close` after current message), wait for clients to reconnect to green.
+- **Canary** for message-format changes — 1% of users for 24h, monitor reconnect rate and error budget burn.
+- Feature flags for new endpoints; kill switch to roll back without redeploy.
+
+### Monitoring & Alerting (SLOs)
+
+| SLI | SLO | Alert |
+|-----|-----|-------|
+| Message send → delivered p99 | <500ms | >1s for 5min |
+| WebSocket connect success | ≥99.9% | <99.5% for 5min |
+| Notification delivery success | ≥99% | <97% for 10min |
+| Active connections per host | <50k | >75k → scale out |
+| Cassandra write p99 | <20ms | >50ms |
+
+**Dashboards**: per-region active connections, message throughput, presence accuracy (sample-based), end-to-end delivery latency, push notification queue depth.
+
+### End-to-End Encryption (Signal Protocol)
+- **X3DH** key agreement: clients exchange identity keys + signed prekeys + one-time prekeys via the server.
+- **Double Ratchet**: every message uses a fresh derived key. Forward secrecy + post-compromise security.
+- The server stores only encrypted blobs and routing metadata. Cannot decrypt content.
+- Group chats: each pair of members has a session; the sender encrypts once per recipient session — O(N) work per group message.
+- **Key rotation** happens automatically on every message via the ratchet.
+
+### Cost & Capacity (1B users, 100M DAU, 50 msg/user/day)
+- Messages/day: 5B → 58k QPS write, ~580k QPS read (10:1 R:W).
+- Storage: 5B × 200B avg = 1TB/day → 365TB/yr. With RF=3 → 1PB/yr. Tier old messages to S3 (cold) after 30 days.
+- WebSocket connections: 100M concurrent. At 50k/server → 2,000 servers per region.
+- Bandwidth: ~50KB/s per active user × 10M peak concurrent = 500GB/s peak ingress.
+
+### Common Trade-Offs to Discuss
+- **Postgres vs Cassandra for messages** — Postgres is simpler but write throughput saturates at single-digit shards; Cassandra scales horizontally for write-heavy workloads.
+- **E2E encryption timing** — adding it later changes the data model and search story; design for it from day one if it's a likely requirement.
+- **Push vs poll for delivery state** — push via the existing WebSocket; polling burns battery and bandwidth.

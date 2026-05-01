@@ -24,7 +24,7 @@ export const ROADMAP_PHASES = [
     title: 'Data Layer',
     week: 'Week 3–4',
     description: 'Master storage, retrieval, and API design patterns.',
-    topics: ['note-11', 'note-12', 'note-15'],
+    topics: ['note-11', 'note-12', 'note-15', 'note-45'],
   },
   {
     id: 'phase-4',

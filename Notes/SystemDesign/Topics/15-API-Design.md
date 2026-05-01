@@ -824,6 +824,68 @@ X-Features: new-response-format
 
 ---
 
+## 🎯 Backend-for-Frontend (BFF) Pattern — Deep Dive
+
+### What It Is
+One backend per frontend client (mobile, web, smart-TV, partner). Each BFF tailors responses, payload size, and aggregation to its client's needs while sharing downstream microservices.
+
+```
+┌──────────┐  ┌──────────┐  ┌──────────┐
+│ iOS App  │  │ Web App  │  │ Partner  │
+└────┬─────┘  └────┬─────┘  └────┬─────┘
+     ▼              ▼             ▼
+┌──────────┐  ┌──────────┐  ┌──────────┐
+│ iOS BFF  │  │ Web BFF  │  │ Pub BFF  │   ◀── owned by client team
+└────┬─────┘  └────┬─────┘  └────┬─────┘
+     └──────┬───────┴─────────────┘
+            ▼
+   ┌──────────────────┐
+   │ Microservices    │   ◀── owned by domain teams
+   │ (Users, Orders…) │
+   └──────────────────┘
+```
+
+### Why It Beats a "One-Size-Fits-All" API
+- Mobile gets a 5KB compact response; web gets the rich 50KB version.
+- Mobile BFF batches 5 service calls into 1 round-trip → fewer mobile retries.
+- Each client team owns its BFF → no cross-team coordination for UI changes.
+- BFF absorbs protocol complexity (REST → gRPC, REST → GraphQL stitching).
+
+### Trade-Offs vs Alternatives
+
+| Approach | Pros | Cons |
+|----------|------|------|
+| **Single REST API** | One thing to maintain | Bloated payloads, "boil-the-ocean" releases |
+| **Sparse fieldsets** (`?fields=id,name`) | Simple | Server still does full DB work; clients duplicate query logic |
+| **GraphQL** | Client picks shape | N+1 query risk, complex authz/rate-limit, caching is hard |
+| **BFF** | Client-tailored, team-owned | Code duplication across BFFs, more services to operate |
+| **GraphQL + BFF combined** | Best of both | Most complex, requires GraphQL expertise |
+
+### When to Use BFF
+- ✅ You have ≥2 distinct client surfaces with different needs.
+- ✅ You're consolidating many microservice calls per screen (mobile is a typical driver).
+- ✅ You can dedicate one team per client to own the BFF.
+- ❌ Single-surface product → BFF adds a hop for nothing.
+- ❌ Tiny team can't maintain 3 BFFs → use sparse fieldsets first.
+
+### Organizational Implications (Conway's Law)
+- Mobile team owns iOS-BFF → can ship UI changes without backend ticket.
+- Reduces cross-team blocking; increases ownership clarity.
+- Risk: each BFF reimplements auth/logging/tracing → solve via shared library or service mesh sidecar.
+
+### Operational Concerns
+- **Observability**: trace spans must propagate Client → BFF → microservices.
+- **Failure isolation**: BFF should degrade gracefully when an upstream is down (return partial response with `_errors` field).
+- **Caching**: BFF is a great place for response caching since it knows the client's context.
+- **Security**: BFF is the auth boundary; downstream services trust the BFF's signed claims.
+
+### Common Pitfalls
+- BFF becoming a god-service with business logic that belongs in domain services.
+- Logic duplication across BFFs — extract shared concerns into libraries.
+- Versioning chaos — BFF should be versioned with its client app, not as a separate API.
+
+---
+
 ## 📚 Further Reading
 
 - [Microsoft REST API Design Guidelines](https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md) — Industry-standard API design patterns used at Microsoft.

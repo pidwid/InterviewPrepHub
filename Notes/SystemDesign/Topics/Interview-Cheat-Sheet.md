@@ -887,3 +887,171 @@ Response: 429 + Retry-After header + X-RateLimit-Remaining
 > **Remember**: The interviewer cares about your **thought process**, not a perfect answer. Communicate clearly, state trade-offs, and drive the conversation.
 
 > **Last tip**: Practice drawing these diagrams on a whiteboard or in a tool like Excalidraw — muscle memory matters.
+
+---
+
+## 🛡️ Privacy-First Design Checklist (Append to Every Solution)
+
+Senior interviewers — especially at Apple, Meta, EU companies — explicitly test whether privacy is **built in** vs **bolted on**. Walk through this in the last 5 minutes of every system design.
+
+| Layer | Question to Address |
+|-------|---------------------|
+| **Threat model** | Who could see this data? Insider, attacker, partner, government? What are they after? |
+| **Data classification** | Tag each field as Public / Internal / Confidential / PII / Sensitive PII (health, financial) |
+| **Minimization** | Do we *need* to store this field? Can we hash/tokenize/aggregate instead? |
+| **Encryption in transit** | TLS 1.3 everywhere, including between internal services (mTLS) |
+| **Encryption at rest** | AES-256 for storage; envelope encryption with KMS; per-tenant keys for B2B SaaS |
+| **Access control** | Default-deny; RBAC + ABAC; just-in-time elevation; auditable break-glass |
+| **Authentication** | Strong: TOTP/WebAuthn for users, mTLS or short-lived signed JWTs for services |
+| **Audit logging** | Who accessed which record when? Tamper-evident (append-only, signed) |
+| **Data residency** | Is data restricted to a region (GDPR Art. 44, India DPDP)? Multi-region implications? |
+| **Retention & deletion** | TTL on logs/backups; right-to-erasure pipeline that catches caches and replicas |
+| **PII in logs** | Scrub at log emission; never log auth tokens, PANs, full DOBs |
+| **Third-party** | DPAs in place; data processed by sub-processors documented |
+| **Anonymization** | k-anonymity for analytics; differential privacy for aggregates |
+| **Customer controls** | Export, delete, opt-out of profiling, consent management |
+| **Incident response** | Detection mean-time, breach notification SLA (72h GDPR), comms plan |
+
+**Power phrase for the interview**: *"Before we wrap up, let me walk through the privacy threat model — who can read this data, how it's encrypted at each hop, and how we honor deletion requests across caches, replicas, and backups."*
+
+---
+
+## 📐 Estimation Worked Examples (Full Walkthroughs)
+
+### Example 1: Twitter Timeline at Scale
+
+**Given**: 300M MAU, 50% DAU = 150M, average user reads timeline 5x/day, posts 1 tweet/day.
+
+**Reads/sec**:
+```
+150M DAU × 5 reads/day = 750M reads/day
+750M / 86,400s ≈ 8.7K reads/sec average
+Peak (3x average) ≈ 26K reads/sec
+```
+
+**Writes/sec**:
+```
+150M DAU × 1 tweet/day = 150M tweets/day
+150M / 86,400s ≈ 1.7K tweets/sec average
+Peak ≈ 5K tweets/sec
+```
+
+**R:W ratio = ~5:1** → Read-heavy. Justifies fan-out-on-write + Redis timeline cache.
+
+**Storage** (tweets):
+```
+Tweet ≈ 280 chars + metadata ≈ 1 KB stored
+150M tweets/day × 1 KB = 150 GB/day
+× 365 days × 5 years = 274 TB
+× 3 (replication factor) = 822 TB
+```
+
+**Cache** (timelines):
+```
+Each user keeps last 800 tweets in timeline
+Per timeline ≈ 800 × 200 B (tweet IDs + metadata) = 160 KB
+150M active users × 160 KB = 24 TB Redis (sharded across cluster)
+```
+
+**Bandwidth**:
+```
+26K reads/sec × 50 KB response = 1.3 GB/s ≈ 11 Gbps egress
+```
+
+**Servers** (web tier, assume 1K QPS/server):
+```
+26K peak QPS / 1K = ~26 servers + 50% headroom = 40 servers
+× 3 for multi-AZ = 120 servers
+```
+
+---
+
+### Example 2: URL Shortener (Bit.ly) — 100M URLs/day
+
+**Writes**:
+```
+100M URLs/day = 1.16K/sec average, ~3K peak
+```
+
+**Reads** (assume 100:1 read:write):
+```
+100M × 100 = 10B reads/day = 116K/sec, ~350K peak
+```
+
+**Storage**:
+```
+Per record: short_code(7B) + long_url(500B avg) + meta(100B) ≈ 700 B
+100M/day × 700 B = 70 GB/day
+5 years = 128 TB
+× 3 RF = 384 TB
+```
+
+**Cache** (assume 80/20 rule — 20% of URLs serve 80% of traffic):
+```
+Hot set ≈ 100M × 100 (5y URLs in cache) × 20% = 2B URLs hot? Too much.
+Better: cache last 30 days of hot URLs ≈ 600M × 700B = 420 GB Redis
+Still big — shard across 6 × 100GB Redis nodes
+```
+
+**Bandwidth**:
+```
+350K reads × 500 B response (HTTP redirect) = 175 MB/s ≈ 1.4 Gbps
+```
+
+---
+
+### Example 3: Chat System — 1B Users, 100M DAU
+
+**Messages**:
+```
+100M DAU × 50 msg/day = 5B msg/day = 58K/sec average, 175K/sec peak
+```
+
+**Storage**:
+```
+5B × 200 B = 1 TB/day
+365 TB/yr × 3 RF = 1.1 PB/yr
+Tier to S3 cold after 30 days
+```
+
+**WebSocket connections** (peak concurrent):
+```
+~10% of DAU online at peak = 10M concurrent
+At 50K WS/server = 200 servers minimum
+× 3 regions × 2 AZ = 1,200 servers globally
+```
+
+**Bandwidth (server → client)**:
+```
+175K msg/sec × 1 KB (with metadata) = 175 MB/s = 1.4 Gbps
+Plus presence pings, typing indicators, read receipts ~3x = 4 Gbps egress
+```
+
+---
+
+### Memorize-These Numbers (Latency)
+
+| Operation | Time | Mnemonic |
+|-----------|------|----------|
+| L1 cache | 0.5 ns | reference |
+| L2 cache | 7 ns | 14× L1 |
+| Mutex lock/unlock | 25 ns | 50× L1 |
+| Main memory | 100 ns | 200× L1 |
+| Compress 1KB (Snappy) | 3 µs | |
+| 1 Gbps network 1 KB send | 10 µs | |
+| Read 1 MB sequential SSD | 250 µs | |
+| Read 1 MB sequential disk | 20 ms | 80× SSD |
+| Datacenter round-trip | 500 µs | |
+| Cross-region round-trip (US east↔west) | 70 ms | |
+| Cross-continent (US↔EU) | 150 ms | |
+
+### Power-of-Ten Conversions
+
+| | |
+|---|---|
+| 10⁶ requests/day | ≈ 12 QPS |
+| 10⁹ requests/day | ≈ 12K QPS |
+| 1 TB | ≈ 10⁶ MB ≈ 10⁹ KB |
+| 1 PB | ≈ 1000 TB ≈ 1M GB |
+| 1 day | 86,400 s ≈ 10⁵ s |
+| 1 year | ≈ 3 × 10⁷ s |
