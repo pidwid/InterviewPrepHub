@@ -20,7 +20,16 @@
  * device config, not user data.
  */
 
-import { createClient } from "@libsql/client/web";
+// @libsql/client is dynamically imported on first use to keep it out of the
+// initial bundle (~200KB). Local-mode users never load it.
+let _createClient = null;
+async function _getCreateClient() {
+  if (!_createClient) {
+    const mod = await import("@libsql/client/web");
+    _createClient = mod.createClient;
+  }
+  return _createClient;
+}
 
 // ── localStorage keys for config ────────────────────────────────────────────
 export const STORAGE_MODE_KEY = "prep_storage_mode"; // 'local' | 'turso'
@@ -65,11 +74,12 @@ export function saveTursoConfig(url, token) {
 let _client = null;
 let _clientKey = null;
 
-function _getClient() {
+async function _getClient() {
   const { url, token } = getTursoConfig();
   if (!url || !token) return null;
   const key = `${url}|${token}`;
   if (_client && _clientKey === key) return _client;
+  const createClient = await _getCreateClient();
   _client = createClient({ url, authToken: token });
   _clientKey = key;
   return _client;
@@ -111,6 +121,7 @@ const UPSERT_SQL = `
 
 export async function testTursoConnection(url, token) {
   try {
+    const createClient = await _getCreateClient();
     const client = createClient({ url: url.trim(), authToken: token.trim() });
     await client.execute("SELECT 1");
     return { ok: true };
@@ -127,7 +138,7 @@ export async function testTursoConnection(url, token) {
 export const progressStorage = {
   async getAll(namespace) {
     if (getStorageMode() === "turso") {
-      const client = _getClient();
+      const client = await _getClient();
       if (!client) return {};
       try {
         await _ensureSchema(client);
@@ -153,7 +164,7 @@ export const progressStorage = {
 
   async set(namespace, topicId, status) {
     if (getStorageMode() === "turso") {
-      const client = _getClient();
+      const client = await _getClient();
       if (!client) return;
       try {
         await _ensureSchema(client);
@@ -176,7 +187,7 @@ export const progressStorage = {
 
   async reset(namespace) {
     if (getStorageMode() === "turso") {
-      const client = _getClient();
+      const client = await _getClient();
       if (!client) return;
       try {
         await _ensureSchema(client);
@@ -199,7 +210,7 @@ export const progressStorage = {
 export const bookmarkStorage = {
   async getAll() {
     if (getStorageMode() === "turso") {
-      const client = _getClient();
+      const client = await _getClient();
       if (!client) return {};
       try {
         await _ensureSchema(client);
@@ -222,7 +233,7 @@ export const bookmarkStorage = {
 
   async set(noteFile, headingId) {
     if (getStorageMode() === "turso") {
-      const client = _getClient();
+      const client = await _getClient();
       if (!client) return;
       try {
         await _ensureSchema(client);
@@ -243,7 +254,7 @@ export const bookmarkStorage = {
 
   async remove(noteFile) {
     if (getStorageMode() === "turso") {
-      const client = _getClient();
+      const client = await _getClient();
       if (!client) return;
       try {
         await _ensureSchema(client);
@@ -271,7 +282,7 @@ export const bookmarkStorage = {
 export const qnaStorage = {
   async getAll() {
     if (getStorageMode() === "turso") {
-      const client = _getClient();
+      const client = await _getClient();
       if (!client) return {};
       try {
         await _ensureSchema(client);
@@ -294,7 +305,7 @@ export const qnaStorage = {
 
   async set(questionId, result) {
     if (getStorageMode() === "turso") {
-      const client = _getClient();
+      const client = await _getClient();
       if (!client) return;
       try {
         await _ensureSchema(client);
@@ -321,7 +332,7 @@ export const qnaStorage = {
  * Safe to run multiple times — uses UPSERT.
  */
 export async function migrateLocalToTurso() {
-  const client = _getClient();
+  const client = await _getClient();
   if (!client)
     throw new Error("Turso is not configured. Add your URL and token first.");
   await _ensureSchema(client);
@@ -369,7 +380,7 @@ export async function migrateLocalToTurso() {
  * Overwrites local data with what's in Turso.
  */
 export async function migrateTursoToLocal() {
-  const client = _getClient();
+  const client = await _getClient();
   if (!client)
     throw new Error("Turso is not configured. Add your URL and token first.");
   await _ensureSchema(client);

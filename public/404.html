@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>InterviewPrepHub</title>
+    <!--
+      GitHub Pages SPA fallback: any deep-link refresh hits this 404 page.
+      We capture the original path and redirect to the SPA root with the
+      path encoded in the query string so the app can restore it on load.
+    -->
+    <script>
+      (function () {
+        var base = '/InterviewPrepHub/';
+        var l = window.location;
+        var redirect =
+          l.protocol +
+          '//' +
+          l.hostname +
+          (l.port ? ':' + l.port : '') +
+          base +
+          '?redirect=' +
+          encodeURIComponent(
+            l.pathname.replace(base, '/') + l.search + l.hash
+          );
+        window.location.replace(redirect);
+      })();
+    </script>
+  </head>
+  <body>
+    Redirecting…
+  </body>
+</html>

@@ -1,15 +1,41 @@
 import { useState, useEffect } from "react";
-import MarkdownRenderer, { getContent } from "./MarkdownRenderer";
+import MarkdownRenderer from "./MarkdownRenderer";
+import { getContent, loadContent } from "../data/contentLoader";
 import { getQnAForTopic } from "../data/qna";
 import InlinePractice, { getTopicNumFromNoteFile } from "./InlinePractice";
 
 export default function NoteViewer({ noteFile, title, onClose }) {
-  const content = getContent(noteFile);
+  // Read cached content synchronously each render — instant for already-loaded
+  // notes. The async path below populates the cache and triggers a re-render.
+  const cached = getContent(noteFile);
+  const [fetched, setFetched] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("notes");
+  const content = cached || (fetched?.file === noteFile ? fetched.md : null);
 
   // Scroll to top when the note viewer opens or noteFile changes
   useEffect(() => {
     window.scrollTo(0, 0);
+  }, [noteFile]);
+
+  // Lazy-load the markdown chunk on demand
+  useEffect(() => {
+    if (getContent(noteFile)) return undefined;
+    let cancelled = false;
+    Promise.resolve()
+      .then(() => {
+        if (!cancelled) setLoading(true);
+        return loadContent(noteFile);
+      })
+      .then((md) => {
+        if (!cancelled) {
+          setFetched({ file: noteFile, md });
+          setLoading(false);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
   }, [noteFile]);
 
   const topicNum = getTopicNumFromNoteFile(noteFile);
@@ -34,9 +60,13 @@ export default function NoteViewer({ noteFile, title, onClose }) {
           <h2 className="note-viewer-title">{title}</h2>
         </div>
         <div className="note-viewer-empty">
-          <p>
-            Note file not found: <code>{noteFile}</code>
-          </p>
+          {loading ? (
+            <p>Loading…</p>
+          ) : (
+            <p>
+              Note file not found: <code>{noteFile}</code>
+            </p>
+          )}
         </div>
       </div>
     );

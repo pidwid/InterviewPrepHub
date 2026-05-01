@@ -2,14 +2,6 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import rehypeSlug from "rehype-slug";
-import { getNoteContent } from "../data/notes";
-import { getLLDNoteContent } from "../data/lldNotes";
-
-// Resolve note content from either SD or LLD note stores
-export function getContent(noteFile) {
-  if (!noteFile) return null;
-  return getNoteContent(noteFile) || getLLDNoteContent(noteFile) || null;
-}
 
 // ── Study Marker Button ──────────────────────────────────────────────────────
 // Shown on hover next to a heading; click to bookmark "studied up to here".

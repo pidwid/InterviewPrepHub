@@ -1,5 +1,6 @@
 import { useState, useRef, useMemo, useCallback, useEffect } from "react";
-import MarkdownRenderer, { getContent } from "./MarkdownRenderer";
+import MarkdownRenderer from "./MarkdownRenderer";
+import { getContent } from "../data/contentLoader";
 import { useBookmarks } from "../store/useBookmarks";
 import InlinePractice, {
   topicHasQuestions,
