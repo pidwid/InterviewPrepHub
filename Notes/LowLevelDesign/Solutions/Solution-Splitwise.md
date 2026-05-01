@@ -1,221 +1,124 @@
-# 🛠️ Design Splitwise (LLD)
+# 🛠️ Design Splitwise (Expense Sharing) — LLD
 
-Splitwise is an app for splitting expenses with friends. The LLD focuses heavily on the algorithm used to simplify debts (minimizing the total number of transactions between users).
-
----
+> **Sources**: [Splitwise public help docs](https://help.splitwise.com/) describing equal/exact/percentage/share split semantics; classic "minimum cash flow" graph reduction (GeeksforGeeks); Java `BigDecimal` / integer-minor-units guidance from Joshua Bloch's *Effective Java* (Item 60); idempotency pattern from Stripe API docs.
 
 ## 1. Requirements
 
-### Functional Requirements
-- **Users & Groups:** Users can register and form groups.
-- **Add Expense:** A user can add an expense, specifying who paid and who owes how much.
-- **Split Types:** Support different split strategies (Equal, Exact, Percentage, Shares).
-- **Balances:** Show each user's total balance (who they owe, who owes them).
-- **Simplify Debts:** The core feature. If A owes B $10, and B owes C $10, the system should simplify to: A owes C $10.
+### Functional
+- **Groups**: Users join groups; expenses are typically scoped to a group.
+- **Add expense** with `paidBy`, `amount`, `currency`, and a split among participants:
+  - **Equal** — divide equally
+  - **Exact** — each participant owes a precise amount (sum must equal total)
+  - **Percentage** — each participant owes a percentage (sum must equal 100%)
+  - **Share** — proportional to share counts
+- **Settle up**: record a payment from A to B; updates pairwise balances.
+- **Simplified balances** — show "X owes Y $A" with the **minimum number of transactions**.
+- **Comments** on expenses; **multi-currency** with conversion captured at expense time.
 
-### Non-Functional Requirements
-- **Extensibility:** Easy to add a new split type (e.g., By Ratios).
-- **Correctness:** floating-point rounding errors must be handled gracefully so money isn't created or lost.
+### Non-Functional
+- **Money is exact** — no penny lost to floating-point or rounding.
+- **Atomic** expense add — all participant balances update consistently.
+- **Idempotent** add (mobile retries are common).
+- **Audit trail** of every balance change.
 
----
+## 2. Core Entities
 
-## 2. Core Entities (Objects)
+| Entity | Key Fields |
+|---|---|
+| `User` | `id`, `name`, `email` |
+| `Group` | `id`, `name`, `members[]` |
+| `Expense` | `id`, `groupId?`, `paidBy`, `amountMinor`, `currency`, `splitType`, `splits[]`, `date`, `description`, `requestId` (idempotency) |
+| `Split` | `userId`, `owedAmountMinor` (after rounding adjust) |
+| `Balance` | `(userIdA, userIdB)` → signed `amountMinor` (positive ⇒ A owes B) |
+| `Settlement` | `id`, `fromUserId`, `toUserId`, `amountMinor`, `at` |
+| `BalanceLog` | append-only audit (every delta with cause) |
 
-- `User`
-- `Group`
-- `Expense`
-- `Split` (Abstract) -> `EqualSplit`, `ExactSplit`, `PercentSplit`
-- `ExpenseManager` / `BalanceSheet`
+> **All money fields are stored as integer minor units** (cents/paise), never as `double`.
 
----
-
-## 3. Class Diagram / Relationships
+## 3. Class Diagram
 
 ```mermaid
 classDiagram
-    class ExpenseManager {
-        -List~Expense~ expenses
-        -Map~String, Map~String, Double~~ balanceSheet
-        +addExpense(Expense)
-        +showBalance(userId)
-        -simplifyDebts()
-    }
-
-    class Expense {
-        -String id
-        -double amount
-        -User paidBy
-        -List~Split~ splits
-        -ExpenseMetadata metadata
-    }
-
-    class Split {
-        <<abstract>>
-        -User user
-        -double amount
-        +getAmount()
-        +setAmount(double)
-    }
-
-    class EqualSplit { }
-    class PercentSplit {
-        -double percent
-    }
-
-    Expense "1" *-- "many" Split
-    Split <|-- EqualSplit
-    Split <|-- PercentSplit
+  class Expense { +amountMinor; +splitType; +splits }
+  class SplitStrategy { <<interface>> +computeSplits(amount, params): List~Split~ }
+  class EqualSplit
+  class ExactSplit
+  class PercentageSplit
+  class ShareSplit
+  class ExpenseService { +addExpense(e); +settleUp(...); +simplifyDebts(group) }
+  class BalanceRepository { +getNet(a,b); +applyDelta(a,b,delta) }
+  Expense ..> SplitStrategy
+  SplitStrategy <|.. EqualSplit
+  SplitStrategy <|.. ExactSplit
+  SplitStrategy <|.. PercentageSplit
+  SplitStrategy <|.. ShareSplit
+  ExpenseService --> BalanceRepository
 ```
 
----
-
-## 4. Key Algorithms / Design Patterns
-
-### 1. Strategy Pattern for Splitting
-
-Splitting logic is perfect for the Strategy pattern. But in Splitwise, the "Split" itself is an object holding the calculated amount. We create different types of Splits, and a factory or the Expense constructor validates them.
+## 4. Key Methods
 
 ```java
-public abstract class Split {
-    protected User user;
-    protected double amount;
-
-    public Split(User user) { this.user = user; }
-    // Getters and setters
-}
-
-public class PercentSplit extends Split {
-    double percent;
-    public PercentSplit(User user, double percent) {
-        super(user);
-        this.percent = percent;
-    }
-}
+ExpenseId   ExpenseService.addExpense(Expense e);   // idempotent on requestId
+Settlement  ExpenseService.settleUp(fromId, toId, amountMinor, currency);
+List<Tx>    ExpenseService.simplifyDebts(groupId); // greedy min-tx
+Money       ExpenseService.getBalance(userA, userB);
 ```
 
-When an `Expense` is created, it validates the splits:
-```java
-public class ExpenseService {
-    public static Expense createExpense(ExpenseType type, double amount, User paidBy, List<Split> splits) {
-        switch (type) {
-            case EXACT:
-                // Sum of splits must equal total amount
-                double total = splits.stream().mapToDouble(Split::getAmount).sum();
-                if (total != amount) throw new InvalidSplitException();
-                break;
-            case PERCENT:
-                // Sum of percentages must equal 100%
-                double totalPercent = 0;
-                for (Split split : splits) {
-                    totalPercent += ((PercentSplit) split).getPercent();
-                    // Calculate and set actual amount
-                    split.setAmount((amount * ((PercentSplit) split).getPercent()) / 100.0);
-                }
-                if (totalPercent != 100.0) throw new InvalidSplitException();
-                break;
-            case EQUAL:
-                // Divide total by number of users
-                int totalSplits = splits.size();
-                double splitAmount = Math.round((amount / totalSplits) * 100.0) / 100.0;
-                for (Split split : splits) {
-                    split.setAmount(splitAmount);
-                }
-                // Handle 1 cent rounding error by adding it to the first split
-                splits.get(0).setAmount(splitAmount + (amount - (splitAmount * totalSplits)));
-                break;
-        }
-        return new Expense(amount, paidBy, splits);
-    }
-}
+## 5. Design Patterns
+
+| Pattern | Where | Why |
+|---|---|---|
+| **Strategy** | `SplitStrategy` (`Equal`, `Exact`, `Percentage`, `Share`) | Add new split modes (e.g., "by adjustment") without touching `Expense`. |
+| **Command** | `AddExpenseCommand` is the audit-logged unit of work | Idempotent replay + undo. |
+| **Observer** | `ExpenseObserver` notifies group members on add | Decouple notifications from core flow. |
+| **Composite** | An expense's UI breakdown (totals → per-participant) | Uniform aggregation. |
+| **Visitor** | Reports (largest expenses, by category, monthly) | Traverse expense graph without modifying it. |
+| **Memento** | Snapshot before edit | Undo / version-history. |
+| **Singleton** | `ExpenseService` facade | Single coordination point. |
+
+## 6. Concurrency & Edge Cases
+
+### 6.1 Money in **integer minor units**
+Never use `double`. Use `long amountMinor` (or `BigDecimal` with explicit scale). All arithmetic stays exact; format to display only at the UI boundary.
+
+### 6.2 Equal split rounding (the classic gotcha)
+For `total = 1000` cents split among 3:
 ```
-
-### 2. The Balance Sheet (Tracking who owes who)
-
-We use a nested HashMap (a 2D matrix) to track balances.
-Rows = "I owe", Cols = "To this person". `balanceSheet[A][B] = 50` means A owes B 50.
-
-```java
-public class ExpenseManager {
-    // Map of User -> (Map of User -> Amount)
-    Map<String, Map<String, Double>> balanceSheet = new HashMap<>();
-
-    public void addExpense(Expense expense) {
-        String paidBy = expense.getPaidBy().getId();
-
-        for (Split split : expense.getSplits()) {
-            String paidTo = split.getUser().getId();
-            double amountOwed = split.getAmount();
-
-            if (paidBy.equals(paidTo)) continue; // Don't owe yourself
-
-            // 1. Update what `paidTo` owes `paidBy`
-            balances.putIfAbsent(paidTo, new HashMap<>());
-            balances.get(paidTo).put(paidBy, balances.get(paidTo).getOrDefault(paidBy, 0.0) + amountOwed);
-
-            // 2. Update what `paidBy` owes `paidTo` (negative)
-            balances.putIfAbsent(paidBy, new HashMap<>());
-            balances.get(paidBy).put(paidTo, balances.get(paidBy).getOrDefault(paidTo, 0.0) - amountOwed);
-        }
-    }
-}
+base       = 1000 / 3 = 333
+remainder  = 1000 - 333 * 3 = 1
+splits[0] += 1   // first participant absorbs the leftover
+// → [334, 333, 333]  Σ = 1000 ✓
 ```
+A common alternative is to rotate the "absorber" expense-by-expense to avoid systematic bias against the same user.
 
-### 3. The Debt Simplification Algorithm (The real interview question)
-
-This is a **Graph Algorithm**. The balances form a directed weighted graph. We want to clear intermediate edges.
-
-**Step 1: Calculate Net Balance for everyone**
-Instead of looking at $A \rightarrow B$ and $B \rightarrow C$, we just look at the total net money for each person across all their transactions.
-- Net > 0: This person acts as a "Receiver" (Creditor).
-- Net < 0: This person acts as a "Giver" (Debtor).
-
-**Step 2: Greedy Settlement (Max Heap / Min Heap)**
-Put all Net > 0 people in a `Receivers` priority queue (highest amount first).
-Put all Net < 0 people in a `Givers` priority queue (lowest/most negative amount first).
-
-Pop the top from both. The person who owes the most pays the person who is owed the most. Minimum transactions guaranteed!
-
-```java
-private void simplifyDebts() {
-    // 1. Calculate net balances
-    Map<String, Double> netBalance = new HashMap<>();
-    for (String user : balanceSheet.keySet()) {
-        for (String otherUser : balanceSheet.get(user).keySet()) {
-            // If I owe otherUser 50, my net balance drops by 50.
-            netBalance.put(user, netBalance.getOrDefault(user, 0.0) - balanceSheet.get(user).get(otherUser));
-        }
-    }
-
-    // 2. Separate into Givers and Receivers
-    PriorityQueue<Map.Entry<String, Double>> receivers = new PriorityQueue<>((a, b) -> Double.compare(b.getValue(), a.getValue()));
-    PriorityQueue<Map.Entry<String, Double>> givers = new PriorityQueue<>((a, b) -> Double.compare(a.getValue(), b.getValue()));
-
-    for (Map.Entry<String, Double> entry : netBalance.entrySet()) {
-        if (entry.getValue() > 0) receivers.add(entry);
-        else if (entry.getValue() < 0) givers.add(entry);
-    }
-
-    // 3. Greedy matching
-    while (!receivers.isEmpty() && !givers.isEmpty()) {
-        Map.Entry<String, Double> receiver = receivers.poll();
-        Map.Entry<String, Double> giver = givers.poll();
-
-        double settleAmount = Math.min(receiver.getValue(), Math.abs(giver.getValue()));
-
-        System.out.println(giver.getKey() + " pays " + settleAmount + " to " + receiver.getKey());
-
-        // Adjust remaining balances and push back into queues if not fully settled
-        double remainingReceiver = receiver.getValue() - settleAmount;
-        double remainingGiver = giver.getValue() + settleAmount;
-
-        if (remainingReceiver > 0.01) {
-            receiver.setValue(remainingReceiver);
-            receivers.add(receiver);
-        }
-        if (remainingGiver < -0.01) {
-            giver.setValue(remainingGiver);
-            givers.add(giver);
-        }
-    }
-}
+### 6.3 Atomic balance update (single transaction)
+For each `Split s`:
 ```
+balance[paidBy][s.userId] -= s.owedAmountMinor   // s.userId owes paidBy
+balance[s.userId][paidBy] += s.owedAmountMinor   // mirror
+INSERT INTO balance_log (... cause=expenseId, delta ...);
+```
+All inside `BEGIN…COMMIT`. Partial failure rolls back.
+
+### 6.4 Idempotent add
+Client supplies `requestId`. The service stores the result keyed on `requestId`; replay returns the cached `ExpenseId` (Stripe-style idempotency).
+
+### 6.5 Multi-currency
+Capture the FX rate at expense time and store both the original `(amountMinor, currency)` and the group-currency-converted equivalent. Later FX moves don't retroactively change history.
+
+### 6.6 Debt simplification (minimum cash flow)
+**Greedy O(n log n)** algorithm:
+1. Compute each user's **net** = (sum of credits) − (sum of debits) in the group.
+2. Push positives (creditors) on a max-heap, negatives on a min-heap.
+3. While both heaps non-empty: take top of each, settle `min(|cred|, |debit|)`, push back any remainder.
+
+This does **not** always produce the absolute mathematical minimum (that's NP-hard in general), but for typical group sizes it produces a close-to-optimal small set of transactions and is what Splitwise's "Settle up balances" feature does.
+
+Run **offline** (eventual consistency) — results are advisory; actual settlements still go through the atomic `settleUp` path.
+
+## 7. Sources / Cross-Refs
+- LLD-08 Behavioral Patterns (Strategy, Command, Observer, Visitor, Memento)
+- 16-Security.md (idempotency-key contract)
+- Solution-Stripe-Payment-Processor.md (idempotent add pattern)
+- *Effective Java* — Item 60 (Avoid `float` and `double` for monetary calcs)
+- Splitwise help: https://help.splitwise.com/
