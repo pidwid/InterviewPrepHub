@@ -30,6 +30,7 @@ export default function Dashboard({
   review,
   streak,
   recordActivity,
+  viewed,
 }) {
   const pctDone = stats.total
     ? Math.round((stats.done / stats.total) * 100)
@@ -163,6 +164,7 @@ export default function Dashboard({
             onInitialTopicConsumed={() => setPendingTopicId(null)}
             onTopicSelect={(topicId) => onNavChange?.("categories", topicId)}
             recordActivity={recordActivity}
+            viewed={viewed}
           />
         )}
         {dashTab === "practice" && showPractice && (
@@ -174,6 +176,7 @@ export default function Dashboard({
             onInitialTopicConsumed={() => setPendingTopicId(null)}
             onTopicSelect={(topicId) => onNavChange?.("practice", topicId)}
             recordActivity={recordActivity}
+            viewed={viewed}
           />
         )}
       </div>

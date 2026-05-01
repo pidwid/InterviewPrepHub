@@ -692,3 +692,144 @@
 .sb-progress + .sb-content-header {
   top: 3px;
 }
+
+/* ─── Phase 4 additions ──────────────────────────────────────────────── */
+
+/* Read-time pill in the content title area */
+.sb-read-time {
+  font-size: 0.75rem;
+  opacity: 0.6;
+  padding: 2px 8px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  white-space: nowrap;
+  align-self: center;
+}
+
+/* "Started — open to continue" indicator on not_started topics */
+.sb-viewed-dot {
+  font-size: 0.85em;
+  opacity: 0.55;
+  margin-left: 4px;
+  flex-shrink: 0;
+}
+
+/* Friendlier empty-state card for topics without notes */
+.sb-no-content {
+  padding: 32px 24px;
+  text-align: center;
+  max-width: 560px;
+  margin: 32px auto;
+  border: 1px dashed var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.sb-no-content-icon {
+  font-size: 2.5rem;
+  margin-bottom: 12px;
+}
+
+.sb-no-content-title {
+  font-size: 1.1rem;
+  margin: 0 0 8px;
+  font-weight: 600;
+}
+
+.sb-no-content-title em {
+  font-style: normal;
+  color: var(--accent, #667eea);
+}
+
+.sb-no-content-body {
+  font-size: 0.9rem;
+  opacity: 0.8;
+  line-height: 1.5;
+  margin: 0 0 16px;
+}
+
+.sb-no-content-details {
+  font-size: 0.8rem;
+  opacity: 0.65;
+  text-align: left;
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+  margin-top: 12px;
+}
+
+.sb-no-content-details summary {
+  cursor: pointer;
+  user-select: none;
+}
+
+.sb-no-content-details code {
+  font-size: 0.85em;
+  background: rgba(127, 127, 127, 0.12);
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+/* ── Mobile drawer ───────────────────────────────────────────────────── */
+@media (max-width: 760px) {
+  /* On mobile, the sidebar slides in from the left as an overlay */
+  .sb-layout--mobile .sb-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 80%;
+    max-width: 320px;
+    height: 100vh;
+    z-index: 100;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    box-shadow: 2px 0 12px rgba(0, 0, 0, 0.15);
+  }
+  .sb-layout--drawer-open .sb-sidebar {
+    transform: translateX(0);
+  }
+  /* Hide the desktop slim-icon column when mobile is collapsed */
+  .sb-layout--mobile .sb-sidebar--collapsed .sb-sidebar-collapsed-content {
+    display: none;
+  }
+  /* Hide the edge-collapse handle on mobile (use hamburger instead) */
+  .sb-layout--mobile .sb-edge-collapse {
+    display: none;
+  }
+  /* Content panel takes full width on mobile */
+  .sb-layout--mobile .sb-main {
+    width: 100%;
+    padding-top: 48px; /* room for the hamburger button */
+  }
+}
+
+/* Hamburger toggle (only rendered on mobile) */
+.sb-mobile-toggle {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 101;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: inherit;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.sb-mobile-toggle:hover {
+  background: var(--bg);
+}
+
+.sb-mobile-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 99;
+  background: rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+}

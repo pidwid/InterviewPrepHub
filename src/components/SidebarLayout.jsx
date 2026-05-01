@@ -3,6 +3,10 @@ import MarkdownRenderer from "./MarkdownRenderer";
 import NoteNav from "./NoteNav";
 import { getContent, loadContent } from "../data/contentLoader";
 import { useBookmarks } from "../store/useBookmarks";
+import {
+  estimateReadMinutes,
+  formatReadMinutes,
+} from "../util/readTime";
 import InlinePractice, {
   topicHasQuestions,
   getQuestionCount,
@@ -23,6 +27,9 @@ const STATUS_CLS = {
 };
 
 // ── Sidebar Item ────────────────────────────────────────────────────────────
+// Layout breakpoint — keep in sync with sidebar.css
+const MOBILE_BREAKPOINT = 760;
+
 function SidebarCategory({
   cat,
   progress,
@@ -31,6 +38,7 @@ function SidebarCategory({
   isExpanded,
   onToggle,
   hasBookmarkFn,
+  isViewedFn,
 }) {
   const done = cat.topics.filter((t) => progress[t.id] === "done").length;
   const total = cat.topics.length;
@@ -77,6 +85,11 @@ function SidebarCategory({
                   {STATUS_ICON[status]}
                 </span>
                 <span className="sb-topic-name">{topic.title}</span>
+                {isViewedFn?.(topic.id) && status === "not_started" && (
+                  <span className="sb-viewed-dot" title="Started — open to continue">
+                    ◐
+                  </span>
+                )}
                 {hasBookmarkFn?.(topic.noteFile || topic.solutionFile) && (
                   <span className="sb-bookmark-dot" title="Study marker inside">
                     🔖
@@ -126,6 +139,7 @@ function ContentPanel({
   getBookmark,
   onSetBookmark,
   recordActivity,
+  markViewed,
 }) {
   const [activeTab, setActiveTab] = useState("notes");
   const [fetched, setFetched] = useState(null);
@@ -170,12 +184,17 @@ function ContentPanel({
     return () => el.removeEventListener("scroll", onScroll);
   }, [scrollRef, targetFileForFetch, contentLoaded]);
 
-  // Record a streak activity after 30s of viewing the topic
+  // Record a streak activity AND mark this topic as viewed after 30s.
+  // Both fire from the same timer to keep "the user actually engaged
+  // with this content" semantics aligned across features.
   useEffect(() => {
-    if (!recordActivity || !targetFileForFetch) return undefined;
-    const t = setTimeout(() => recordActivity(), 30_000);
+    if (!targetFileForFetch) return undefined;
+    const t = setTimeout(() => {
+      recordActivity?.();
+      if (topic?.id) markViewed?.(topic.id);
+    }, 30_000);
     return () => clearTimeout(t);
-  }, [targetFileForFetch, recordActivity]);
+  }, [targetFileForFetch, recordActivity, markViewed, topic?.id]);
 
   // Lazy-load the markdown chunk for the selected topic
   useEffect(() => {
@@ -230,6 +249,11 @@ function ContentPanel({
               className={`priority-badge priority-badge--${topic.priority} priority-badge--small`}
             >
               {topic.priority}
+            </span>
+          )}
+          {content && (
+            <span className="sb-read-time" title="Estimated read time">
+              {formatReadMinutes(estimateReadMinutes(content))}
             </span>
           )}
         </div>
@@ -323,11 +347,24 @@ function ContentPanel({
             </>
           ) : fetched && fetched.file === targetFile && fetched.md === null ? (
             <div className="sb-no-content">
-              <p>No notes available for this topic yet.</p>
+              <div className="sb-no-content-icon" aria-hidden="true">📝</div>
+              <h2 className="sb-no-content-title">
+                Notes for <em>{topic.title}</em> aren't ready yet
+              </h2>
+              <p className="sb-no-content-body">
+                This topic doesn't have written notes attached. You can still
+                mark it as <strong>Done</strong> or <strong>Revise</strong>{" "}
+                using the buttons above to track your study progress.
+              </p>
               {targetFile && (
-                <p className="sb-no-content-hint">
-                  Create <code>{targetFile}</code> to add content.
-                </p>
+                <details className="sb-no-content-details">
+                  <summary>Want to contribute notes?</summary>
+                  <p>
+                    Create the file <code>{targetFile}</code> in the{" "}
+                    <code>Notes/</code> directory and it will appear here
+                    automatically.
+                  </p>
+                </details>
               )}
             </div>
           ) : (
@@ -354,6 +391,7 @@ export default function SidebarLayout({
   onInitialTopicConsumed,
   onTopicSelect,
   recordActivity,
+  viewed,
 }) {
   const mainRef = useRef(null);
   const { getBookmark, setBookmark, hasBookmark } = useBookmarks();
@@ -362,7 +400,29 @@ export default function SidebarLayout({
     // Start with first category expanded
     return categories.length > 0 ? new Set([categories[0].id]) : new Set();
   });
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  // Auto-collapse the sidebar on mobile so the content panel gets the
+  // full viewport. The same `sidebarCollapsed` flag drives both desktop
+  // (slim icon column) and mobile (hidden drawer) — we just toggle a
+  // body class so CSS can render the right variant.
+  const [isMobile, setIsMobile] = useState(
+    () =>
+      typeof window !== "undefined" &&
+      window.innerWidth <= MOBILE_BREAKPOINT,
+  );
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(() =>
+    typeof window !== "undefined"
+      ? window.innerWidth <= MOBILE_BREAKPOINT
+      : false,
+  );
+  useEffect(() => {
+    const onResize = () => {
+      const mobile = window.innerWidth <= MOBILE_BREAKPOINT;
+      setIsMobile(mobile);
+      if (mobile) setSidebarCollapsed(true);
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
   const [searchQuery, setSearchQuery] = useState("");
 
   const toggleCategory = useCallback((catId) => {
@@ -378,6 +438,11 @@ export default function SidebarLayout({
     (topic) => {
       setActiveTopic(topic);
       onTopicSelect?.(topic.id);
+      // On mobile, close the drawer after picking a topic
+      if (typeof window !== "undefined" &&
+          window.innerWidth <= MOBILE_BREAKPOINT) {
+        setSidebarCollapsed(true);
+      }
     },
     [onTopicSelect],
   );
@@ -446,7 +511,7 @@ export default function SidebarLayout({
 
   return (
     <div
-      className={`sb-layout ${sidebarCollapsed ? "sb-layout--collapsed" : ""}`}
+      className={`sb-layout ${sidebarCollapsed ? "sb-layout--collapsed" : ""} ${isMobile ? "sb-layout--mobile" : ""} ${isMobile && !sidebarCollapsed ? "sb-layout--drawer-open" : ""}`}
     >
       {/* Sidebar */}
       <aside
@@ -510,6 +575,7 @@ export default function SidebarLayout({
             <nav className="sb-category-nav">
               {filteredCategories.map((cat) => (
                 <SidebarCategory
+                  isViewedFn={viewed?.isViewed}
                   key={cat.id}
                   cat={cat}
                   progress={progress}
@@ -539,6 +605,27 @@ export default function SidebarLayout({
         {sidebarCollapsed ? "»" : "«"}
       </button>
 
+      {/* Mobile-only: hamburger toggle (top-left of content) and a
+          backdrop that closes the drawer when tapped. The backdrop only
+          appears when the drawer is open. */}
+      {isMobile && (
+        <button
+          className="sb-mobile-toggle"
+          onClick={() => setSidebarCollapsed((c) => !c)}
+          aria-label={sidebarCollapsed ? "Open menu" : "Close menu"}
+          data-ga-event="sidebar_mobile_toggle"
+        >
+          {sidebarCollapsed ? "☰" : "✕"}
+        </button>
+      )}
+      {isMobile && !sidebarCollapsed && (
+        <div
+          className="sb-mobile-backdrop"
+          onClick={() => setSidebarCollapsed(true)}
+          aria-hidden="true"
+        />
+      )}
+
       {/* Content */}
       <main className="sb-main" ref={mainRef}>
         <ContentPanel
@@ -549,6 +636,7 @@ export default function SidebarLayout({
           getBookmark={getBookmark}
           onSetBookmark={setBookmark}
           recordActivity={recordActivity}
+          markViewed={viewed?.markViewed}
         />
       </main>
     </div>

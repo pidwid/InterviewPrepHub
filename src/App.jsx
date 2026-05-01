@@ -8,6 +8,7 @@ import SearchPalette from "./components/SearchPalette";
 import { SEARCH_INDEX } from "./data/searchIndex";
 import { useReviewState } from "./store/useReviewState";
 import { useStreakState } from "./store/useStreakState";
+import { useViewed } from "./store/useViewed";
 import { STATUS } from "./data/topics";
 import { useProgress } from "./store/useProgress";
 import { useTheme } from "./store/useTheme";
@@ -45,6 +46,7 @@ function TabSection({
   const { progress, setStatus: rawSetStatus, getStatus, resetAll, stats } =
     useProgress(namespace, allTopics);
   const review = useReviewState(namespace);
+  const viewed = useViewed(namespace);
   const [view, setView] = useState("dashboard");
   const [activeNote, setActiveNote] = useState(null);
 
@@ -123,6 +125,7 @@ function TabSection({
         setStatus={setStatus}
         review={review}
         streak={streak}
+        viewed={viewed}
         recordActivity={recordActivity}
         onOpenNote={(topic) => setActiveNote(topic)}
         roadmapPhases={roadmapPhases}
