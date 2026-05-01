@@ -112,11 +112,38 @@ export const TIERS = {
   4: { key: 4, label: 'Reference',   short: 'T4', color: 'tier-4', desc: 'Reference — niche or operational depth, look up as needed' },
 };
 
+// ── Practice question tiers (SD design problems) ──────────────────────────
+// LLD practice questions use lld-* ids and inherit their tier from T*_LLD.
+const T1_Q = new Set([
+  'q-url-shortener', 'q-twitter-timeline', 'q-rate-limiter', 'q-news-feed',
+  'q-chat-system', 'q-distributed-cache', 'q-search-autocomplete',
+  'q-notification', 'q-instagram', 'q-uber', 'q-message-queue',
+  'q-consistent-hashing', 'q-pastebin',
+]);
+const T2_Q = new Set([
+  'q-yelp', 'q-google-maps', 'q-dropbox', 'q-payment', 'q-online-judge',
+  'q-tiktok', 'q-discord', 'q-video-streaming', 'q-live-streaming',
+  'q-web-crawler', 'q-mint', 'q-key-value-search', 'q-top-k', 'q-spotify',
+  'q-booking', 'q-cdn', 'q-google-docs',
+]);
+const T3_Q = new Set([
+  'q-amazon-sales', 'q-aws-scale', 'q-social-network', 'q-google-search',
+  'q-e-commerce', 'q-stock-exchange', 'q-recommendation', 'q-garbage-collection',
+]);
+
 // ── Lookup ────────────────────────────────────────────────────────────────
 //
 // Returns 1, 2, 3, or 4 for a given topic id.
 export function getTier(topicId) {
   if (!topicId) return 4;
+  // Practice questions
+  if (topicId.startsWith('q-')) {
+    if (T1_Q.has(topicId)) return 1;
+    if (T2_Q.has(topicId)) return 2;
+    if (T3_Q.has(topicId)) return 3;
+    return 4;
+  }
+  // SD topic notes vs LLD notes
   const isSD = topicId.startsWith('note-');
   const t1 = isSD ? T1_SD : T1_LLD;
   const t2 = isSD ? T2_SD : T2_LLD;
