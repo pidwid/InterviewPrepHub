@@ -510,20 +510,12 @@
   max-width: 800px;
 }
 
-/* Sticky section headings while scrolling */
+/* Section headings — plain, non-sticky for readability */
 .sb-content-body h2,
 .sb-content-body h3,
 .sb-content-body h4 {
-  position: sticky;
-  top: 52px; /* below the sticky content header */
-  z-index: 5;
-  background: var(--bg);
   padding-top: 0.6rem;
   padding-bottom: 0.5rem;
-  margin-left: -0.5rem;
-  padding-left: 0.5rem;
-  margin-right: -0.5rem;
-  padding-right: 0.5rem;
   border-bottom: 1px solid color-mix(in srgb, var(--border) 40%, transparent);
 }
 
@@ -667,4 +659,16 @@
 
 .sb-bookmark-banner-clear:hover {
   opacity: 1;
+}
+/* ── Reading progress bar (top of content panel) ───────────────────────── */
+.sb-progress {
+  height: 3px;
+  background: transparent;
+  overflow: hidden;
+}
+
+.sb-progress-fill {
+  height: 100%;
+  background: var(--accent, #667eea);
+  transition: width 0.05s linear;
 }

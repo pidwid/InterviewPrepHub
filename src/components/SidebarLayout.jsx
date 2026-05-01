@@ -1,5 +1,6 @@
 import { useState, useRef, useMemo, useCallback, useEffect } from "react";
 import MarkdownRenderer from "./MarkdownRenderer";
+import NoteNav from "./NoteNav";
 import { getContent, loadContent } from "../data/contentLoader";
 import { useBookmarks } from "../store/useBookmarks";
 import InlinePractice, {
@@ -127,6 +128,7 @@ function ContentPanel({
 }) {
   const [activeTab, setActiveTab] = useState("notes");
   const [fetched, setFetched] = useState(null);
+  const [scrollPct, setScrollPct] = useState(0);
 
   // Reset to notes tab and scroll to top when topic changes
   const topicId = topic?.id;
@@ -137,8 +139,35 @@ function ContentPanel({
     scrollRef?.current?.scrollTo(0, 0);
   }
 
-  // Lazy-load the markdown chunk for the selected topic
+  // Save & restore scroll position per topic on the inner scroll container.
+  // Also drives the reading progress bar.
   const targetFileForFetch = topic?.noteFile || topic?.solutionFile;
+  useEffect(() => {
+    const el = scrollRef?.current;
+    if (!el || !targetFileForFetch) return undefined;
+    // Restore previous position (after a frame so content is laid out)
+    const saved = sessionStorage.getItem(`sb-scroll:${targetFileForFetch}`);
+    if (saved) {
+      requestAnimationFrame(() => el.scrollTo(0, parseInt(saved, 10)));
+    }
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const max = el.scrollHeight - el.clientHeight;
+        const y = el.scrollTop;
+        setScrollPct(max > 0 ? Math.min(100, (y / max) * 100) : 0);
+        sessionStorage.setItem(`sb-scroll:${targetFileForFetch}`, String(y));
+        ticking = false;
+      });
+    };
+    el.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => el.removeEventListener("scroll", onScroll);
+  }, [scrollRef, targetFileForFetch]);
+
+  // Lazy-load the markdown chunk for the selected topic
   useEffect(() => {
     if (!targetFileForFetch) return undefined;
     if (getContent(targetFileForFetch)) return undefined;
@@ -178,6 +207,10 @@ function ContentPanel({
 
   return (
     <div className="sb-content">
+      {/* Reading progress bar (top of content panel) */}
+      <div className="sb-progress" aria-hidden="true">
+        <div className="sb-progress-fill" style={{ width: `${scrollPct}%` }} />
+      </div>
       {/* Header bar with title + action buttons */}
       <div className="sb-content-header">
         <div className="sb-content-title-area">
@@ -269,12 +302,15 @@ function ContentPanel({
       ) : activeTab === "notes" ? (
         <div className="sb-content-body markdown-body">
           {content ? (
-            <MarkdownRenderer
-              content={content}
-              noteFile={targetFile}
-              bookmarkedHeadingId={getBookmark?.(targetFile)}
-              onSetBookmark={onSetBookmark}
-            />
+            <>
+              <MarkdownRenderer
+                content={content}
+                noteFile={targetFile}
+                bookmarkedHeadingId={getBookmark?.(targetFile)}
+                onSetBookmark={onSetBookmark}
+              />
+              <NoteNav noteFile={targetFile} />
+            </>
           ) : fetched && fetched.file === targetFile && fetched.md === null ? (
             <div className="sb-no-content">
               <p>No notes available for this topic yet.</p>
