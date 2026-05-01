@@ -23,6 +23,7 @@ export default function TabNav({
   theme,
   onToggleTheme,
   onOpenSettings,
+  onOpenSearch,
 }) {
   const storageMode = getStorageMode();
 
@@ -62,6 +63,17 @@ export default function TabNav({
           );
         })}
         <div className="tab-nav-actions">
+          {onOpenSearch && (
+            <button
+              className="theme-toggle-btn"
+              onClick={onOpenSearch}
+              title="Search (⌘K / Ctrl+K)"
+              aria-label="Open search"
+              data-ga-event="search_open"
+            >
+              🔍
+            </button>
+          )}
           <button
             className="theme-toggle-btn"
             onClick={onToggleTheme}

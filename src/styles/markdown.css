@@ -244,3 +244,47 @@ letter-spacing: 0.04em;
     background: color-mix(in srgb, var(--accent) 12%, transparent);
     border-color: color-mix(in srgb, var(--accent) 30%, transparent);
 }
+/* ── Copy button on code blocks ─────────────────────────────────────────── */
+.markdown-body pre {
+  position: relative;
+}
+
+.code-copy-btn {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  padding: 3px 10px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  background: rgba(127, 127, 127, 0.15);
+  color: inherit;
+  border: 1px solid rgba(127, 127, 127, 0.25);
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s, background 0.15s;
+}
+
+.code-copy-btn::before {
+  content: "Copy";
+}
+
+.code-copy-btn--copied::before {
+  content: "Copied!";
+}
+
+.markdown-body pre:hover .code-copy-btn,
+.code-copy-btn:focus {
+  opacity: 1;
+}
+
+.code-copy-btn:hover {
+  background: rgba(127, 127, 127, 0.3);
+}
+
+.code-copy-btn--copied {
+  opacity: 1 !important;
+  background: rgba(72, 187, 120, 0.3);
+  border-color: rgba(72, 187, 120, 0.5);
+  color: #2f855a;
+}

@@ -48,8 +48,43 @@ function makeHeadingComponent(Tag, noteFile, bookmarkedId, onSetBookmark) {
   };
 }
 
+// ── Code-block <pre> with hover Copy button ─────────────────────────────────
+function CodeBlock({ children, ...props }) {
+  // Extract the raw text of the inner <code> for the clipboard.
+  // children is typically a single <code> element from react-markdown.
+  function extractText(node) {
+    if (typeof node === "string") return node;
+    if (Array.isArray(node)) return node.map(extractText).join("");
+    if (node?.props?.children) return extractText(node.props.children);
+    return "";
+  }
+  const text = extractText(children);
+
+  function copy(e) {
+    navigator.clipboard?.writeText(text);
+    const btn = e.currentTarget;
+    btn.classList.add("code-copy-btn--copied");
+    setTimeout(() => btn.classList.remove("code-copy-btn--copied"), 1200);
+  }
+
+  return (
+    <pre {...props}>
+      <button
+        type="button"
+        className="code-copy-btn"
+        onClick={copy}
+        aria-label="Copy code"
+        title="Copy"
+      />
+
+      {children}
+    </pre>
+  );
+}
+
 // ── Base shared components (code, links) ─────────────────────────────────────
 const BASE_COMPONENTS = {
+  pre: CodeBlock,
   code({ inline, className, children, ...props }) {
     return inline ? (
       <code className="inline-code" {...props}>

@@ -73,3 +73,87 @@
     border-bottom-color: var(--accent);
 }
 
+
+/* ── Next/Previous note nav (footer) ───────────────────────────────────── */
+.note-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 48px 0 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border-color, #e5e7eb);
+}
+
+.note-nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  background: transparent;
+  border: 1px solid var(--border-color, #e5e7eb);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: inherit;
+  text-align: left;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.note-nav-btn:hover {
+  background: var(--hover-bg, rgba(127, 127, 127, 0.08));
+  border-color: var(--accent-color, #667eea);
+}
+
+.note-nav-btn--next {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.note-nav-arrow {
+  font-size: 1.25rem;
+  opacity: 0.6;
+}
+
+.note-nav-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.note-nav-meta--right {
+  align-items: flex-end;
+}
+
+.note-nav-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.6;
+}
+
+.note-nav-title {
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+/* ── Reading progress bar (top of viewport) ────────────────────────────── */
+.reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: transparent;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.reading-progress-fill {
+  height: 100%;
+  background: var(--accent-color, #667eea);
+  transition: width 0.05s linear;
+}

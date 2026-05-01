@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import MarkdownRenderer from "./MarkdownRenderer";
+import NoteNav from "./NoteNav";
+import ReadingProgress from "./ReadingProgress";
 import { getContent, loadContent } from "../data/contentLoader";
 import { getQnAForTopic } from "../data/qna";
 import InlinePractice, { getTopicNumFromNoteFile } from "./InlinePractice";
@@ -13,10 +15,8 @@ export default function NoteViewer({ noteFile, title, onClose }) {
   const [activeTab, setActiveTab] = useState("notes");
   const content = cached || (fetched?.file === noteFile ? fetched.md : null);
 
-  // Scroll to top when the note viewer opens or noteFile changes
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [noteFile]);
+  // Note: scroll restore is handled by ReadingProgress (per-note position).
+  // We avoid resetting scroll here so refresh resumes where you left off.
 
   // Lazy-load the markdown chunk on demand
   useEffect(() => {
@@ -74,6 +74,7 @@ export default function NoteViewer({ noteFile, title, onClose }) {
 
   return (
     <div className="note-viewer">
+      <ReadingProgress noteFile={noteFile} />
       <div className="note-viewer-header">
         <button
           className="back-btn"
@@ -111,6 +112,7 @@ export default function NoteViewer({ noteFile, title, onClose }) {
         <div className="note-viewer-content markdown-body">
           <MarkdownRenderer content={content} />
           {hasQuestions && <InlinePractice topicNum={topicNum} />}
+          <NoteNav noteFile={noteFile} />
         </div>
       ) : (
         <InlinePractice topicNum={topicNum} />

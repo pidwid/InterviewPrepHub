@@ -4,6 +4,8 @@ import Dashboard from "./components/Dashboard";
 import TopicList from "./components/TopicList";
 import NoteViewer from "./components/NoteViewer";
 import SettingsDialog from "./components/SettingsDialog";
+import SearchPalette from "./components/SearchPalette";
+import { SEARCH_INDEX } from "./data/searchIndex";
 import { useProgress } from "./store/useProgress";
 import { useTheme } from "./store/useTheme";
 import { useNavState } from "./store/useNavState";
@@ -46,6 +48,17 @@ function TabSection({
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [view, activeNote]);
+
+  // Allow other parts of the app (e.g. SearchPalette) to open a note in this
+  // section by dispatching a CustomEvent. Keeps TabSection decoupled.
+  useEffect(() => {
+    const handler = (e) => {
+      if (e.detail?.namespace !== namespace) return;
+      setActiveNote({ noteFile: e.detail.noteFile, title: e.detail.title });
+    };
+    window.addEventListener("open-note", handler);
+    return () => window.removeEventListener("open-note", handler);
+  }, [namespace]);
 
   // If viewing a note, show the note viewer
   if (activeNote) {
@@ -104,6 +117,41 @@ export default function App() {
   const [activeTab, setActiveTab] = useState(initial.tab);
   const { theme, toggleTheme } = useTheme();
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+
+  // Global Cmd+K / Ctrl+K to open search
+  useEffect(() => {
+    const onKey = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setSearchOpen((s) => !s);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  const handleSearchSelect = useCallback(
+    (item) => {
+      setSearchOpen(false);
+      // Switch tab if needed, then dispatch open-note for the target section
+      setActiveTab(item.section);
+      writeHash(item.section, "roadmap", null);
+      // Defer one tick so the target TabSection has mounted its listener
+      setTimeout(() => {
+        window.dispatchEvent(
+          new CustomEvent("open-note", {
+            detail: {
+              namespace: item.section,
+              noteFile: item.noteFile,
+              title: item.title,
+            },
+          }),
+        );
+      }, 0);
+    },
+    [writeHash],
+  );
 
   useEffect(() => {
     const canTrack = () => typeof window.gtag === "function";
@@ -243,6 +291,7 @@ export default function App() {
         theme={theme}
         onToggleTheme={toggleTheme}
         onOpenSettings={() => setSettingsOpen(true)}
+        onOpenSearch={() => setSearchOpen(true)}
       />
       <div className="app">
         {SECTIONS.map(
@@ -279,6 +328,13 @@ export default function App() {
 
       {settingsOpen && (
         <SettingsDialog onClose={() => setSettingsOpen(false)} />
+      )}
+      {searchOpen && (
+        <SearchPalette
+          index={SEARCH_INDEX}
+          onClose={() => setSearchOpen(false)}
+          onSelect={handleSearchSelect}
+        />
       )}
     </div>
   );
