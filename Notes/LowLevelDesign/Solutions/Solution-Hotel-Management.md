@@ -1,187 +1,122 @@
 # 🛠️ Design Hotel Management System (LLD)
 
-Designing a Hotel Management System involves modeling physical inventory (rooms), actors (guests, receptionists), and transactions (bookings, payments). It shares similarities with a Car Rental or Library system but introduces room-specific metadata.
-
----
+> **Sources**: This solution synthesizes interview-style references including [Hotel Management System OOP design walkthrough](https://www.youtube.com/watch?v=5VWycK8KmW0), Booking.com engineering blog on availability calendars, plus standard textbook patterns (GoF). Concurrency techniques follow MySQL/Postgres documentation for `SELECT ... FOR UPDATE` and optimistic locking.
 
 ## 1. Requirements
 
-### Functional Requirements
-- **Search:** Users can search for rooms by type (Single, Double, Suite) and date range.
-- **Booking:** Users can book an available room.
-- **Check-in/Check-out:** Receptionists can check guests in and out.
-- **Room Status:** Track room statuses (Available, Occupied, Reserved, Maintenance, Cleaning).
-- **Billing:** Calculate the total bill including room charges and additional services (Room Service, Spa).
+### Functional
+- **Search & inventory**: Find rooms in a hotel by city, date range, room type (`STANDARD`/`DELUXE`/`SUITE`), and guest count.
+- **Booking flow**: Hold → pay → confirm. A booking covers a date range `[checkIn, checkOut)`.
+- **Lifecycle**: `cancelBooking`, `checkIn`, `checkOut`, `noShow`.
+- **Housekeeping**: Track room status (`CLEAN`/`DIRTY`/`OCCUPIED`/`MAINTENANCE`); notify staff on checkout.
+- **Pricing**: Base + season + weekday/weekend + length-of-stay discount + dynamic occupancy surge.
+- **Add-on services**: Extra bed, breakfast, late checkout, room service, laundry; show on final bill.
+- **Loyalty**: Points per night/spend; tiered redemption.
 
-### Non-Functional Requirements
-- **Concurrency:** Ensure two users cannot book the exact same room for overlapping dates.
-- **Extensibility:** Easily add new room types or amenities.
+### Non-Functional
+- **No double booking** under contention (the headline correctness property).
+- **Atomic check-in** transitions (`BOOKED → CHECKED_IN`).
+- **Idempotent payments** so retries don't double-charge.
+- **Read-heavy availability search** (cache + read replicas).
 
----
+## 2. Core Entities
 
-## 2. Core Entities (Objects)
+| Entity | Key Fields |
+|---|---|
+| `Hotel` | `id`, `name`, `address`, `rooms[]` |
+| `Room` | `roomNumber`, `type`, `basePrice`, `housekeepingStatus` |
+| `RoomBooking` | `id`, `guestId`, `roomId`, `checkInDate`, `checkOutDate`, `status`, `version` |
+| `Guest` | `id`, `name`, `email`, `loyaltyAccount` |
+| `Payment` | `id`, `bookingId`, `amount`, `idempotencyKey`, `status` |
+| `Service` | `id`, `bookingId`, `type`, `cost`, `timestamp` |
+| `HousekeepingTask` | `id`, `roomId`, `assignedTo`, `status`, `createdAt` |
 
-- `Hotel` (Central orchestrator)
-- `User` (Abstract) -> `Guest`, `Receptionist`, `Admin`
-- `Room` (Abstract) -> `StandardRoom`, `DeluxeRoom`, `SuiteRoom`
-- `RoomKey` / `KeyCard`
-- `Booking` / `Reservation`
-- `Invoice` / `Payment`
-- `RoomCharge` (Additional charges)
-
----
-
-## 3. Class Diagram / Relationships
+## 3. Class Diagram
 
 ```mermaid
 classDiagram
-    class Hotel {
-        -String name
-        -List~Room~ rooms
-        +searchAvailableRooms(startDate, endDate, roomType)
-    }
-
-    class Room {
-        -String roomNumber
-        -RoomStyle style
-        -RoomStatus status
-        -double bookingPrice
-        -List~RoomKey~ keys
-        +isAvailable()
-        +checkIn()
-        +checkOut()
-    }
-
-    class Booking {
-        -String bookingId
-        -Guest guest
-        -Room room
-        -Date checkInDate
-        -Date checkOutDate
-        -BookingStatus status
-    }
-
-    class Invoice {
-        -double roomCharges
-        -List~RoomCharge~ additionalCharges
-        +calculateTotal()
-    }
-
-    Hotel "1" *-- "many" Room
-    Booking o-- "1" Room
-    Booking o-- "1" Guest
-    Booking "1" -- "1" Invoice
+  class Hotel { +rooms: List~Room~; +findAvailable(range, type) }
+  class Room { +number; +type; +basePrice; +housekeepingStatus }
+  class RoomBooking { +status: BookingState; +version: int; +cancel(); +checkIn(); +checkOut() }
+  class Guest { +id; +name; +loyalty: LoyaltyAccount }
+  class Payment { +idempotencyKey; +charge() }
+  class PricingStrategy { <<interface>> +price(room, range): Money }
+  class HousekeepingObserver { <<interface>> +onCheckout(roomId) }
+  Hotel "1" o-- "*" Room
+  Hotel "1" o-- "*" RoomBooking
+  Guest "1" -- "*" RoomBooking
+  RoomBooking "1" -- "1" Payment
+  Room ..> PricingStrategy
+  RoomBooking ..> HousekeepingObserver
 ```
 
----
-
-## 4. Key Algorithms / Design Patterns
-
-### 1. The Strategy / Decorator Pattern (Pricing & Billing)
-
-A room has a base price. However, prices might fluctuate based on seasons, or a user might add amenities. Use the **Decorator Pattern** to calculate the bill dynamically, or a simple List of `Charge` objects.
+## 4. Key Methods
 
 ```java
-public class Invoice {
-    private double baseRoomCharge;
-    private List<Charge> additionalCharges = new ArrayList<>();
+List<Room> Hotel.searchAvailableRooms(LocalDate inDate, LocalDate outDate, RoomType type);
 
-    public Invoice(double baseRoomCharge) {
-        this.baseRoomCharge = baseRoomCharge;
-    }
+// Atomic; throws RoomUnavailableException if a conflicting booking exists
+Booking BookingService.bookRoom(guestId, roomId, inDate, outDate, idempotencyKey);
 
-    public void addCharge(Charge charge) {
-        this.additionalCharges.add(charge);
-    }
-
-    public double calculateTotal() {
-        double total = baseRoomCharge;
-        for (Charge c : additionalCharges) {
-            total += c.getAmount();
-        }
-        return total; // Plus calculate taxes
-    }
-}
-
-public class Charge {
-    private String description;
-    private double amount;
-    // Constructor, getters
-}
+void  BookingService.cancelBooking(bookingId);
+void  BookingService.checkIn(bookingId);    // version-checked
+void  BookingService.checkOut(bookingId);   // notifies housekeeping observers
+Money Billing.computeBill(bookingId);       // room + services + tax
 ```
 
-### 2. Overlapping Dates Algorithm (The Core Logic)
+## 5. Design Patterns
 
-Just like Car Rentals, a room is not simply "Available" or "Unavailable" in a boolean sense. It is available *for a specific date range*. To search for rooms, the system must cross-reference all existing bookings.
+| Pattern | Where | Why |
+|---|---|---|
+| **State** | `RoomBooking.status` (`HELD`/`BOOKED`/`CHECKED_IN`/`CHECKED_OUT`/`CANCELLED`); `Room.housekeepingStatus` | Each state owns its allowed transitions. |
+| **Strategy** | `PricingStrategy` (seasonal, weekday, length-of-stay, dynamic) | Pricing rules vary independently of `Booking`. |
+| **Observer** | `HousekeepingObserver`, `LoyaltyObserver` on checkout | Decouple side-effects from booking domain. |
+| **Factory** | `BookingFactory.create(...)` validates overlap + composes price | Centralize creation rules. |
+| **Decorator** | Room price decorated with `BreakfastDecorator`, `ExtraBedDecorator`, `LateCheckoutDecorator` | Compose add-ons without subclass explosion. |
+| **Singleton** | `RoomInventoryService` | Single coordinator for availability cache. |
 
-```java
-public class Room {
-    private String roomNumber;
-    private RoomStyle style;
-    private List<Booking> schedule = new ArrayList<>();
+## 6. Concurrency & Edge Cases
 
-    // O(N) where N is number of future bookings for this room
-    public boolean isAvailable(Date startDate, Date endDate) {
-        for (Booking b : schedule) {
-            // Check if requested dates overlap with an existing booking
-            // Overlap logic: StartA < EndB AND EndA > StartB
-            if (startDate.before(b.getCheckOutDate()) && endDate.after(b.getCheckInDate())) {
-                return false; // Conflict found
-            }
-        }
-        return true;
-    }
+### 6.1 Preventing double booking (the core problem)
 
-    public synchronized void addBooking(Booking booking) throws RoomUnavailableException {
-        if (isAvailable(booking.getCheckInDate(), booking.getCheckOutDate())) {
-            schedule.add(booking);
-        } else {
-            throw new RoomUnavailableException("Room is already booked for these dates.");
-        }
-    }
-}
+Two well-known approaches; pick by contention:
 
-public class Hotel {
-    private List<Room> rooms;
-
-    public List<Room> searchAvailableRooms(RoomStyle style, Date start, Date end) {
-        List<Room> available = new ArrayList<>();
-        for (Room room : rooms) {
-            if (room.getStyle() == style && room.isAvailable(start, end)) {
-                available.add(room);
-            }
-        }
-        return available;
-    }
-}
+**(A) Optimistic — atomic conditional INSERT**
+```sql
+INSERT INTO bookings (room_id, check_in, check_out, status)
+SELECT :roomId, :in, :out, 'BOOKED'
+WHERE NOT EXISTS (
+  SELECT 1 FROM bookings
+  WHERE room_id = :roomId
+    AND status IN ('HELD','BOOKED','CHECKED_IN')
+    AND check_in < :out AND check_out > :in   -- overlap predicate
+);
+-- 0 rows inserted ⇒ conflict; retry or surface to user
 ```
 
-### 3. State Pattern (Room Status)
+**(B) Pessimistic — `SELECT … FOR UPDATE` on the room row**
+Best for high-contention release windows (concert weekends, big-game travel). Source rows for the date range are locked until commit.
 
-A room's physical state changes. It needs cleaning after checkout before it can be occupied again.
-
-```java
-public enum RoomStatus {
-    AVAILABLE, 
-    OCCUPIED, 
-    BEING_CLEANED, 
-    MAINTENANCE
-}
-
-public class Room {
-    private RoomStatus currentStatus = RoomStatus.AVAILABLE;
-
-    public void checkOut() {
-        if (this.currentStatus == RoomStatus.OCCUPIED) {
-            this.currentStatus = RoomStatus.BEING_CLEANED;
-            // Notify Housekeeping system
-        }
-    }
-
-    public void finishCleaning() {
-        if (this.currentStatus == RoomStatus.BEING_CLEANED) {
-            this.currentStatus = RoomStatus.AVAILABLE;
-        }
-    }
-}
+### 6.2 Atomic check-in (no double check-in)
+Optimistic-lock the booking with a `version` column:
+```sql
+UPDATE bookings SET status='CHECKED_IN', version=version+1
+ WHERE id=:id AND status='BOOKED' AND version=:expectedVersion;
 ```
+0 rows ⇒ already checked in or cancelled.
+
+### 6.3 Idempotent payment
+Client supplies `Idempotency-Key`. Server stores the first response keyed on it; replays return the cached response (Stripe-style).
+
+### 6.4 Cancellation cascade
+Cancellation: refund payment (idempotent), restore inventory (no-op since row condition releases it), notify observers.
+
+### 6.5 Housekeeping notification
+On `checkOut`, the booking publishes a `RoomCheckedOut` event; `HousekeepingObserver` flips `Room.housekeepingStatus` to `DIRTY` and creates a `HousekeepingTask`.
+
+## 7. Sources / Cross-Refs
+- LLD-08 Behavioral Patterns (State, Strategy, Observer, Command)
+- LLD-07 Structural Patterns (Decorator)
+- Solution-Concert-Booking.md (atomic seat hold pattern reused here for rooms)
+- Solution-Stripe-Payment-Processor.md (idempotency-key contract)
+- Video walkthrough: https://www.youtube.com/watch?v=5VWycK8KmW0

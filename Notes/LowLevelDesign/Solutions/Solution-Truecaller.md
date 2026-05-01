@@ -1,172 +1,115 @@
-# 🛠️ Design Truecaller (LLD)
+# 🛠️ Design Truecaller-style Caller ID + Spam Detection (LLD)
 
-Truecaller is a Caller ID and Spam Blocking app. It maps incoming phone numbers to names, even if the number isn't saved in the user's local contact book, by crowdsourcing contacts globally. 
-
----
+> **Sources**: [Google `libphonenumber`](https://github.com/google/libphonenumber) for E.164 normalization; [Bloom filter (Wikipedia)](https://en.wikipedia.org/wiki/Bloom_filter) for negative-existence pre-filter; Truecaller engineering blog posts on crowd-sourced names + spam reports; [GDPR Art. 17 — Right to Erasure](https://gdpr-info.eu/art-17-gdpr/); standard cache-aside / write-behind patterns.
 
 ## 1. Requirements
 
-### Functional Requirements
-- **Register User:** End users can register with their Name and Phone Number.
-- **Import Contacts:** The system ingests a user's address book to map numbers to names.
-- **Search (Caller ID):** Given a phone number, return the likely Name and Spam status instantly.
-- **Mark as Spam:** Users can report a phone number as spam. After $N$ reports, it gets officially flagged as spam.
-- **Block:** Users can block a spam number personally, or rely on the global spam list.
+### Functional
+- **User registration** with phone number + name (verified via OTP).
+- **Reverse lookup**: query any phone number → return aggregated `displayName` + `spamScore`.
+- **Spam reporting**: any user can report a number with a reason.
+- **Contact sync**: a user uploads their address book to enrich the global directory (with consent).
+- **Block list**: per-user blocked numbers.
+- **International numbers** in E.164 (`+15551234567`).
 
-### Non-Functional Requirements
-- **High Read Throughput:** When a phone rings, the look-up must happen in < 100ms.
-- **Trie / Inverted Index:** Efficient searching using prefix trees if doing a reverse name-to-number search.
+### Non-Functional
+- **<100 ms** lookup p95 even with billions of numbers.
+- **False-positive sensitivity** (legitimate businesses must not be flagged on a few reports).
+- **GDPR right-to-erasure** must cascade across all replicas + caches.
+- **Privacy**: contacts are shared only with consent; deleted users are scrubbed.
 
----
+## 2. Core Entities
 
-## 2. Core Entities (Objects)
+| Entity | Key Fields |
+|---|---|
+| `User` | `id`, `phoneNumber` (E.164), `displayName`, `consentSyncedContacts` |
+| `PhoneNumber` | normalized E.164 string (the global key) |
+| `DirectoryEntry` | `phoneNumber`, `aggregatedName`, `nameSources[]`, `spamScore`, `reportCount`, `lastUpdatedAt` |
+| `SpamReport` | `id`, `reporterId`, `phoneNumber`, `reason`, `timestamp` |
+| `Contact` | `ownerUserId`, `phoneNumber`, `displayNameAsSaved` |
+| `BlockEntry` | `userId`, `blockedPhoneNumber`, `createdAt` |
+| `CallEvent` | `callerPhone`, `calleePhone`, `timestamp`, `wasBlocked` |
 
-- `System`
-- `User` (A registered app user)
-- `Contact` (A record scraped from someone's phone)
-- `PhoneNumber` (Value object holding country code and number)
-- `SpamRecord` 
-
----
-
-## 3. Class Diagram / Relationships
+## 3. Class Diagram
 
 ```mermaid
 classDiagram
-    class System {
-        -Trie contactDirectory
-        -Map~String, GlobalSpamData~ spamDB
-        +identifyCaller(phoneNumber)
-        +reportSpam(phoneNumber, reportingUser)
-    }
-
-    class User {
-        -String id
-        -PhoneNumber myNumber
-        -List~Contact~ localContacts
-        -List~String~ localBlockList
-    }
-
-    class Contact {
-        -String name
-        -PhoneNumber number
-    }
-
-    class CallerProfile {
-        -String dominantName
-        -boolean isSpam
-        -int spamReports
-    }
-
-    System "1" *-- "many" User
+  class DirectoryService { +lookup(phone); +reportSpam(rep); +syncContacts(userId, list) }
+  class DirectoryEntry { +aggregatedName; +spamScore; +reportCount }
+  class SpamScoringStrategy { <<interface>> +score(entry, reports): double }
+  class CallFilter { <<chain>> +handle(call) }
+  class SpamObserver { <<interface>> +onThresholdCrossed(phone) }
+  DirectoryService --> DirectoryEntry
+  DirectoryEntry ..> SpamScoringStrategy
+  DirectoryService ..> SpamObserver
+  CallFilter --> DirectoryService
 ```
 
----
-
-## 4. Key Algorithms / Design Patterns
-
-### 1. Identifying the Caller (The Crowdsourcing Logic)
-
-If 5 different users have the number `999-9999` saved in their imported contacts under different names ("Mom", "Jane Doe", "Jane D", "Plumber", "Jane"), how does Truecaller know what to show?
-It usually groups and counts. The most frequent full name associated with that number wins (ignoring generic labels if possible, though that requires ML).
+## 4. Key Methods
 
 ```java
-public class UserDirectory {
-    // Map of Phone Number -> (Map of "Name" -> Count)
-    private Map<String, Map<String, Integer>> crowdsourcedNames = new HashMap<>();
-    
-    public void importContact(String phoneNumber, String nameSavedAs) {
-        crowdsourcedNames.putIfAbsent(phoneNumber, new HashMap<>());
-        Map<String, Integer> nameCounts = crowdsourcedNames.get(phoneNumber);
-        
-        nameCounts.put(nameSavedAs, nameCounts.getOrDefault(nameSavedAs, 0) + 1);
-    }
-    
-    public String resolveBestName(String phoneNumber) {
-        if (!crowdsourcedNames.containsKey(phoneNumber)) return "Unknown";
-        
-        Map<String, Integer> nameCounts = crowdsourcedNames.get(phoneNumber);
-        
-        // Find the name with the absolute highest count
-        String bestName = "Unknown";
-        int max = 0;
-        
-        for(Map.Entry<String, Integer> entry : nameCounts.entrySet()) {
-            if(entry.getValue() > max) {
-                max = entry.getValue();
-                bestName = entry.getKey();
-            }
-        }
-        return bestName;
-    }
-}
+DirectoryEntry  DirectoryService.lookupByPhone(String e164);
+void            DirectoryService.reportSpam(String reporterUserId, String e164, String reason);
+void            DirectoryService.blockNumber(String userId, String e164);
+void            DirectoryService.syncContacts(String userId, List<Contact> contacts);  // idempotent
+double          SpamScoringStrategy.score(DirectoryEntry e, List<SpamReport> recent);
+void            DirectoryService.deleteUserData(String userId);  // GDPR cascade
 ```
 
-### 2. Spam Calculation
+## 5. Design Patterns
 
-If a number gets reported as spam, we don't block it globally immediately (to prevent abuse where 1 person maliciously blocks a legitimate business). It requires a threshold.
+| Pattern | Where | Why |
+|---|---|---|
+| **Strategy** | `SpamScoringStrategy` (count-based, time-decayed, ML, trust-weighted) | Scoring rules evolve; swap without touching `DirectoryEntry`. |
+| **Chain of Responsibility** | `CallFilter`: `IsBlocked → IsKnownSpam → IsContact → Ring` | Each handler decides whether to short-circuit. |
+| **Observer** | `SpamObserver` notified when `reportCount` crosses a threshold → broadcast warning | Real-time alerting decoupled from reporting flow. |
+| **Singleton** | `DirectoryService` facade | Single coordination point. |
+| **Cache-Aside** | Redis cache in front of the directory store | Read-heavy lookups served from RAM. |
+| **Composite** | `aggregatedName` is composed from many `nameSources` (registered, contacts, ML) | Uniform aggregation algorithm. |
 
-```java
-public class SpamManager {
-    // Phone Number -> List of User IDs who reported it
-    private Map<String, Set<String>> spamReports = new HashMap<>();
-    private final int GLOBAL_SPAM_THRESHOLD = 10;
-    
-    public void reportSpam(String spammerNumber, String reporterUserId) {
-        spamReports.putIfAbsent(spammerNumber, new HashSet<>());
-        spamReports.get(spammerNumber).add(reporterUserId);
-    }
-    
-    public boolean isGlobalSpam(String phoneNumber) {
-        if (!spamReports.containsKey(phoneNumber)) return false;
-        
-        return spamReports.get(phoneNumber).size() >= GLOBAL_SPAM_THRESHOLD;
-    }
-}
+## 6. Concurrency & Edge Cases
+
+### 6.1 Read-heavy lookup pipeline (sub-100 ms)
+
+```
+client → API gateway
+       → Bloom filter (per-shard) ──► miss = number unknown ⇒ return "Unknown" in O(1)
+       → Redis (LRU) ──► hit = return cached entry
+       → DB read replica (sharded by phoneNumber hash)
+       → DirectoryEntry (composed)
 ```
 
-### 3. Fast Prefix Searching (The Trie)
+The bloom filter rejects never-seen numbers in microseconds with no false negatives, only ~1 % false positives that fall through to the cache; this is the classic "Don't even check the cache for things that can't exist" optimization.
 
-If the app also allows searching for a Person's Name (e.g., typing "Rob" and seeing "Robert S.", "Robin G."), a HashMap won't work because HashMaps don't support `LIKE 'Rob%'` prefix searching efficiently.
-We must construct a **Trie (Prefix Tree)** for O(L) searches, where L is the length of the string.
+### 6.2 Phone-number normalization
+Always normalize to E.164 *at the edge* using `libphonenumber`. Stored numbers are always normalized; a query for `+1 (555) 123-4567`, `5551234567` (US default region), and `+15551234567` all resolve to the same key.
 
-```java
-class TrieNode {
-    Map<Character, TrieNode> children = new HashMap<>();
-    boolean isEndOfName = false;
-    List<String> associatedPhoneNumbers = new ArrayList<>();
-}
+### 6.3 Spam reporting (write path)
+- `INCR spam:{phone}` in Redis (lock-free atomic counter).
+- Append `SpamReport` row to DB asynchronously (write-behind, batched every 1 s).
+- If `INCR` returns ≥ threshold (e.g., 50 recent reports / 24 h), publish `SpamThresholdCrossed` event → observers notify users with this number in their contacts.
 
-public class ContactTrie {
-    private TrieNode root = new TrieNode();
-
-    public void insert(String name, String phoneNumber) {
-        TrieNode current = root;
-        for (char c : name.toLowerCase().toCharArray()) {
-            current.children.putIfAbsent(c, new TrieNode());
-            current = current.children.get(c);
-        }
-        current.isEndOfName = true;
-        current.associatedPhoneNumbers.add(phoneNumber);
-    }
-
-    public List<String> searchPrefix(String prefix) {
-        TrieNode current = root;
-        for (char c : prefix.toLowerCase().toCharArray()) {
-            if (!current.children.containsKey(c)) {
-                return new ArrayList<>(); // Prefix doesn't exist
-            }
-            current = current.children.get(c);
-        }
-        
-        // From this node, we would run a DFS to collect all valid names/numbers
-        // below this prefix. (DFS logic omitted for brevity).
-        return gatherAllNumbersBelow(current);
-    }
-}
+### 6.4 Trust-weighted scoring (false-positive defense)
 ```
+spamScore = Σᵢ (reporterTrustᵢ × exp(-λ · ageDays_i))
+```
+Reporters who frequently flag legitimate numbers see their trust decay. Long-known business numbers carry "verified" weight that requires many high-trust reports to flip.
 
-### 4. Client-Side Optimization (Bloom Filter)
+### 6.5 Idempotent contact sync
+Each `Contact` row has `(ownerUserId, phoneNumber)` as the natural key. Sync uses upsert + `lastModifiedAt` to converge regardless of how many times a flaky client retries.
 
-If your phone rings without internet, Truecaller often still knows it's spam. How?
-Before you go offline, the app downloads a heavily compressed representation of the Top 1 Million spam numbers to your phone's local storage. Storing 1 million raw strings takes 10-20 MB. Storing them in a **Bloom Filter** takes < 2 MB of RAM. The app checks the incoming number against the local Bloom Filter in 1 millisecond. If it returns true (possible spam), it rejects the call.
+### 6.6 GDPR cascade delete
+`deleteUserData(userId)` runs:
+1. Remove `User` row.
+2. Remove all `Contact` rows where `ownerUserId = userId`.
+3. Remove `BlockEntry`, `CallEvent` for the user.
+4. **Anonymize** `SpamReport` rows authored by the user (`reporterId = NULL`) — preserves aggregate spam stats while breaking the link to the user (a common compromise).
+5. Invalidate Redis cache entries.
+6. Recompute affected `DirectoryEntry.aggregatedName`.
+
+## 7. Sources / Cross-Refs
+- 12-Caching.md (Redis cache-aside, LRU)
+- LLD-08 Behavioral Patterns (Strategy, Chain of Responsibility, Observer)
+- Solution-Notification.md (real-time alert fanout)
+- Google libphonenumber: https://github.com/google/libphonenumber
+- Bloom filter: https://en.wikipedia.org/wiki/Bloom_filter

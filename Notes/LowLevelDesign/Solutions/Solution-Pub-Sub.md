@@ -1,200 +1,109 @@
-# 🛠️ Design Pub-Sub System (LLD)
+# 🛠️ Design In-Process Pub-Sub Messaging System (LLD)
 
-A Publish-Subscribe (Pub/Sub) system is an asynchronous messaging paradigm where message senders (Publishers) do not send messages directly to specific receivers (Subscribers). Instead, published messages are characterized into classes (Topics), without knowledge of which subscribers, if any, there may be. 
-
-This problem heavily tests the **Observer Pattern** and multi-threading/concurrency control.
-
----
+> **Sources**: [Java Concurrency in Practice (Goetz et al.)](https://jcip.net/) on `BlockingQueue` and `CopyOnWriteArraySet`; [Apache Kafka design doc](https://kafka.apache.org/documentation/#design); [Enterprise Integration Patterns — Durable Subscriber](https://www.enterpriseintegrationpatterns.com/patterns/messaging/DurableSubscription.html); JMS spec on durable vs non-durable subscriptions; [`java.util.concurrent` JavaDocs](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/package-summary.html).
 
 ## 1. Requirements
 
-### Functional Requirements
-- **Topics/Channels:** The system should support creating multiple topics.
-- **Publishers:** Can publish messages to a specific topic.
-- **Subscribers:** Can subscribe to one or more topics.
-- **Message Dispatch:** When a publisher publishes to `Topic A`, all subscribers of `Topic A` should receive the message.
+### Functional
+- **Publish/Subscribe**: Publishers push messages to a named `Topic`; all current subscribers receive them.
+- **Topic management**: `createTopic`, `deleteTopic`.
+- **Wildcard subscriptions**: `orders.*` matches `orders.created`, `orders.shipped`, …
+- **Durable vs non-durable subscribers**: durable subscribers see messages produced while they were offline (replay from stored offset).
+- **Unsubscribe** at any time.
 
-### Non-Functional Requirements
-- **Decoupling:** Publishers and Subscribers should not know about each other.
-- **Concurrency:** Multiple publishers might publish at the same time. The structure must be thread-safe.
-- **Asynchronous Delivery:** Message delivery should not block the publisher from continuing its work.
+### Non-Functional
+- **Thread-safe** under concurrent publish + subscribe + unsubscribe.
+- **Low-latency** delivery; one slow consumer must not block other consumers or the publisher.
+- **No message loss** for durable subscribers.
+- **Backpressure** for slow consumers (bounded queue + `BLOCK` or `DROP_OLDEST` policy).
 
----
+## 2. Core Entities
 
-## 2. Core Entities (Objects)
+| Entity | Key Fields |
+|---|---|
+| `Message` | `id`, `topicName`, `payload`, `timestamp`, `headers` |
+| `Topic` | `name`, `subscribers: Set<Subscription>`, `log: List<Message>` (for durable) |
+| `Subscriber` | `id`, `onMessage(msg)`, `isDurable` |
+| `Subscription` | `subscriberId`, `topicName`, `offset` (durable only), `queue` (per-sub) |
+| `MessageBroker` | Singleton facade: `topics: Map<String,Topic>` |
 
-- `Message` (The DTO)
-- `Topic` (The channel holding subscribers)
-- `Broker` / `PubSubSystem` (The central manager)
-- `Publisher` (Interface)
-- `Subscriber` (Interface)
-
----
-
-## 3. Class Diagram / Relationships
+## 3. Class Diagram
 
 ```mermaid
 classDiagram
-    class PubSubBroker {
-        -Map~String, Topic~ topics
-        +addTopic(String)
-        +subscribe(Subscriber, String)
-        +publish(String, Message)
-    }
-
-    class Topic {
-        -String name
-        -List~Subscriber~ subscribers
-        +addSubscriber(Subscriber)
-        +broadcast(Message)
-    }
-
-    class Message {
-        -String content
-        -long targetTopicId
-    }
-
-    class Subscriber {
-        <<interface>>
-        +onMessage(Message)
-    }
-
-    class Publisher {
-        <<interface>>
-        +publish(Message, PubSubBroker)
-    }
-
-    PubSubBroker "1" *-- "many" Topic
-    Topic "1" *-- "many" Subscriber
+  class MessageBroker { +publish(t,m); +subscribe(t,s,durable); +unsubscribe(t,s) }
+  class Topic { +name; +subscribers; +log; +fanout(m) }
+  class Subscription { +subscriberId; +offset; +queue: BlockingQueue~Message~ }
+  class Subscriber { <<interface>> +onMessage(m); +id }
+  class DeliveryStrategy { <<interface>> +deliver(sub, msg) }
+  MessageBroker "1" o-- "*" Topic
+  Topic "1" o-- "*" Subscription
+  Subscription --> Subscriber
+  Subscription ..> DeliveryStrategy
 ```
 
----
-
-## 4. Key Algorithms / Design Patterns
-
-### 1. The Observer Pattern
-The core of Pub/Sub is the Observer pattern. The `Topic` is the Subject. The `Subscriber`s are the Observers.
+## 4. Key Methods
 
 ```java
-// Common Interface for all receivers
-public interface Subscriber {
-    void onMessage(Message msg);
-}
+void  MessageBroker.publish(String topic, Message msg);
+void  MessageBroker.subscribe(String topic, Subscriber sub, boolean durable);
+void  MessageBroker.unsubscribe(String topic, Subscriber sub);
+Topic MessageBroker.createTopic(String name);
+void  MessageBroker.deleteTopic(String name);
 
-// Concrete Subscriber
-public class EmailService implements Subscriber {
-    @Override
-    public void onMessage(Message msg) {
-        System.out.println("Emailing: " + msg.getPayload());
-    }
-}
-```
-
-### 2. The Topic (Subject)
-
-The `Topic` manages its list of subscribers and handles the broadcasting loop.
-**Concurrency note:** If a subscriber unsubscribes *while* the topic is broadcasting a message, iterating over a standard `ArrayList` will throw a `ConcurrentModificationException`. We must use thread-safe collections like `CopyOnWriteArrayList` or synchronize the block.
-
-```java
-import java.util.concurrent.CopyOnWriteArrayList;
-
-public class Topic {
-    private final String topicId;
-    // Thread-safe list optimized for reads (iteration) over writes (adding/removing)
-    private final List<Subscriber> subscribers = new CopyOnWriteArrayList<>();
-
-    public Topic(String id) {
-        this.topicId = id;
-    }
-
-    public void addSubscriber(Subscriber sub) {
-        subscribers.add(sub);
-    }
-    
-    public void removeSubscriber(Subscriber sub) {
-        subscribers.remove(sub);
-    }
-
-    // Synchronous broadcast (Blocks the publisher)
-    public void publish(Message message) {
-        for (Subscriber sub : subscribers) {
-            sub.onMessage(message);
-        }
-    }
+interface Subscriber {
+  void onMessage(Message m) throws InterruptedException;
+  String id();
+  boolean isDurable();
 }
 ```
 
-### 3. The Central Broker
-The Broker manages the topics. Publishers don't talk to Topics directly; they talk to the Broker.
+## 5. Design Patterns
 
-```java
-import java.util.concurrent.ConcurrentHashMap;
+| Pattern | Where | Why |
+|---|---|---|
+| **Observer** | `Subscriber` observes `Topic` | Foundational fan-out semantics. |
+| **Mediator** | `MessageBroker` brokers Pub↔Sub; they never reference each other | Decoupling. |
+| **Singleton** | `MessageBroker` | One global topic registry. |
+| **Producer-Consumer** | Each `Subscription` has its own `BlockingQueue<Message>` | Decouples slow consumer from publisher. |
+| **Strategy** | `DeliveryStrategy` (`AT_MOST_ONCE`, `AT_LEAST_ONCE`) | Configurable delivery guarantees. |
+| **Decorator** | `FilteredSubscriber(predicate, delegate)` | Content-based filtering. |
+| **Iterator** | Safe traversal of subscriber set during fanout via `CopyOnWriteArraySet` | Iteration without `ConcurrentModificationException`. |
 
-public class PubSubBroker {
-    private final Map<String, Topic> topicMap = new ConcurrentHashMap<>();
+## 6. Concurrency & Edge Cases
 
-    public void createTopic(String topicId) {
-        topicMap.putIfAbsent(topicId, new Topic(topicId));
-    }
+### 6.1 Thread-safe collections
+- `topics: ConcurrentHashMap<String, Topic>` — lock-free reads.
+- `Topic.subscribers: CopyOnWriteArraySet<Subscription>` — many concurrent reads (fanout) + occasional writes (subscribe/unsubscribe). Iteration is safe even if the set mutates mid-publish.
 
-    public void subscribe(String topicId, Subscriber sub) {
-        Topic topic = topicMap.get(topicId);
-        if (topic != null) {
-            topic.addSubscriber(sub);
-        }
-    }
+### 6.2 Per-subscriber `BlockingQueue` (the key insight)
+A slow consumer must not block other consumers or the publisher. Each subscription has its own bounded `ArrayBlockingQueue<Message>(capacity)`. Publisher does `queue.put(msg)`; subscriber thread does `queue.take()`. If one consumer is slow:
 
-    public void publish(String topicId, Message message) {
-        Topic topic = topicMap.get(topicId);
-        if (topic != null) {
-            topic.publish(message);
-        }
-    }
-}
-```
+| Backpressure policy | Behavior |
+|---|---|
+| **BLOCK** (default) | `put()` blocks the publisher when full → producer slows down. |
+| **DROP_OLDEST** | `pollFirst()` then `put()` → newest wins; safe only for non-durable. |
+| **DROP_LATEST** | Drop incoming `msg` → cheapest, lossy. |
 
-### 4. Advanced: Asynchronous Delivery (Producer-Consumer)
+### 6.3 Durable subscriber replay
+- Each `Topic` keeps an append-only `log: List<Message>` (or capped ring + checkpointed file).
+- `Subscription.offset` is the last delivered index; persisted (file/DB) on each successful `onMessage`.
+- On reconnect, broker enqueues `log[offset+1 ..]` to the subscriber's queue, then resumes live delivery.
+- Apache Kafka uses exactly this model — consumer offsets stored in a special `__consumer_offsets` topic.
 
-The design above is *synchronous*. If we have 10,000 subscribers, `publish()` loops 10,000 times, blocking the Publisher thread for seconds.
-To make it genuinely asynchronous (like Kafka or RabbitMQ), we introduce a queue.
+### 6.4 Wildcard matching
+Implementations vary — naive: linear scan of topic names with regex; production: trie keyed by `.`-separated segments for `O(depth)` lookup.
 
-```java
-import java.util.concurrent.*;
+### 6.5 Subscriber callback errors (at-least-once)
+If `onMessage` throws, **do not advance the offset**. Retry with exponential backoff; after N retries, push to a Dead Letter Queue topic and advance.
 
-public class AsyncTopic {
-    private final String topicId;
-    private final List<Subscriber> subscribers = new CopyOnWriteArrayList<>();
-    
-    // A queue to hold messages waiting to be delivered
-    private final BlockingQueue<Message> messageQueue = new LinkedBlockingQueue<>();
-    private final ExecutorService executor = Executors.newFixedThreadPool(10);
+### 6.6 Broker crash recovery
+Durable offsets and the topic log survive restart. Non-durable in-flight queue contents are lost (acceptable per JMS semantics).
 
-    public AsyncTopic(String id) {
-        this.topicId = id;
-        
-        // Start a background daemon to process the queue
-        Thread dispatcher = new Thread(() -> {
-            while (true) {
-                try {
-                    Message msg = messageQueue.take(); // Blocks until a msg arrives
-                    broadcastWorker(msg);
-                } catch (InterruptedException e) {}
-            }
-        });
-        dispatcher.start();
-    }
-
-    // Publisher calls this. It returns instantly (O(1)).
-    public void publish(Message msg) {
-        messageQueue.offer(msg);
-    }
-
-    // Background thread delivers messages to subscribers using a thread pool
-    private void broadcastWorker(Message msg) {
-        for (Subscriber sub : subscribers) {
-            executor.submit(() -> sub.onMessage(msg));
-        }
-    }
-}
-```
-*Note for interviews: Building the synchronous version first proves you know the Observer pattern. Bumping it to the asynchronous BlockingQueue version proves you know concurrency.*
+## 7. Sources / Cross-Refs
+- LLD-12 Concurrency Deep Dive (`BlockingQueue`, `CopyOnWriteArraySet`, producer-consumer)
+- Solution-Producer-Consumer.md
+- Solution-Blocking-Queue.md
+- Apache Kafka design: https://kafka.apache.org/documentation/#design
+- Java Concurrency in Practice (Goetz et al.) — Ch. 5 (Building Blocks) & Ch. 12 (Testing Concurrent Programs)
+- EAI Patterns — Durable Subscriber: https://www.enterpriseintegrationpatterns.com/patterns/messaging/DurableSubscription.html

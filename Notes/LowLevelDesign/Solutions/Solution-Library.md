@@ -1,199 +1,113 @@
-# 🛠️ Design a Library Management System (LLD)
+# 🛠️ Design Library Management System (LLD)
 
-Designing a Library Management System (LMS) is a fundamental Object-Oriented Design problem. It tests your ability to identify the correct actors and use cases, model the relationships between Physical Books vs. Book Titles, and handle states (like borrowing, returning, and reserving).
-
----
+> **Sources**: Synthesized from standard library-system OOP designs (Grokking the OO Design Interview, awesome-lld), GoF design patterns (State, Strategy, Observer, Chain of Responsibility, Command, Visitor), and concurrency primitives in [PostgreSQL row-level locks](https://www.postgresql.org/docs/current/explicit-locking.html#LOCKING-ROWS).
 
 ## 1. Requirements
 
-### Functional Requirements
-- **Book vs Book Item:** The library has multiple titles (Books). A title can have multiple physical copies (BookItems).
-- **Actors:** Members can search, borrow, reserve, and return books. Librarians can add/remove book items and block members.
-- **Search:** Users can search the catalog by Title, Author, Subject, or Publication Date.
-- **Borrowing Rules:** 
-  - A member can borrow a maximum of 5 books.
-  - The maximum checkout duration is 10 days.
-- **Fines:** If a book is returned late, a fine is calculated and collected.
-- **Reservations:** If a book is currently checked out, a member can reserve it.
+### Functional
+- **Catalog**: A `Book` (logical work) has many physical `BookCopy` units (each with its own status).
+- **Members**: `STUDENT` (5-book limit, 14-day loan) vs `TEACHER` (10-book limit, 30-day loan) — values configurable.
+- **Borrow / Return**: A copy is loaned to one member at a time; returns compute fines if overdue.
+- **Reservations**: When all copies are out, a member joins a FIFO queue per `Book`; on next return, the queue head is notified and the copy is held.
+- **Search** by title / author / ISBN / category.
+- **Librarian admin**: add/remove book, register member, write off lost/damaged copies.
+- **Notifications**: due-soon, overdue, reservation-ready.
 
-### Non-Functional Requirements
-- **Consistency:** Two members cannot borrow the exact same specific physical `BookItem` at the same time.
-- **Extensibility:** The system should easily allow for changes in fine calculations or search indexing algorithms.
+### Non-Functional
+- **At most one active loan per copy** (no double-borrow under contention).
+- **Borrow-limit enforced** atomically (no member can ever exceed their limit by racing).
+- **FIFO fairness** in reservation queues.
+- **Audit trail** for every borrow / return / fine event.
 
----
+## 2. Core Entities
 
-## 2. Core Entities (Objects)
+| Entity | Key Fields |
+|---|---|
+| `Book` | `isbn`, `title`, `author`, `category`, `copies[]` |
+| `BookCopy` | `copyId`, `bookIsbn`, `status` (`AVAILABLE`/`BORROWED`/`RESERVED`/`LOST`/`DAMAGED`), `version` |
+| `Member` | `id`, `type`, `borrowLimit`, `currentLoanCount` |
+| `Loan` | `id`, `memberId`, `copyId`, `borrowedAt`, `dueAt`, `returnedAt?`, `fineAmount` |
+| `Reservation` | `id`, `bookIsbn`, `memberId`, `createdAt`, `status` |
+| `Fine` | `id`, `loanId`, `amount`, `paidAt?` |
 
-- `Library` (The central hub containing the catalog)
-- `User` (Abstract) -> `Librarian`, `Member`
-- `Book` (Metadata of the book)
-- `BookItem` (The physical copy on the shelf, identified by a barcode)
-- `Account` (Manages member details, borrowed items, and fines)
-- `LibraryCard` (Used for scanning/login)
-- `BookReservation` / `BookLending`
-- `Fine`
-
----
-
-## 3. Class Diagram / Relationships
+## 3. Class Diagram
 
 ```mermaid
 classDiagram
-    class User {
-        <<abstract>>
-        -String id
-        -String name
-    }
-
-    class Member {
-        -int totalBooksCheckedOut
-        +checkoutBookItem(BookItem)
-        +returnBookItem(BookItem)
-        +reserveBookItem(BookItem)
-    }
-
-    class Librarian {
-        +addBookItem(BookItem)
-        +blockMember(Member)
-    }
-
-    class Book {
-        -String ISBN
-        -String title
-        -String author
-        -String subject
-    }
-
-    class BookItem {
-        -String barcode
-        -boolean isReferenceOnly
-        -double price
-        -BookFormat format
-        -BookStatus status
-        -Date dateOfPurchase
-        -Rack placedAt
-    }
-
-    class Catalog {
-        -Map~String, List~Book~~ bookTitles
-        -Map~String, List~Book~~ bookAuthors
-        +searchByTitle(String)
-        +searchByAuthor(String)
-    }
-
-    class BookStatus {
-        <<enumeration>>
-        AVAILABLE, RESERVED, LOANED, LOST
-    }
-
-    User <|-- Member
-    User <|-- Librarian
-    Book "1" *-- "many" BookItem
-    Catalog o-- Book
+  class Book { +isbn; +title; +copies: List~BookCopy~ }
+  class BookCopy { +status: CopyState; +version }
+  class Member { +type: MemberType; +borrowLimit; +activeLoans }
+  class Loan { +borrowedAt; +dueAt; +returnedAt; +fine }
+  class Reservation { +createdAt; +status }
+  class FineStrategy { <<interface>> +compute(Loan): Money }
+  class BorrowValidator { <<chain>> +validate(member, copy) }
+  Book "1" o-- "*" BookCopy
+  Member "1" -- "*" Loan
+  BookCopy "0..1" -- "1" Loan
+  Book "1" -- "*" Reservation
+  Loan ..> FineStrategy
 ```
 
----
-
-## 4. Key Algorithms / Design Patterns
-
-### 1. Catalog Search (In-Memory Indexing)
-When a user searches for a book by author, we don't want to iterate through a list of 100,000 books. We maintain HashMaps that act as indexes. This is an application of a basic **Inverted Index**.
+## 4. Key Methods
 
 ```java
-public interface Search {
-    List<Book> searchByTitle(String title);
-    List<Book> searchByAuthor(String author);
-}
-
-public class Catalog implements Search {
-    private Map<String, List<Book>> bookTitles;
-    private Map<String, List<Book>> bookAuthors;
-
-    public Catalog() {
-        bookTitles = new HashMap<>();
-        bookAuthors = new HashMap<>();
-    }
-
-    // When a Librarian adds a book, we index it.
-    public void indexBook(Book book) {
-        bookTitles.computeIfAbsent(book.getTitle(), k -> new ArrayList<>()).add(book);
-        bookAuthors.computeIfAbsent(book.getAuthor(), k -> new ArrayList<>()).add(book);
-    }
-
-    @Override
-    public List<Book> searchByTitle(String title) {
-        return bookTitles.getOrDefault(title, new ArrayList<>());
-    }
-
-    @Override
-    public List<Book> searchByAuthor(String author) {
-        return bookAuthors.getOrDefault(author, new ArrayList<>());
-    }
-}
+List<Book>  Catalog.search(query);
+Loan        LibraryService.borrowBook(memberId, copyId);   // chain-validated, atomic
+Receipt     LibraryService.returnBook(loanId);             // computes fine via Strategy; promotes reservation
+Reservation LibraryService.reserveBook(memberId, isbn);    // joins FIFO queue
+void        LibraryService.payFine(fineId);
+void        LibrarianService.addBook(book);
+void        LibrarianService.markCopyLost(copyId);
 ```
 
-### 2. State Pattern (Book Status)
-A `BookItem` has states, and specific actions are only valid in certain states. You cannot checkout a book that is `LOANED`.
+## 5. Design Patterns
 
-```java
-public enum BookStatus {
-    AVAILABLE, RESERVED, LOANED, LOST
-}
+| Pattern | Where | Why |
+|---|---|---|
+| **State** | `BookCopy.status`, `Loan` lifecycle (`OPEN`/`OVERDUE`/`CLOSED`) | Constrain transitions; e.g., can't borrow a `LOST` copy. |
+| **Strategy** | `FineStrategy` (per-day, capped, member-type discount, holiday-waiver) | Fine policy is the most-changed rule. |
+| **Observer** | `Reservation` queue subscribes to `BookCopy.returned` events | When a copy returns, head-of-queue is notified. |
+| **Chain of Responsibility** | `BorrowValidator`: `MembershipActive → WithinLimit → NoOverdueFines → CopyAvailable` | Each rule fails fast; easy to add (e.g., `NoBlockedAccount`). |
+| **Command** | `BorrowCommand`, `ReturnCommand` | Auditable, retryable, undo-able for librarian corrections. |
+| **Singleton** | `Catalog` index | One in-memory inverted index for search. |
+| **Visitor** | Reports (top-borrowed books, member activity, overdue list) | Add new reports without changing entities. |
 
-public class BookItem extends Book {
-    private String barcode;
-    private BookStatus status;
+## 6. Concurrency & Edge Cases
 
-    public synchronized boolean checkout(String memberId) {
-        if (this.status != BookStatus.AVAILABLE) {
-            return false; // Cannot checkout
-        }
-        
-        // Change state
-        this.status = BookStatus.LOANED;
-        return true;
-    }
-    
-    public void returnItem() {
-        this.status = BookStatus.AVAILABLE;
-    }
-}
+### 6.1 Atomic borrow (no double-loan)
+
+```sql
+-- Conditional UPDATE on the copy row + INSERT loan in same tx
+BEGIN;
+UPDATE book_copies SET status='BORROWED', version=version+1
+ WHERE copy_id=:copyId AND status='AVAILABLE';
+-- 0 rows ⇒ someone beat us; rollback and surface to user
+
+INSERT INTO loans(member_id, copy_id, borrowed_at, due_at) VALUES (...);
+COMMIT;
 ```
 
-### 3. Handling Fines (Strategy Pattern)
-The library might charge $1/day for the first 10 days, and $2/day after. This rule might change next year. The logic shouldn't be hardcoded into the `returnBookItem` method. We can use the Strategy Pattern.
+### 6.2 Borrow-limit enforcement
+Check inside the same tx: `SELECT count(*) FROM loans WHERE member_id=:m AND returned_at IS NULL FOR UPDATE` then assert `< borrowLimit`. Or denormalize `current_loan_count` on `Member` with optimistic version.
 
-```java
-public interface FineStrategy {
-    double calculateFine(int daysLate);
-}
+### 6.3 Reservation queue (FIFO)
+- Queue rows ordered by `(created_at, reservation_id)` — the second component breaks timestamp ties deterministically.
+- On return, atomically move the head reservation to `READY`, set the copy to `RESERVED` for that member, send notification with `holdExpiresAt = now() + 48h`.
+- If hold expires, demote to `EXPIRED`; promote next.
 
-public class StandardFineStrategy implements FineStrategy {
-    @Override
-    public double calculateFine(int daysLate) {
-        if (daysLate <= 0) return 0.0;
-        if (daysLate <= 10) return daysLate * 1.0;
-        return (10 * 1.0) + ((daysLate - 10) * 2.0);
-    }
-}
-
-public class FineService {
-    private FineStrategy strategy;
-
-    public FineService(FineStrategy strategy) {
-        this.strategy = strategy;
-    }
-
-    public void collectFine(Member member, int daysLate) {
-        double amount = strategy.calculateFine(daysLate);
-        if (amount > 0) {
-            System.out.println("Processing fine of $" + amount + " for member " + member.getId());
-            // Call payment gateway...
-        }
-    }
-}
+### 6.4 Overdue fine computation (Strategy example)
 ```
+fine = max(0, daysOverdue * perDayRate)
+fine = min(fine, perBookCap)
+fine *= (1 - memberType.discount)
+```
+Fines are attached to the loan on `returnBook`; not retroactively recomputed.
 
-### 4. Concurrency Control
-Since a library app might be accessed via a web portal and kiosks simultaneously, someone could reserve a book online at the exact moment another person picks it off the physical shelf and scans it at the kiosk.
-The `checkout()` method inside `BookItem` must be `synchronized` (in Java) or rely on a database transaction with a row-level lock (`SELECT * FROM book_items WHERE barcode = '123' FOR UPDATE`) in the real world to prevent double checkouts.
+### 6.5 Lost/damaged copies
+Librarian command transitions `BookCopy → LOST/DAMAGED`. The copy is excluded from search availability counts but the loan history is preserved.
+
+## 7. Sources / Cross-Refs
+- LLD-08 Behavioral Patterns (State, Strategy, Observer, Chain of Responsibility, Command, Visitor)
+- Solution-Hotel-Management.md (similar atomic-resource-allocation pattern)
+- Solution-Concert-Booking.md (FIFO queue + hold expiry pattern reused here)
+- Postgres row-level locking docs: https://www.postgresql.org/docs/current/explicit-locking.html
