@@ -159,3 +159,126 @@ Loading images directly from S3 is slow, especially for users far from the data 
 ### Additional Talking Points
 - **Feed Ranking Algorithms:** While this design sorted chronologically, modern feeds use ML algorithms. Mention that feed lists in Redis would be passed through an ML ranking service that scores photos based on user affinity, engagement history, and photo recency before returning them to the client.
 - **Search:** To search for users by name quickly, use an inverted index datastore like **Elasticsearch**, pushing updates to Elasticsearch whenever a new user registers or updates their profile.
+
+---
+
+## 🔬 Operational Depth — How Instagram Actually Ranks the Feed
+
+This section is grounded in Meta's own Transparency Center publications ("Instagram Feed AI system" and "Instagram Explore AI system") and Instagram's official ranking-explained blog. The exact model architectures change frequently; the **stages and signal categories** below are what Meta publicly documents.
+
+### The Four Surfaces, Four Algorithms
+
+Instagram (and Meta more broadly) does **not** run a single algorithm. There are separate AI systems for:
+- **Feed** — content from accounts you follow + recommended posts
+- **Stories** — only from accounts you follow (no recommendations in Stories)
+- **Explore** — entirely recommendations; you've never followed these accounts
+- **Reels** — discovery-first; mostly accounts you don't follow
+
+Each system has different **prediction targets** and different **ranking weights**. This matters in interviews: never claim "Instagram uses one algorithm." It's a family of models sharing infrastructure.
+
+### The Three-Stage Pipeline (per Meta's Transparency Center)
+
+For both Feed and Explore, Meta publicly documents the same multi-stage funnel:
+
+```
+[ Candidate generation ]   →   [ Early-stage ranking ]   →   [ Late-stage ranking ]
+   ~thousands of posts          ~500 surviving posts          Final ordered list
+   cheap retrieval              lightweight ML model          heavy multi-task NN
+```
+
+**1. Candidate generation (retrieval).** Pulls a few thousand posts that *could* be relevant. Techniques cited by Meta for Explore include **collaborative filtering, personalized PageRank, and two-tower sparse network sourcing**. For Feed, candidates come from accounts you follow plus recommended accounts.
+
+**2. Early-stage ranking.** A **lightweight model** (cheap to evaluate) trims the candidate set down to ~500 posts. This stage is throughput-optimized; you can't run a giant transformer over thousands of candidates per request.
+
+**3. Late-stage ranking.** A **multi-task multi-label neural network** (heavier, more accurate) scores each of the surviving ~500 posts on multiple predicted actions and combines them into a single relevance score. The top N are returned.
+
+This funnel pattern (cheap retrieval → coarse ranking → fine ranking) is **the standard architecture for personalized feeds at scale**, used by YouTube, TikTok, Pinterest, etc. Worth memorizing.
+
+### The Ranking Predictions (What the Model Actually Predicts)
+
+Meta says there are "roughly a dozen" prediction tasks per post. The five that Instagram itself has called out for **Feed** are:
+
+| Prediction | What it estimates |
+|---|---|
+| Probability you spend a few seconds on the post | Dwell time / scroll-stop rate |
+| Probability you comment | Engagement depth |
+| Probability you like | Light engagement |
+| Probability you reshare | Distributability — strongest signal |
+| Probability you tap the profile photo | Interest in the creator beyond this post |
+
+Each prediction has a **weight**; final score = weighted sum. Meta tunes weights frequently; **shares (especially DM sends)** have grown to be the most heavily weighted signal in recent years per Adam Mosseri's public statements.
+
+### Input Signals
+
+Meta groups signals into **three buckets** (in roughly decreasing importance for Feed):
+
+1. **Your activity** — what you've liked, shared, saved, commented on recently
+2. **Information about the post** — popularity (likes/comments velocity), timestamp, location, format (photo vs Reel vs carousel)
+3. **Information about the poster** — how often *people in general* engage with them, your past interactions with them
+4. **Context** — current device, connection quality, time of day, what you've already seen this session (avoid repetition)
+
+There are reportedly **thousands** of underlying signals feeding into these models — Meta's Transparency Center page enumerates dozens by name.
+
+### A Concrete Example: How a Single Post Is Scored
+
+For a single post P being ranked for user U:
+
+```
+features = extract_features(U, P, context)
+  # ~thousands of signals: U's activity, P's popularity, creator-U history, etc.
+
+predictions = late_stage_model(features)
+  # returns: {p_dwell, p_comment, p_like, p_share, p_profile_tap, ...}
+
+score = (
+    w_dwell   * predictions.p_dwell   +
+    w_comment * predictions.p_comment +
+    w_like    * predictions.p_like    +
+    w_share   * predictions.p_share   +   # heaviest weight (post-2023)
+    w_profile * predictions.p_profile_tap
+)
+
+# Apply diversity / integrity adjustments:
+score *= diversity_penalty_if_too_many_from_same_author(P, recent_feed)
+score *= integrity_demotion_if_borderline_content(P)
+
+return score
+```
+
+After scoring all ~500 candidates, sort descending and return the top N for the page.
+
+### Diversity Rules (the "no three in a row" problem)
+
+Per Meta's public docs, the system **explicitly avoids showing too many posts from the same person back-to-back, or too many recommended (non-followed) posts in a row**. This is implemented as a **post-ranking pass** that re-shuffles the sorted list to enforce diversity constraints — it's a heuristic layer on top of pure score-sorted ordering.
+
+### Integrity & Demotion
+
+Two separate systems operate in parallel:
+- **Removal** — content violating Community Guidelines is taken down (separate pipeline, not part of feed ranking)
+- **Demotion** — content that's borderline (clickbait, low-quality, watermarked from other apps, recycled content) gets a **score multiplier < 1**. It still appears, but lower.
+
+Meta publishes a Recommendation Guidelines document listing categories that are *allowed but not recommended*. These can never appear in Explore or Reels recommendations.
+
+### Storage & Serving Architecture (general pattern)
+
+How a feed-ranking system is typically deployed at scale:
+
+| Layer | Role |
+|---|---|
+| **User-feature store** | Online key-value store (e.g., RocksDB-based) holding user embeddings, recent activity vectors |
+| **Item-feature store** | Per-post features (popularity, embeddings, age, format) — refreshed via streaming |
+| **Candidate retrieval service** | Approximate-nearest-neighbor search (FAISS, ScaNN) over item embeddings |
+| **Ranking service** | GPU/TPU-served NN models; batch-scores ~500 candidates per request |
+| **Re-ranking / diversity** | CPU-side post-processing |
+| **Edge cache** | Pre-computed top-of-feed for active users so the first scroll is instant |
+
+End-to-end target: **~100-200 ms** from request to fully-ranked feed page.
+
+### What Could Bite You In an Interview
+
+- **"Why have multiple ranking stages?"** — Computational budget. You can't run a 100-million-parameter transformer over 10,000 candidates in 100ms. Cheap retrieval + cheap ranking + expensive final scoring is **the** way to do personalized feeds at scale.
+- **"How do you handle cold-start users?"** — Lean heavily on recommendations (collaborative filtering by demographic / location / language), de-emphasize personal history (which doesn't exist yet). Instagram's "Following" feed is the chronological fallback.
+- **"How do you avoid filter bubbles?"** — Explicit diversity penalties in the re-ranking stage; mandatory injection of recommended (non-followed) posts at fixed positions; "Not Interested" signals from users.
+- **"How do you train these models?"** — Logged user interactions become labels: did they engage with rank-N post or scroll past it? Train on click/share/save labels, deploy via A/B-tested rollout, monitor offline metrics (NDCG) and online metrics (session length, return visits) in parallel.
+
+> **Sources for this section.** Meta Transparency Center: "Instagram Feed AI system" and "Instagram Explore AI system" pages (the only authoritative source on the actual pipeline). Instagram's official "Instagram Ranking Explained" blog (about.instagram.com). Adam Mosseri's January 2025 ranking-signals statements as summarized in industry analyses (Later, Buffer, Sprout Social, Dataslayer). Specific weights, model architectures, and exact thresholds are not publicly disclosed and change frequently.

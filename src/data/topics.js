@@ -106,6 +106,15 @@ export const CATEGORIES = [
     ],
   },
   {
+    id: 'modern-emerging',
+    title: 'Modern & Emerging Topics',
+    topics: [
+      { id: 'note-46', title: 'Vector Databases & RAG',                noteFile: '46-Vector-Databases-RAG.md' },
+      { id: 'note-47', title: 'Feature Flags & Experimentation',       noteFile: '47-Feature-Flags-Experimentation.md' },
+      { id: 'note-48', title: 'Edge Computing — From CDN to Compute',  noteFile: '48-Edge-Computing.md' },
+    ],
+  },
+  {
     id: 'deep-dives',
     title: 'Deep Dives & Reference',
     topics: [

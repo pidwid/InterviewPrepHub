@@ -55,6 +55,9 @@ const T2_SD_NEW = new Set([
   'note-26',  // Unique ID Generation     ← promoted from T3
   'note-30',  // Distributed Locking
   'note-44',  // Service Discovery
+  'note-46',  // Vector Databases & RAG (modern, important)
+  'note-47',  // Feature Flags & Experimentation (modern, important)
+  'note-48',  // Edge Computing (modern, important)
 ]);
 const T2_SD = new Set([...T1_SD, ...T2_SD_NEW]);
 

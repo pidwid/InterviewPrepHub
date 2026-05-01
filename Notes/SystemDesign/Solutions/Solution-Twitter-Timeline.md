@@ -375,3 +375,106 @@ tweet:{tweetId}:replies  → counter
 - **Geo-search** — Geospatial index for "tweets near me" (R-tree or geohash)
 - **Real-time streaming** — WebSocket/SSE for live timeline updates
 - **Content moderation** — Async pipeline: tweet → ML classifier → human review queue
+
+---
+
+## 🔬 Operational Depth — Real Twitter Numbers & Decisions
+
+This section is grounded in publicly-disclosed details from Yao Yue's "Scaling Redis at Twitter" talk, the Twitter Engineering blog, and follow-up analyses by High Scalability and Stackbit.
+
+### The Public Numbers
+
+From Twitter Engineering presentations and analyses:
+- Twitter cache fleet was sized at the order of **105 TB of RAM across ~10,000 Redis instances** at peak (per the Yao Yue / High Scalability writeup)
+- Reported throughput for the timeline cache reached **~39 million QPS**
+- The service handled roughly **6,000 tweets/sec on average** with **~600,000 timeline reads/sec**, giving a **~1000:1 read-to-write ratio**
+- Each user's home timeline cache holds **~800 tweet IDs** (a product decision; users rarely scroll farther)
+
+These numbers anchor every architectural choice that follows.
+
+### Why Fanout-on-Write Won (For Most Accounts)
+
+Twitter's read:write ratio is so skewed that **paying ~5,000 small writes per tweet** to make every read O(1) is a clear win. Specifically:
+- Reads are millions per second, latency-sensitive (homepage load), uncached → catastrophic
+- Writes are thousands per second, latency-insensitive (post-tweet ack), can be async
+- Once the timeline is materialized in Redis, a home-timeline read is a **single ZREVRANGE** on a sorted set — sub-millisecond
+
+Fanout-on-write is the **default** for accounts under a follower threshold (commonly cited around **10,000 followers**, though Twitter has not published a single canonical number).
+
+### Why Pure Fanout-on-Write Breaks: The Celebrity Problem
+
+A user with **30M followers** posting one tweet generates **30M Redis writes**. This is "the celebrity problem":
+- Workers can't keep up — fanout lag stretches into hours
+- Memory pressure: many small timelines get evicted to make room for one celebrity's tweet propagating across millions of timeline ziplists (per Yao Yue's talk, ziplist resizing under memory pressure is the dominant source of write-latency variability)
+- Cascading failure: if the fanout queue backs up, every user's tweet is delayed — not just the celebrity's
+
+### The Hybrid Solution (What Twitter Actually Does)
+
+The production approach combines both strategies based on a **per-account policy**:
+
+| Account type | Strategy | Why |
+|---|---|---|
+| Regular (< ~10K followers) | **Fanout-on-write** | Cheap writes; O(1) reads dominate the workload |
+| High-volume (>~10K followers) | **No fanout; pull at read** | Avoids the write storm; their tweets are fetched per-request and merged into the reader's timeline |
+
+On read, the Timeline Service:
+1. Fetches the precomputed sorted set from Redis (regular followees)
+2. Identifies the user's celebrity followees (small list)
+3. Fetches each celebrity's recent tweets from a **per-celebrity cache** (one cache entry serves millions of readers)
+4. Merge-sorts by timestamp and returns the top N
+
+This adds a few ms to read latency but caps the fanout cost at the threshold. **One cache entry per celebrity vs. one timeline write per follower** is the central trade.
+
+### Two Other Optimizations Worth Naming
+
+**1. Active-user fanout filtering.** Twitter only fans tweets out to **users who logged in within the last 30 days** (sometimes called "active users"). Inactive users get their timeline computed lazily on next login. This typically removes 80–90% of the write load.
+
+**2. Hybrid List in Redis (Twitter's custom data structure).** Stock Redis stores lists as either ziplists (compact but slow at scale) or linked lists (fast but memory-heavy). Twitter built a **Hybrid List** — a linked list of bounded ziplists — to get the memory efficiency of ziplists with predictable resize behavior. This was part of Twitter's forked, internal Redis (later succeeded by **Pelikan**, their open-source cache server in C/Rust).
+
+### The Tweet ID Choice: Snowflake
+
+Tweet IDs use Twitter's **Snowflake** scheme: `[timestamp][datacenter][machine][sequence]`. Two consequences:
+- **Sortable by ID** is equivalent to **sorted by time** — no separate `ORDER BY created_at` needed
+- **No central counter** means tweet creation is fully horizontal-scale; each Snowflake worker is independent
+- IDs fit in 64 bits, which is what Redis sorted-set members and most cache layers want anyway
+
+### Storage Layout
+
+| Data | Storage | Why |
+|---|---|---|
+| Tweets (durable) | Sharded MySQL (T-bird, originally via Gizzard) | Durability for the tweet text itself |
+| User profiles | Gizmoduck service backed by MySQL | Profile reads cached aggressively at edge |
+| Social graph (follows) | Flock service over MySQL (originally) | Bidirectional adjacency lists; sharded by user_id |
+| Home timeline cache | Redis sorted sets, 3× replicated, ~800 IDs/user | The hot read path |
+| Tweet detail cache | Memcached | Memcached is great at small-object GET, no fanout structure needed |
+
+The split between **Memcached for tweet bodies** and **Redis for timelines** is intentional — different access patterns deserve different tools. (Recent migration efforts toward **Pelikan** target both.)
+
+### The Read Pipeline Step-By-Step
+
+When you open the Twitter app:
+
+```
+1. Timeline Service receives GET /home_timeline
+2. ZREVRANGE timeline:{user_id} 0 19   ── Redis, ~1 ms
+3. For each tweet_id, fetch tweet body  ── Memcached batch GET, ~1 ms
+4. For each author, fetch user profile  ── Gizmoduck, often cached
+5. Apply read-time filters:
+     - Drop tweets from blocked/muted users
+     - Hide @-replies to people you don't follow
+     - Apply localization
+6. Merge in recent celebrity tweets (if any followees are celebrities)
+7. Optional: re-rank with ML (post-2016 algorithmic timeline)
+8. Return JSON
+```
+
+The **read-time filters** (block, mute, reply visibility) are applied at read because the user can change preferences without invalidating millions of timeline entries.
+
+### What Could Bite You In an Interview
+
+- **"Why not just always fanout-on-read?"** — Doesn't survive the read:write skew. Computing 600K reads/sec from cold storage means scanning every followee's recent tweets, joining, and sorting on every page load. Math doesn't work.
+- **"What's the consistency model?"** — Eventual. A reply may arrive in some users' timelines before the original tweet ("headless tweet" effect, especially when celebrities are involved). Twitter accepts this; it's a documented trade.
+- **"How do you handle a follower deletion (unfollow)?"** — Don't try to scrub the cache. Apply a **read-time filter** that drops tweets whose author no longer in the follow set. The sorted-set entry naturally falls off the 800-tweet cap soon.
+- **"What about the new user with zero history?"** — Cold-start path: pull from `tweets WHERE author_id IN (followees) ORDER BY id DESC LIMIT 800`, populate the Redis cache, and serve. A nightly job populates inactive users on demand.
+
+> **Sources for this section.** "How Twitter Uses Redis to Scale - 105TB RAM, 39MM QPS, 10,000+ Instances" (High Scalability summary of Yao Yue's QCon talk, 2014); Stackbit's "How would you build Twitter today" series; SystemDesignHandbook and TechInterview's Twitter breakdowns; "How Twitter caches timelines" (algonote, 2023). Specific thresholds (~10K-follower split) and active-user windows (30 days) are commonly cited in these analyses but Twitter itself has not published a single canonical number.
