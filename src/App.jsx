@@ -108,6 +108,7 @@ function TabSection({
       <NoteViewer
         noteFile={activeNote.noteFile}
         title={activeNote.title}
+        namespace={namespace}
         recordActivity={recordActivity}
         onClose={() => setActiveNote(null)}
       />

@@ -182,6 +182,7 @@ export default function Dashboard({
             onTopicSelect={(topicId) => onNavChange?.("categories", topicId)}
             recordActivity={recordActivity}
             viewed={viewed}
+            namespace={namespace}
           />
         )}
         {dashTab === "practice" && showPractice && (
@@ -194,6 +195,7 @@ export default function Dashboard({
             onTopicSelect={(topicId) => onNavChange?.("practice", topicId)}
             recordActivity={recordActivity}
             viewed={viewed}
+            namespace={namespace}
           />
         )}
       </div>

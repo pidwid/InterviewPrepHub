@@ -9,12 +9,15 @@ import InlinePractice, { getTopicNumFromNoteFile } from "./InlinePractice";
 export default function NoteViewer({
   noteFile,
   title,
+  namespace,
   recordActivity,
   onClose,
 }) {
   // Read cached content synchronously each render — instant for already-loaded
   // notes. The async path below populates the cache and triggers a re-render.
-  const cached = getContent(noteFile);
+  // The namespace hint disambiguates filenames that exist in both stores
+  // (e.g. README.md ships in both SystemDesign/ and LowLevelDesign/).
+  const cached = getContent(noteFile, namespace);
   const [fetched, setFetched] = useState(null);
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("notes");
@@ -32,12 +35,12 @@ export default function NoteViewer({
 
   // Lazy-load the markdown chunk on demand
   useEffect(() => {
-    if (getContent(noteFile)) return undefined;
+    if (getContent(noteFile, namespace)) return undefined;
     let cancelled = false;
     Promise.resolve()
       .then(() => {
         if (!cancelled) setLoading(true);
-        return loadContent(noteFile);
+        return loadContent(noteFile, namespace);
       })
       .then((md) => {
         if (!cancelled) {
@@ -48,7 +51,7 @@ export default function NoteViewer({
     return () => {
       cancelled = true;
     };
-  }, [noteFile]);
+  }, [noteFile, namespace]);
 
   const topicNum = getTopicNumFromNoteFile(noteFile);
   const hasQuestions =

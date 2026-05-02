@@ -133,6 +133,7 @@ function ContentPanel({
   recordActivity,
   markViewed,
   onNavigateNote,
+  namespace,
 }) {
   const [activeTab, setActiveTab] = useState("notes");
   const [fetched, setFetched] = useState(null);
@@ -150,7 +151,7 @@ function ContentPanel({
   // Also drives the reading progress bar.
   const targetFileForFetch = topic?.noteFile || topic?.solutionFile;
   // Re-run restore when content finishes loading (so DOM is tall enough)
-  const contentLoaded = !!getContent(targetFileForFetch);
+  const contentLoaded = !!getContent(targetFileForFetch, namespace);
   useEffect(() => {
     const el = scrollRef?.current;
     if (!el || !targetFileForFetch) return undefined;
@@ -192,17 +193,17 @@ function ContentPanel({
   // Lazy-load the markdown chunk for the selected topic
   useEffect(() => {
     if (!targetFileForFetch) return undefined;
-    if (getContent(targetFileForFetch)) return undefined;
+    if (getContent(targetFileForFetch, namespace)) return undefined;
     let cancelled = false;
     Promise.resolve()
-      .then(() => loadContent(targetFileForFetch))
+      .then(() => loadContent(targetFileForFetch, namespace))
       .then((md) => {
         if (!cancelled) setFetched({ file: targetFileForFetch, md });
       });
     return () => {
       cancelled = true;
     };
-  }, [targetFileForFetch]);
+  }, [targetFileForFetch, namespace]);
 
   if (!topic) {
     return (
@@ -219,7 +220,7 @@ function ContentPanel({
   const targetFile = topic.noteFile || topic.solutionFile;
   // Lazy-load markdown chunks. Cached hits are returned synchronously; the
   // first time a note is opened, fetched.md fills in after a re-render.
-  const cached = getContent(targetFile);
+  const cached = getContent(targetFile, namespace);
   const content =
     cached || (fetched?.file === targetFile ? fetched.md : null);
   const hasQuestions = topicHasQuestions(targetFile);
@@ -379,6 +380,7 @@ export default function SidebarLayout({
   onTopicSelect,
   recordActivity,
   viewed,
+  namespace,
 }) {
   const mainRef = useRef(null);
   const { getBookmark, setBookmark, hasBookmark } = useBookmarks();
@@ -683,6 +685,7 @@ export default function SidebarLayout({
           recordActivity={recordActivity}
           markViewed={viewed?.markViewed}
           onNavigateNote={handleNavigateNote}
+          namespace={namespace}
         />
       </main>
     </div>
