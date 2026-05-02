@@ -66,7 +66,7 @@ export default function ReviewQueue({
             key={item.id}
             type="button"
             className="st-topic st-topic--revise"
-            onClick={() => onOpenNote?.(item.id, item.noteFile, item.title)}
+            onClick={() => onOpenNote?.(item.id)}
             title="Open for review"
           >
             <span className="st-topic-dot st-topic-dot--revise">↻</span>
