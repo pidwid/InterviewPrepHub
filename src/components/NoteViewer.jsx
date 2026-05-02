@@ -89,7 +89,7 @@ export default function NoteViewer({
 
   return (
     <div className="note-viewer">
-      <ReadingProgress noteFile={noteFile} />
+      <ReadingProgress noteFile={noteFile} namespace={namespace} />
       <div className="note-viewer-header">
         <button
           className="back-btn"

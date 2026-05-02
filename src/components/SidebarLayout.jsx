@@ -155,7 +155,9 @@ function ContentPanel({
   useEffect(() => {
     const el = scrollRef?.current;
     if (!el || !targetFileForFetch) return undefined;
-    const saved = sessionStorage.getItem(`sb-scroll:${targetFileForFetch}`);
+    const saved = sessionStorage.getItem(
+      `sb-scroll:${namespace || "sd"}:${targetFileForFetch}`,
+    );
     const targetY = saved ? parseInt(saved, 10) : 0;
     // Wait for content + paint, then jump to saved position
     requestAnimationFrame(() => {
@@ -169,7 +171,10 @@ function ContentPanel({
         const max = el.scrollHeight - el.clientHeight;
         const y = el.scrollTop;
         setScrollPct(max > 0 ? Math.min(100, (y / max) * 100) : 0);
-        sessionStorage.setItem(`sb-scroll:${targetFileForFetch}`, String(y));
+        sessionStorage.setItem(
+          `sb-scroll:${namespace || "sd"}:${targetFileForFetch}`,
+          String(y),
+        );
         ticking = false;
       });
     };
@@ -383,7 +388,25 @@ export default function SidebarLayout({
   namespace,
 }) {
   const mainRef = useRef(null);
-  const { getBookmark, setBookmark, hasBookmark } = useBookmarks();
+  const {
+    getBookmark: getBookmarkRaw,
+    setBookmark: setBookmarkRaw,
+    hasBookmark: hasBookmarkRaw,
+  } = useBookmarks();
+  // Pre-bind the current namespace into the bookmark API so all downstream
+  // call sites just see (noteFile, headingId) and namespace is invisible.
+  const getBookmark = useCallback(
+    (noteFile) => getBookmarkRaw(noteFile, namespace),
+    [getBookmarkRaw, namespace],
+  );
+  const setBookmark = useCallback(
+    (noteFile, headingId) => setBookmarkRaw(noteFile, headingId, namespace),
+    [setBookmarkRaw, namespace],
+  );
+  const hasBookmark = useCallback(
+    (noteFile) => hasBookmarkRaw(noteFile, namespace),
+    [hasBookmarkRaw, namespace],
+  );
   const [activeTopic, setActiveTopic] = useState(null);
   const [expandedCats, setExpandedCats] = useState(() => {
     // Start with first category expanded

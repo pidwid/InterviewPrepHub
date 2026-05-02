@@ -2,23 +2,29 @@ import { useEffect, useState } from "react";
 
 // Thin top-of-screen progress bar that tracks reading position.
 // Also persists scroll position per note so refresh resumes where you left off.
-export default function ReadingProgress({ noteFile }) {
+//
+// The sessionStorage key is namespaced (`note-scroll:${ns}:${noteFile}`) so
+// shared filenames like README.md don't share scroll position across the
+// SD and LLD tabs.
+export default function ReadingProgress({ noteFile, namespace }) {
   const [pct, setPct] = useState(0);
+  const ns = namespace || "sd";
+  const storageKey = noteFile ? `note-scroll:${ns}:${noteFile}` : null;
 
   // Restore previous scroll position on note open
   useEffect(() => {
-    if (!noteFile) return;
-    const saved = sessionStorage.getItem(`note-scroll:${noteFile}`);
+    if (!storageKey) return;
+    const saved = sessionStorage.getItem(storageKey);
     if (saved) {
       const y = parseInt(saved, 10);
       // Wait for content to render before scrolling
       requestAnimationFrame(() => window.scrollTo(0, y));
     }
-  }, [noteFile]);
+  }, [storageKey]);
 
   // Track scroll → update progress bar + persist position
   useEffect(() => {
-    if (!noteFile) return;
+    if (!storageKey) return;
     let ticking = false;
     const onScroll = () => {
       if (ticking) return;
@@ -27,14 +33,14 @@ export default function ReadingProgress({ noteFile }) {
         const max = document.documentElement.scrollHeight - window.innerHeight;
         const y = window.scrollY;
         setPct(max > 0 ? Math.min(100, (y / max) * 100) : 0);
-        sessionStorage.setItem(`note-scroll:${noteFile}`, String(y));
+        sessionStorage.setItem(storageKey, String(y));
         ticking = false;
       });
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
     return () => window.removeEventListener("scroll", onScroll);
-  }, [noteFile]);
+  }, [storageKey]);
 
   if (!noteFile) return null;
 
