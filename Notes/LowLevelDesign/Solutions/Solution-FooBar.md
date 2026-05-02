@@ -106,3 +106,13 @@ class FooBar {
 ```
 
 *Note: While `wait/notify` is perfectly valid, using `Semaphore` is usually considered the cleanest and most readable solution for strict alternation problems.*
+
+---
+
+## Sources / Cross-Refs
+- LeetCode #1115 — *Print FooBar Alternately*: https://leetcode.com/problems/print-foobar-alternately/
+- Edsger W. Dijkstra — *Cooperating Sequential Processes* (EWD123, 1965) — the original semaphore paper.
+- Brian Goetz et al. — *Java Concurrency in Practice* (2006), Ch. 5 §5.5 (`Semaphore`).
+- Java API docs — `java.util.concurrent.Semaphore`: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/Semaphore.html
+- LLD-09 Concurrency, LLD-12 Concurrency Deep Dive (this repo).
+- Solution-FizzBuzz.md, Solution-Zero-Even-Odd.md, Solution-H2O.md (sister concurrency problems).

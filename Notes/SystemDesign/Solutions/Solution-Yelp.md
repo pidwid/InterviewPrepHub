@@ -122,3 +122,13 @@ Because our read-to-write ratio is incredibly skewed (100k reads vs 0.01 writes 
 2. We map 2D coordinates to 1D strings using **Geohashes** so they can be indexed via standard B-Trees.
 3. Business creations happen on a Master RDBMS and are asynchronously replicated to a fleet of read replicas.
 4. High-velocity searches hit an in-memory spatial cache (like Redis GEO commands) to instantly find nearby `place_id`s, followed by fetching the rich metadata from the read replica fleet.
+
+---
+
+## Sources / Cross-Refs
+- *Alex Xu — System Design Interview* (Vol. 2, 2022), Ch. 3 ("Proximity Service").
+- Redis — Geospatial commands (`GEOADD`, `GEORADIUS`/`GEOSEARCH`): https://redis.io/docs/data-types/geospatial/
+- Uber H3 (hexagonal grid) and Google S2 (spherical cells) — spatial indexing libraries: https://h3geo.org/ , https://s2geometry.io/
+- *Spatial Databases: With Application to GIS* (Rigaux, Scholl, Voisard, 2002) — quadtree / R-tree foundation.
+- 27-Proximity-Location-Services.md, 11-Databases.md (this repo).
+- Solution-Uber.md, Solution-Google-Maps.md (sister geospatial systems).

@@ -133,3 +133,11 @@ If you used a standard `Executors.newFixedThreadPool(4)` and submitted the left 
 
 **Work-Stealing Algorithm:**
 `ForkJoinPool` is designed so that when a thread calls `join()`, instead of going to sleep, it actively looks at other queues and "steals" their sub-tasks to process, ensuring that CPU cores are constantly doing useful work and never deadlocking during recursive splits.
+---
+
+## Sources / Cross-Refs
+- John von Neumann — *First Draft of a Report on the EDVAC* (1945) — the original merge-sort.
+- *Introduction to Algorithms* (Cormen et al., 4e), Ch. 2 §2.3 ("Designing algorithms" — merge sort) and §27 (Multithreaded algorithms).
+- Doug Lea — *A Java Fork/Join Framework* (2000): https://gee.cs.oswego.edu/dl/papers/fj.pdf
+- Java API docs — `ForkJoinPool` & `RecursiveTask`: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/ForkJoinPool.html
+- LLD-09 Concurrency, LLD-12 Concurrency Deep Dive (this repo).

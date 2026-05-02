@@ -282,3 +282,13 @@ End-to-end target: **~100-200 ms** from request to fully-ranked feed page.
 - **"How do you train these models?"** — Logged user interactions become labels: did they engage with rank-N post or scroll past it? Train on click/share/save labels, deploy via A/B-tested rollout, monitor offline metrics (NDCG) and online metrics (session length, return visits) in parallel.
 
 > **Sources for this section.** Meta Transparency Center: "Instagram Feed AI system" and "Instagram Explore AI system" pages (the only authoritative source on the actual pipeline). Instagram's official "Instagram Ranking Explained" blog (about.instagram.com). Adam Mosseri's January 2025 ranking-signals statements as summarized in industry analyses (Later, Buffer, Sprout Social, Dataslayer). Specific weights, model architectures, and exact thresholds are not publicly disclosed and change frequently.
+
+---
+
+## Sources / Cross-Refs
+- Meta Transparency Center — *Instagram Feed AI system*: https://transparency.meta.com/features/explaining-ranking/ig-feed/
+- Meta Transparency Center — *Instagram Explore AI system*: https://transparency.meta.com/features/explaining-ranking/ig-explore/
+- Instagram official blog — *Shedding More Light on How Instagram Works*: https://about.instagram.com/blog/announcements/shedding-more-light-on-how-instagram-works
+- Adam Mosseri (Head of Instagram) — periodic ranking-signal updates on @mosseri (Instagram & Threads).
+- 38-ML-System-Design.md, 12-Caching.md (this repo).
+- Solution-TikTok.md, Solution-News-Feed.md, Solution-Recommendation.md (sister feed/recommendation systems).

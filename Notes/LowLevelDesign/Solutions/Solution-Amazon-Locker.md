@@ -166,3 +166,11 @@ public class ExpirationService {
 ### 4. Handling Driver Drop-off (Multi-item)
 A single driver often brings 20 packages to a 7-Eleven at once.
 Instead of making the driver scan a package, wait for a door to pop, put it in, shut it, scan the next... the UI allows them to scan all 20 packages rapidly. The system runs the `assignCompartment` loop for all 20, and pops 20 doors open simultaneously, allowing the driver to rapid-fire load the wall. The state locks when the physical door hinge sensor reports "closed".
+---
+
+## Sources / Cross-Refs
+- Amazon Hub Locker public docs: https://www.amazon.com/b?node=6442600011
+- LLD-06 Creational Patterns (Factory for compartment sizes).
+- LLD-08 Behavioral Patterns (State for reservation lifecycle).
+- Solution-Parking-Lot.md (sister "best-fit slot allocation" problem).
+- Solution-Inventory.md (capacity tracking).

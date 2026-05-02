@@ -106,3 +106,11 @@ Instead, we must measure **CPU Time** (the exact number of CPU cycles consumed b
 2. Code execution happens entirely asynchronously on specialized Worker Nodes.
 3. Untrusted security threats are neutralized using OS-level virtualization (**Docker/Micro-VMs**) paired with strict kernel guardrails (**cgroups** for memory/CPU capping and **seccomp** for blocking malicious system calls).
 4. Fairness is guaranteed by utilizing lowest-level OS metrics to calculate exact CPU execution time rather than real-world wall time.
+---
+
+## Sources / Cross-Refs
+- Linux kernel — `cgroups` and `seccomp` documentation: https://www.kernel.org/doc/Documentation/cgroup-v2.txt , https://www.kernel.org/doc/html/latest/userspace-api/seccomp_filter.html
+- Google gVisor — application-kernel sandbox: https://gvisor.dev/docs/
+- AWS Firecracker (microVM technology behind Lambda): https://firecracker-microvm.github.io/
+- Codeforces / LeetCode public posts on judge architecture (developer Q&A blogs).
+- 13-Asynchronism.md, 18-Distributed-Systems.md, 22-Containers-Orchestration.md (this repo).

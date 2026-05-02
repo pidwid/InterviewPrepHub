@@ -115,3 +115,11 @@ For e-commerce, it's recommended to have a central **Order Orchestrator** servic
 3. The shopping cart acts as a transient, highly available Key-Value store mapped to user sessions.
 4. The checkout pipeline aggressively enforces **Strong Consistency** utilizing RDBMS row-level locking (Pessimistic concurrency) and Distributed Sagas to prevent double-spending and overselling inventory.
 5. All checkout API endpoints are wrapped in strict **Idempotency** guarantees to protect the financial transaction boundary.
+---
+
+## Sources / Cross-Refs
+- Werner Vogels (Amazon CTO) — *Amazon's Dynamo Paper* (SOSP 2007) and *Eventually Consistent* (CACM 2009) — the foundational shopping-cart use case.
+- Amazon — *Service-Oriented Architecture* origins: Steve Yegge's leaked Google+ post (2011) summarizing Amazon's "all teams expose data through service interfaces" mandate.
+- *Designing Data-Intensive Applications* (Kleppmann, 2017), Ch. 7 (Transactions) and Ch. 12 (Future of Data Systems).
+- 11-Databases.md, 12-Caching.md, 17-Rate-Limiting.md, 18-Distributed-Systems.md (this repo).
+- Solution-Hotel-Booking.md, Solution-Payment-System.md (related transaction-heavy designs).

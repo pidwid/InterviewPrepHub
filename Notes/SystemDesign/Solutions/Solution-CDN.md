@@ -311,3 +311,13 @@ Push CDN:
 3. **Cache-Control headers** and **stale-while-revalidate** enable fine-grained caching policies without CDN configuration changes.
 4. **Purge propagation** via a message queue ensures cache invalidation reaches all 200+ PoPs within seconds.
 5. **Origin shielding** collapses cache misses from hundreds of PoPs into a handful of requests to the origin, reducing origin load by orders of magnitude.
+
+---
+
+## Sources / Cross-Refs
+- Akamai Tech Center — *Akamai's Network Architecture* whitepapers: https://www.akamai.com/resources/research-paper
+- Cloudflare blog — *How Cloudflare's Anycast network works*: https://blog.cloudflare.com/a-brief-anycast-primer/
+- Netflix Tech Blog — *Open Connect*: https://openconnect.netflix.com/
+- Erik Nygren et al. — *The Akamai Network: A Platform for High-Performance Internet Applications* (ACM SIGOPS OSR, 2010).
+- 07-Content-Delivery-Networks.md, 48-Edge-Computing.md (this repo).
+- Solution-Video-Streaming.md, Solution-TikTok.md, Solution-Spotify.md (CDN-heavy systems).

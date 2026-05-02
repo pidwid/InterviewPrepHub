@@ -392,3 +392,13 @@ Optimization:
 - **Real-time updates** — When a friendship is created/deleted, invalidate affected caches
 - **Graph databases** — Neo4j, Amazon Neptune, TigerGraph are purpose-built for these queries
 - **Six degrees of separation** — Research shows average path length in social networks is ~4.7 (Facebook data)
+
+---
+
+## Sources / Cross-Refs
+- Lars Backstrom et al. — *Four Degrees of Separation* (Facebook research, 2012) — the cited 4.7-hop figure.
+- Facebook Engineering — *TAO: Facebook's Distributed Data Store for the Social Graph* (USENIX ATC 2013).
+- LinkedIn Engineering — *Building the LinkedIn Knowledge Graph*: https://engineering.linkedin.com/blog/2016/10/building-the-linkedin-knowledge-graph
+- Neo4j Cypher manual: https://neo4j.com/docs/cypher-manual/current/
+- 40-Graph-Databases-Social-Graphs.md (this repo).
+- Solution-Twitter-Timeline.md, Solution-Instagram.md, Solution-LinkedIn.md (related social systems).

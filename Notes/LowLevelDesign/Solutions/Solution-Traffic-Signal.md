@@ -153,3 +153,10 @@ public class TrafficController {
 If the intersection has complex left-turn logic and pedestrian phases, an infinite `run()` loop gets messy. The **State Pattern** can model the intersection's phase.
 States: `NorthSouthGreenState`, `NorthSouthYellowState`, `EastWestGreenState`.
 The `TrafficController` simply calls `currentState.handleTimeout(this)` which automatically switches the machine to the next state and resets the timer.
+---
+
+## Sources / Cross-Refs
+- Roger P. Roess et al. — *Traffic Engineering* (5th ed., 2019), Ch. 16 (Signalized Intersection Design) — Webster's optimal cycle-length formula.
+- LLD-08 Behavioral Patterns (State for intersection phases; Observer for vehicle-detection sensors).
+- LLD-06 Creational Patterns (Singleton for the controller).
+- Solution-Home-Automation.md (sister event-driven controller design).

@@ -123,3 +123,12 @@ If a Cache Node crashes, we lose its fraction of the ring. While Consistent Hash
 2. **Consistent Hashing with Virtual Nodes** is used to deterministically route keys to a specific horizontal shard without needing a central lookup table, surviving node scale-ups and scale-downs gracefully.
 3. Internally, each node uses a memory-mapped Hash Table bound to a Doubly Linked List to support O(1) **LRU Eviction**.
 4. Every node has automated synchronous/asynchronous Replicas. Heartbeat (Gossip) protocols detect failures and execute leader election to maintain high availability.
+---
+
+## Sources / Cross-Refs
+- Rajesh Nishtala et al. — *Scaling Memcache at Facebook* (NSDI 2013).
+- Berk Atikoglu et al. — *Workload Analysis of a Large-Scale Key-Value Store* (SIGMETRICS 2012, Facebook Memcached study).
+- Redis Cluster spec: https://redis.io/docs/management/scaling/
+- Memcached source & architecture notes: https://github.com/memcached/memcached/wiki
+- 12-Caching.md, 43-Consistent-Hashing.md (this repo).
+- Solution-Consistent-Hashing.md (the routing primitive).

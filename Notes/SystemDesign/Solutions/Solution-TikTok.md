@@ -111,3 +111,11 @@ The backend architecture is only half the battle. To achieve "instant start" whe
 2. An asynchronous pipeline (Message Queue + Worker Nodes) chunks, transcodes, and compresses the video into various formats suited for streaming.
 3. Heavy ML models constantly analyze aggregate user interaction streams to pre-compute and cache a unique list of recommended video IDs for every active user in Redis.
 4. Clients request batches of metadata from the Feed API, and aggressively pre-fetch video chunks directly from Edge CDNs to guarantee zero-latency swiping.
+---
+
+## Sources / Cross-Refs
+- ByteDance / TikTok Engineering — Monolith (their recommendation system, OSDI 2022 paper): https://arxiv.org/abs/2209.07663
+- Eugene Wei — *TikTok and the Sorting Hat* (analytical essay on the discovery algorithm, 2020): https://www.eugenewei.com/blog/2020/8/3/tiktok-and-the-sorting-hat
+- Apple HLS spec — IETF RFC 8216: https://datatracker.ietf.org/doc/html/rfc8216
+- 07-Content-Delivery-Networks.md, 38-ML-System-Design.md (this repo).
+- Solution-Video-Streaming.md, Solution-Instagram.md, Solution-Recommendation.md (related systems).

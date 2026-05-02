@@ -403,3 +403,11 @@ Client ──▶ API Gateway (Auth, Rate Limit, TLS)
 - **Data export** — CSV/PDF export for tax preparation
 - **Multi-currency** — Exchange rate conversion for international accounts
 - **Offline access** — Cache recent data on device for viewing without connectivity
+
+---
+
+## Sources / Cross-Refs
+- Plaid API docs — bank-account aggregation (the canonical Mint replacement provider): https://plaid.com/docs/
+- *Designing Data-Intensive Applications* (Kleppmann, 2017), Ch. 11 (Stream Processing) — for transaction-stream categorization.
+- 11-Databases.md, 13-Asynchronism.md, 19-Event-Driven-Architecture.md (this repo).
+- Solution-Payment-System.md (related financial-data design).

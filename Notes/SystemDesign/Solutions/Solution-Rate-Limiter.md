@@ -345,3 +345,13 @@ Client ──▶ LB ──▶ Rate Limiter Middleware ──▶ API Servers
 - **Client best practices** — Use client cache, add backoff retry logic, handle 429 gracefully
 - **Rate limiting by different dimensions** — per user, per IP, per API key, per endpoint, global
 - **Graceful degradation** — If Redis goes down, allow all traffic (fail open) vs reject all (fail closed)
+
+---
+
+## Sources / Cross-Refs
+- *Alex Xu — System Design Interview* (Vol. 1, 2020), Ch. 4 ("Design a Rate Limiter").
+- Stripe Engineering — *Scaling your API with rate limiters*: https://stripe.com/blog/rate-limiters
+- Cloudflare blog — distributed counting and rate limiting: https://blog.cloudflare.com/counting-things-a-lot-of-different-things/
+- IETF *RateLimit Header Fields for HTTP* draft: https://datatracker.ietf.org/doc/draft-ietf-httpapi-ratelimit-headers/
+- 17-Rate-Limiting.md (this repo, algorithm comparison).
+- Solution-API-Rate-Limiter.md (LLD counterpart).

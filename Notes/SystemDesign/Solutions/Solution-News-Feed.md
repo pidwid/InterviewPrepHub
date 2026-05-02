@@ -330,3 +330,12 @@ Client ──▶ LB ──▶ Web Servers
 - **Pagination** — Cursor-based (not offset-based) for consistency during concurrent writes
 - **A/B testing** — Serve different ranking models to different users
 - **Feed diversity** — Avoid showing too many posts from the same author
+
+---
+
+## Sources / Cross-Refs
+- *Alex Xu — System Design Interview* (Vol. 1, 2020), Ch. 11 ("Design a News Feed System").
+- Facebook Engineering — *Scaling the Facebook News Feed* (talks & blog posts at engineering.fb.com).
+- *Designing Data-Intensive Applications* (Kleppmann, 2017), Ch. 1 (introduces fan-out-on-write vs fan-out-on-read using Twitter as the example).
+- 12-Caching.md, 13-Asynchronism.md, 45-Read-Heavy-vs-Write-Heavy.md (this repo).
+- Solution-Twitter-Timeline.md, Solution-Instagram.md (sister feed designs).

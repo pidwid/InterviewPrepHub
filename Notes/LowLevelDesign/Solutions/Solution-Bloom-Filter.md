@@ -141,3 +141,11 @@ public class ConcurrentBloomFilter {
 By using an array of Atomic Longs, we rely purely on CPU-level Compare-And-Swap (CAS) instructions. This operates entirely Lock-Free. 
 1. 100 threads can call `add()` on 100 different strings simultaneously.
 2. Even if Thread A and Thread B both hash to index `44` and both need to update `AtomicLong[0]`, the `compareAndSet` loop ensures that one thread updates it, and the other thread immediately retries the OR operation against the new value, enforcing atomic updates without a single `synchronized` block anywhere in the class.
+---
+
+## Sources / Cross-Refs
+- Burton H. Bloom — *Space/Time Trade-offs in Hash Coding with Allowable Errors* (CACM, July 1970) — the original paper.
+- Andrei Broder & Michael Mitzenmacher — *Network Applications of Bloom Filters: A Survey* (2004).
+- Google Guava — `BloomFilter` reference implementation: https://github.com/google/guava/blob/master/guava/src/com/google/common/hash/BloomFilter.java
+- Java API docs — `AtomicLongArray`: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/atomic/AtomicLongArray.html
+- Solution-Truecaller.md (uses Bloom filter for fast spam check), Solution-URL-Shortener.md (Bloom filter for collision check).

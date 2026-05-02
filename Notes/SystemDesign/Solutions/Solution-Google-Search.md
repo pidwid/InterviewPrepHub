@@ -130,3 +130,12 @@ The `Ranking Service` takes the 50 million matching docs, calculates `Score = (T
 2. An asynchronous **MapReduce pipeline** processes the raw HTML, building a massive **Inverted Index** and a Link Graph.
 3. The Inverted Index is **Document-Sharded** across thousands of machines. 
 4. The Online Query API uses **Scatter-Gather** to broadcast the user's words to all index shards, intersect the matching documents, apply a **Ranking Algorithm**, and return the top 10 results, backed by a massive memory cache to absorb repeated identical queries.
+---
+
+## Sources / Cross-Refs
+- Sergey Brin & Larry Page — *The Anatomy of a Large-Scale Hypertextual Web Search Engine* (WWW 1998) — the foundational paper covering crawler, indexer, and PageRank.
+- Jeffrey Dean & Sanjay Ghemawat — *MapReduce: Simplified Data Processing on Large Clusters* (OSDI 2004) — the framework Google built its index on.
+- Sanjay Ghemawat et al. — *The Google File System* (SOSP 2003).
+- *Introduction to Information Retrieval* (Manning, Raghavan, Schütze, 2008) — TF-IDF, inverted indexes, ranking.
+- 28-Search-Systems.md (this repo).
+- Solution-Web-Crawler.md (the crawl side).

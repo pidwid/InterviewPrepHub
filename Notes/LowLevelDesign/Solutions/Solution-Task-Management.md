@@ -169,3 +169,9 @@ public class WorkflowManager {
     }
 }
 ```
+---
+
+## Sources / Cross-Refs
+- Atlassian Jira public data model — issue, transition, workflow: https://developer.atlassian.com/cloud/jira/platform/rest/v3/intro/
+- LLD-08 Behavioral Patterns (State machine for `TODO → IN_PROGRESS → DONE`, Strategy for permission checks).
+- Solution-Jira.md (deeper Jira-specific design), Solution-Logistics.md (state-machine pattern reuse).

@@ -86,3 +86,12 @@ You don't actually build a circular linked list. The ring is typically implement
 
 ### Summary
 Consistent caching solves horizontal scalability for stateful datastores. By mapping keys and servers onto a circular keyspace and using Virtual Nodes (V-Nodes) for uniform distribution, we guarantee that resizing the cluster results in the absolute mathematical minimum `k/N` amount of data movement.
+---
+
+## Sources / Cross-Refs
+- David Karger et al. — *Consistent Hashing and Random Trees: Distributed Caching Protocols for Relieving Hot Spots on the World Wide Web* (STOC 1997) — the original paper.
+- Giuseppe DeCandia et al. — *Dynamo: Amazon's Highly Available Key-value Store* (SOSP 2007) — virtual nodes (vNodes) in production.
+- Apache Cassandra docs — Token ring & vnodes: https://cassandra.apache.org/doc/latest/cassandra/architecture/dynamo.html
+- Discord Engineering — *How Discord scaled Elixir to 5,000,000 concurrent users*: https://discord.com/blog/how-discord-scaled-elixir-to-5-000-000-concurrent-users
+- 43-Consistent-Hashing.md (this repo).
+- Solution-Distributed-Cache.md, Solution-Key-Value-Store.md (consumers of consistent hashing).

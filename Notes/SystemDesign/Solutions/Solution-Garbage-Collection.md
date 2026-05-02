@@ -353,3 +353,12 @@ Solution: Write Barrier + Remembered Set
 3. **Mark-Compact or region-based (G1)** for the Old Generation balances throughput with manageable pause times.
 4. **Concurrent phases** (mark, sweep, relocate) run alongside application threads to minimize stop-the-world pauses.
 5. **Write barriers and remembered sets** enable efficient cross-generational reference tracking without scanning the entire heap.
+
+---
+
+## Sources / Cross-Refs
+- Richard Jones, Antony Hosking, Eliot Moss — *The Garbage Collection Handbook: The Art of Automatic Memory Management* (2nd ed., 2023).
+- John McCarthy — *Recursive Functions of Symbolic Expressions and Their Computation by Machine* (CACM 1960) — first description of GC (for Lisp).
+- HotSpot G1, ZGC, Shenandoah documentation: https://docs.oracle.com/en/java/javase/17/gctuning/
+- Go runtime — *Getting to Go: The Journey of Go's Garbage Collector* (Rick Hudson, 2018): https://go.dev/blog/ismmkeynote
+- 18-Distributed-Systems.md (this repo).

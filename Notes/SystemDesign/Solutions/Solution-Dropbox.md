@@ -131,3 +131,12 @@ What happens if User A edits `report.docx` offline on their laptop, and *also* e
 5. The Metadata Service triggers the WebSocket Notification Service.
 6. The Notification Service alerts the user's other online devices.
 7. Those devices immediately fetch the new metadata and subsequently download the missing chunks from S3 to silently reconstruct the file in the background.
+---
+
+## Sources / Cross-Refs
+- Idilio Drago et al. — *Inside Dropbox: Understanding Personal Cloud Storage Services* (IMC 2012) — first independent measurement study.
+- Dropbox Tech Blog — *Magic Pocket: Dropbox's exabyte-scale storage system*: https://dropbox.tech/infrastructure/inside-the-magic-pocket
+- AWS S3 Multipart Upload docs: https://docs.aws.amazon.com/AmazonS3/latest/userguide/mpuoverview.html
+- Andrew Tridgell — *The rsync algorithm* (1996) — chunk-based delta sync foundation.
+- 29-Blob-Object-Storage.md, 13-Asynchronism.md (this repo).
+- Solution-Google-Docs.md (collaborative-edit cousin).

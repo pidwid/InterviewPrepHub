@@ -115,3 +115,12 @@ When you are driving, the route sometimes flashes "We found a faster route, save
 2. **Hierarchical Pathfinding algorithms** (like A* on Contraction Hierarchies) ignore local streets in favor of highways for middle segments to guarantee < 200ms route generation.
 3. A massive data-streaming pipeline acts as a feedback loop, aggregating live GPS pings from millions of phones to dynamically update the Graph's Edge Weights (traffic conditions).
 4. For efficiency, dynamic re-routing calculations are often offloaded partially to the edge device (phone), triggered by pub/sub traffic anomaly alerts pushed from the server.
+---
+
+## Sources / Cross-Refs
+- Edsger W. Dijkstra — *A Note on Two Problems in Connexion with Graphs* (Numerische Mathematik, 1959) — Dijkstra's shortest path.
+- Robert Geisberger et al. — *Contraction Hierarchies: Faster and Simpler Hierarchical Routing in Road Networks* (WEA 2008) — the algorithm behind real navigation systems.
+- Hannah Bast et al. — *Route Planning in Transportation Networks* (Microsoft Research TR, 2015) — comprehensive survey.
+- Google S2 spherical cell index: https://s2geometry.io/
+- 27-Proximity-Location-Services.md (this repo).
+- Solution-Uber.md (sister real-time location service).

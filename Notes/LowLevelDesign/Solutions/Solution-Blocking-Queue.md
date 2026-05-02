@@ -146,3 +146,12 @@ public class OptimalBlockingQueue<T> {
 1. **Explain the `while` loop:** Always use `while (condition) wait();` instead of `if (condition) wait();`. The OS can sometimes wake threads up for no reason (Spurious Wakeup). If using an `if`, the thread would proceed to pop from an empty queue and throw an Exception. The `while` loop forces it to re-check the condition upon waking.
 2. **Explain `finally`:** If an Exception occurs inside the `try` block, the thread crashes. If you don't use `finally { lock.unlock(); }`, the crashed thread takes the lock to its grave, and the queue is permanently deadlocked forever.
 3. **Contrast `notifyAll()` vs `signal()`:** Highlight your knowledge of efficiency by explaining that using segmented `Condition` variables prevents the Thundering Herd.
+
+---
+
+## Sources / Cross-Refs
+- Brian Goetz et al. — *Java Concurrency in Practice* (2006), Ch. 5 §5.3 ("Blocking Queues and the Producer-Consumer Pattern") and Ch. 14 (Building Custom Synchronizers).
+- OpenJDK source — `java.util.concurrent.ArrayBlockingQueue` & `LinkedBlockingQueue` (uses `ReentrantLock` + two `Condition` variables — `notEmpty`, `notFull`).
+- Java API docs — `BlockingQueue`: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/BlockingQueue.html
+- LLD-12 Concurrency Deep Dive (this repo) — wait/notify, spurious wakeup, monitor pattern.
+- Solution-Producer-Consumer.md, Solution-Pub-Sub.md (callers of this primitive).

@@ -146,3 +146,11 @@ The elevator car's physical display showing "Floor 4... Floor 5..." needs to upd
 The `ElevatorCar` acts as the Subject.
 The `FloorDisplay` objects on every single floor act as Observers.
 When `currentFloor` changes, the Car triggers `notifyObservers(currentFloor)`, updating the LCD screens instantly.
+---
+
+## Sources / Cross-Refs
+- LIFT/SCAN scheduling algorithms (analogous to disk-arm scheduling) — *Operating System Concepts* (Silberschatz, Galvin, Gagne, 10e), Ch. 11.5 ("Disk Scheduling").
+- ASME A17.1 — *Safety Code for Elevators and Escalators* (industry-standard physical safety constraints).
+- LLD-08 Behavioral Patterns (Strategy for scheduling, State for car direction, Observer for floor display).
+- LLD-12 Concurrency Deep Dive (request-queue producer/consumer).
+- Solution-Task-Scheduler.md (related scheduling problem), Solution-Traffic-Signal.md (sister real-time controller).

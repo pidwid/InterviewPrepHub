@@ -93,3 +93,12 @@ Leetcode provides the `IntConsumer printNumber` parameter. It is a functional in
 
 ### Why is Semaphore better than `wait/notify` here?
 To do this with `wait/notify`, you only have one monitor lock (the `this` object). When `zero()` finishes, it must call `notifyAll()` to wake up *both* the Even and Odd threads, because it cannot selectively `notify()` just one specific thread. The wrong thread will wake up, evaluate a `while` condition, and go back to sleep. This causes unnecessary CPU usage (Thundering Herd). Semaphores avoid this entirely by targeting the specific blocked thread.
+
+---
+
+## Sources / Cross-Refs
+- LeetCode #1116 — *Print Zero Even Odd*: https://leetcode.com/problems/print-zero-even-odd/
+- Java API docs — `java.util.concurrent.Semaphore`: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/Semaphore.html
+- Brian Goetz et al. — *Java Concurrency in Practice* (2006), Ch. 5 §5.5.3 (Semaphore as a counting permit).
+- LLD-09 Concurrency, LLD-12 Concurrency Deep Dive (this repo).
+- Solution-FooBar.md, Solution-FizzBuzz.md, Solution-H2O.md (sister concurrency problems).

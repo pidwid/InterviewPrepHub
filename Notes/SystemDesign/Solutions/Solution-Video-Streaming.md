@@ -440,3 +440,13 @@ Metadata Flow:
 - **Subtitles/captions** — Auto-generate with speech-to-text (Whisper), store as WebVTT files
 - **Analytics** — Video engagement: watch time, completion rate, re-watches, buffer ratio
 - **Multi-audio tracks** — Netflix: multiple language audio tracks per video
+
+---
+
+## Sources / Cross-Refs
+- *Alex Xu — System Design Interview* (Vol. 1, 2020), Ch. 14 ("Design YouTube").
+- Netflix Tech Blog — Open Connect (their custom CDN): https://openconnect.netflix.com/
+- Apple HLS spec — IETF RFC 8216: https://datatracker.ietf.org/doc/html/rfc8216
+- MPEG-DASH — ISO/IEC 23009-1: https://www.iso.org/standard/79329.html
+- 07-Content-Delivery-Networks.md, 29-Blob-Object-Storage.md (this repo).
+- Solution-TikTok.md, Solution-Live-Streaming.md, Solution-Spotify.md (related streaming systems).

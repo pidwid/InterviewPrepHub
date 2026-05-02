@@ -214,3 +214,12 @@ For "B runs after A succeeds":
 - How do you guarantee **at-most-once vs at-least-once**? → Idempotency tokens; the scheduler is at-least-once by default.
 - How would you scale to 100M scheduled tasks? → Hierarchical timing wheels (Kafka/Netty) — O(1) insert, no heap.
 - How do you handle **graceful shutdown**? → Stop accepting new submits → drain in-flight → snapshot heap to disk → restore on restart.
+
+---
+
+## Sources / Cross-Refs
+- Quartz Scheduler reference: https://www.quartz-scheduler.org/documentation/
+- Java API docs — `ScheduledThreadPoolExecutor` / `DelayQueue`: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/ScheduledThreadPoolExecutor.html
+- George Varghese & Anastasios Lauck — *Hashed and Hierarchical Timing Wheels* (SOSP 1987) — the O(1) timer data structure used by Kafka & Netty.
+- LLD-08 Behavioral Patterns (Command pattern for tasks).
+- Solution-Thread-Pool.md, Solution-Notification-Throttler.md (related schedulers).

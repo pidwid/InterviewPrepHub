@@ -303,3 +303,12 @@ Load Balancer ──▶ API Servers (stateless, auto-scaled)
 - **Search** — if paste titles are searchable, use Elasticsearch for full-text search
 - **Abuse prevention** — content scanning for malware/spam, CAPTCHA for anonymous users
 - **API rate limiting** — protect against bulk paste creation attacks
+
+---
+
+## Sources / Cross-Refs
+- *System Design Primer* (Donne Martin) — Pastebin solution: https://github.com/donnemartin/system-design-primer/tree/master/solutions/system_design/pastebin
+- *Designing Data-Intensive Applications* (Martin Kleppmann, 2017), Ch. 1 (Reliability/Scalability/Maintainability) and Ch. 7 (Transactions).
+- AWS S3 docs — pre-signed URLs and object lifecycle policies: https://docs.aws.amazon.com/AmazonS3/latest/userguide/ShareObjectPreSignedURL.html
+- Solution-URL-Shortener.md (sister design, base-62 encoding & ID generation).
+- 11-Databases.md, 12-Caching.md, 26-Unique-ID-Generation.md, 29-Blob-Object-Storage.md (this repo).

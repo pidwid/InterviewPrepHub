@@ -386,3 +386,13 @@ A useful rule of thumb for senior interviews:
 - **Availability target: 99.99%** for redirects (52 min/year), **99.9%** for create (8.76 h/year — reasonable since create is a less-critical path)
 
 > **Sources for this section.** Bitly's engineering blog (architecture & Kafka pipeline references), Hello Interview "Design a URL Shortener Like Bitly" breakdown, Designgurus / SystemDesignSchool / GeeksForGeeks URL-shortener guides. Specific numbers (3 TB / 70 GB / 8K rps) are illustrative interview targets — not Bitly internal figures, which are not publicly disclosed beyond the **~10B clicks/month** figure.
+
+---
+
+## Sources / Cross-Refs
+- Bitly Engineering blog — architecture posts: https://bitly.com/blog/category/engineering/
+- *Alex Xu — System Design Interview* (Vol. 1, 2020), Ch. 8 ("Design a URL Shortener").
+- Twitter Snowflake (the canonical distributed-ID generator referenced for short codes): https://github.com/twitter-archive/snowflake/tree/snowflake-2010
+- Base62/Base64 encoding background — RFC 4648: https://datatracker.ietf.org/doc/html/rfc4648
+- 26-Unique-ID-Generation.md, 11-Databases.md, 12-Caching.md (this repo).
+- Solution-Pastebin.md (sister "shortcode → blob" design).

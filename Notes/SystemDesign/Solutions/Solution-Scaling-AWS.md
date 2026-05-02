@@ -457,3 +457,11 @@ Stage 6: Global Scale Multi-Region Architecture
 - **Disaster recovery** — Pilot light (minimal standby in second region) or warm standby
 - **Security layers** — WAF, Shield (DDoS), VPC, Security Groups, IAM, KMS encryption
 - **Infrastructure as Code** — CloudFormation or Terraform for reproducible environments
+
+---
+
+## Sources / Cross-Refs
+- *System Design Primer* (Donne Martin) — Scaling to millions on AWS: https://github.com/donnemartin/system-design-primer/tree/master/solutions/system_design/scaling_aws
+- AWS Well-Architected Framework: https://aws.amazon.com/architecture/well-architected/
+- AWS Whitepaper — *Web Application Hosting in the AWS Cloud*: https://docs.aws.amazon.com/whitepapers/latest/web-application-hosting-best-practices/
+- 32-Cloud-Architecture-Patterns.md, 33-Infrastructure-as-Code.md, 34-CICD-Deployment-Pipelines.md (this repo).

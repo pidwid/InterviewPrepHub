@@ -402,3 +402,13 @@ Caller Services → Notification API (validate, preferences, template, rate-limi
 - **Campaign management** — Marketing team schedules bulk notifications with targeting rules
 - **Compliance** — CAN-SPAM (email), TCPA (SMS), GDPR (EU data rights), one-click unsubscribe
 - **Cost control** — SMS is expensive ($0.01-0.05/msg); prefer push for non-critical notifications
+
+---
+
+## Sources / Cross-Refs
+- *Alex Xu — System Design Interview* (Vol. 1, 2020), Ch. 10 ("Design a Notification System").
+- Apple Push Notification service (APNs) docs: https://developer.apple.com/documentation/usernotifications
+- Firebase Cloud Messaging (FCM) docs: https://firebase.google.com/docs/cloud-messaging
+- 16 CFR Part 316 — *CAN-SPAM Act of 2003* (FTC); 47 U.S.C. §227 — *Telephone Consumer Protection Act (TCPA)*.
+- 13-Asynchronism.md, 19-Event-Driven-Architecture.md (this repo).
+- Solution-Notification-Throttler.md (LLD throttling counterpart).

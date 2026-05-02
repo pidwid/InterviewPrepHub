@@ -231,3 +231,11 @@ synchronized void applyMove(GameId gid, Move m) {
 - Trade-off: 2D `int[][]` vs `BitBoard` (one `long` per player). BitBoards make win-check a single bitwise AND-shift sequence — used in real Connect Four solvers.
 - Solving Connect Four: it is a **first-player-wins** game with perfect play (proved 1988). Discuss minimax + transposition tables if AI comes up.
 - Persistence: store game state via Memento → JSON in DB → resume after restart.
+
+---
+
+## Sources / Cross-Refs
+- James D. Allen — *The Complete Book of Connect Four* (2010); proves the first-player-wins result (originally by Victor Allis, 1988).
+- John Tromp — Connect Four solver & bitboards: https://tromp.github.io/c4/c4.html
+- LLD-08 Behavioral Patterns (Strategy for win-detection, Memento for save/restore).
+- Solution-Tic-Tac-Toe.md, Solution-Chess.md (sister board-game problems).

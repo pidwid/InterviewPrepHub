@@ -204,3 +204,10 @@ public class VehicleFactory {
     }
 }
 ```
+---
+
+## Sources / Cross-Refs
+- LLD-06 Creational Patterns (Factory for vehicle types).
+- LLD-08 Behavioral Patterns (State for reservation lifecycle, Strategy for pricing).
+- Solution-Hotel-Management.md, Solution-Movie-Booking.md (sister "atomic resource allocation" problems).
+- Solution-Concert-Booking.md (FIFO hold-and-pay pattern).

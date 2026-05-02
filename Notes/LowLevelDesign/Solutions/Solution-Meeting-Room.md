@@ -207,3 +207,12 @@ The DB row lock guarantees that two pods can't both insert overlapping rows.
 - How would you scale this to 1M rooms? → shard by `roomId`, partition by building, async indexer.
 - How would you support "Find the next 30-minute slot when these 5 people are all free"? → intersect their interval trees (sweep-line algorithm).
 - How would you handle clock skew between client and server? → server is source of truth; reject booking if `client.now() - server.now() > 30s`.
+
+---
+
+## Sources / Cross-Refs
+- LeetCode #253 — *Meeting Rooms II* (interval-scheduling foundation): https://leetcode.com/problems/meeting-rooms-ii/
+- *Introduction to Algorithms* (Cormen et al., 4e) — Ch. 14 (Augmented data structures: interval trees).
+- Java API docs — `TreeMap.floorEntry / ceilingEntry`: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/TreeMap.html
+- LLD-08 Behavioral Patterns (Strategy for room-suggestion algorithm).
+- Solution-Calendar.md, Solution-Hotel-Management.md (sister date-range allocation problems).

@@ -188,3 +188,10 @@ public class BlackjackHand {
     }
 }
 ```
+---
+
+## Sources / Cross-Refs
+- *Cracking the Coding Interview* (Gayle Laakmann McDowell, 6th ed.), **Q7.1** ("Deck of Cards" — Blackjack).
+- Donald E. Knuth — *The Art of Computer Programming*, Vol. 2, §3.4.2 (Fisher–Yates shuffle).
+- Java API docs — `Collections.shuffle`: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collections.html#shuffle(java.util.List)
+- Solution-OOD-Deck-Of-Cards.md (CTCI walkthrough), Solution-Card-Game.md.

@@ -310,3 +310,13 @@ Solution: Sticky sessions per document.
 3. **Sticky sessions** (via consistent hashing on document ID) ensure all editors of a document connect to the same collaboration server.
 4. An **append-only operation log** provides full edit history, undo/redo, and crash recovery.
 5. **Periodic snapshots** to durable storage prevent unbounded operation log replay on recovery.
+
+---
+
+## Sources / Cross-Refs
+- C. A. Ellis & S. J. Gibbs — *Concurrency Control in Groupware Systems* (SIGMOD 1989) — Operational Transformation foundation.
+- Google Wave Federation Protocol whitepaper (the OT system Google Docs descended from): https://svn.apache.org/repos/asf/incubator/wave/whitepapers/operational-transform/operational-transform.html
+- Marc Shapiro et al. — *Conflict-Free Replicated Data Types* (SSS 2011) — CRDT foundation; basis for Figma/Notion-style alternatives.
+- Martin Kleppmann — *Local-First Software*: https://www.inkandswitch.com/local-first/
+- 18-Distributed-Systems.md (this repo).
+- Solution-Dropbox.md (sync cousin), Solution-Versioned-Document-Store.md (LLD storage layer).

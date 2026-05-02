@@ -187,3 +187,11 @@ class LRUCache extends LinkedHashMap<Integer, Integer> {
 
 **Python: `collections.OrderedDict`**
 Similarly, Python's `OrderedDict` maintains insertion order. When you `get` or `put`, you can `move_to_end(key)` to mark it as MRU, and `popitem(last=False)` to evict the LRU. Python also offers the `@lru_cache` decorator in `functools` for literal single-line caching of function returns.
+---
+
+## Sources / Cross-Refs
+- LeetCode #146 — *LRU Cache*: https://leetcode.com/problems/lru-cache/
+- *Introduction to Algorithms* (Cormen et al., 4e), Ch. 11 (Hash tables) — the HashMap+DLL combination.
+- Java API docs — `LinkedHashMap` with `accessOrder=true` & `removeEldestEntry`: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/LinkedHashMap.html
+- Python docs — `functools.lru_cache` and `collections.OrderedDict`: https://docs.python.org/3/library/functools.html#functools.lru_cache
+- 12-Caching.md (cache eviction policies), Solution-OOD-LRU-Cache.md, Solution-TTL-Cache.md, Solution-In-Memory-Cache.md (sister cache designs).

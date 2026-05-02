@@ -208,3 +208,10 @@ public class TwentyDollarHandler extends CashDispenserHandler {
     }
 }
 ```
+---
+
+## Sources / Cross-Refs
+- *Cracking the Coding Interview* (Gayle Laakmann McDowell, 6th ed.) — Ch. 7 OOD problems (state-machine modeling).
+- LLD-08 Behavioral Patterns (State, Chain of Responsibility — used here for change dispensing).
+- LLD-06 Creational Patterns (Factory for transaction types).
+- Solution-Vending-Machine.md (sister state-machine problem).

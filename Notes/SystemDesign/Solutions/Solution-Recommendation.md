@@ -285,3 +285,13 @@ Request flow (< 200ms total):
 3. **Pre-computed recommendations** in Redis serve the majority of requests instantly. Real-time scoring handles fresh signals.
 4. A **feature store** unifies offline training and online serving, ensuring model training and serving use identical feature definitions.
 5. **Real-time event streaming** (Kafka + Flink) updates user features within minutes, keeping recommendations fresh.
+
+---
+
+## Sources / Cross-Refs
+- Yifan Hu, Yehuda Koren, Chris Volinsky — *Collaborative Filtering for Implicit Feedback Datasets* (ICDM 2008) — matrix factorization foundation.
+- Paul Covington, Jay Adams, Emre Sargin — *Deep Neural Networks for YouTube Recommendations* (RecSys 2016).
+- Netflix Tech Blog — *Netflix Recommendations: Beyond the 5 stars*: https://netflixtechblog.com/netflix-recommendations-beyond-the-5-stars-part-1-55838468f429
+- Spotify Engineering — *Discover Weekly* and *Annoy* nearest-neighbor library: https://github.com/spotify/annoy
+- 38-ML-System-Design.md, 46-Vector-Databases-RAG.md (this repo).
+- Solution-Spotify.md, Solution-TikTok.md, Solution-News-Feed.md (consumers of recommendation).

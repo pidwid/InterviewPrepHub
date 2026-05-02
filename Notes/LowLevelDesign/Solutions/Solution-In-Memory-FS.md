@@ -206,3 +206,10 @@ public class Directory extends FileSystemElement {
 }
 ```
 *Verdict:* The Composite Pattern is better for theoretical OOD interviews. The unified `Node` approach is far superior for algorithmic/LeetCode-style interviews where speed of implementation matters most.
+---
+
+## Sources / Cross-Refs
+- LeetCode #588 — *Design In-Memory File System*: https://leetcode.com/problems/design-in-memory-file-system/
+- Maurice J. Bach — *The Design of the UNIX Operating System* (1986), Ch. 4 (Internal Representation of Files — inodes, dentries).
+- LLD-07 Structural Patterns (Composite for directory/file uniformity).
+- Solution-OOD-Hashmap.md (path → node map).

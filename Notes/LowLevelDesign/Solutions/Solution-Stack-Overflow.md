@@ -169,3 +169,10 @@ public class User {
     }
 }
 ```
+---
+
+## Sources / Cross-Refs
+- Stack Overflow public data dump (schema reference): https://archive.org/details/stackexchange
+- Jeff Atwood — *Coding Horror* blog posts on Stack Overflow's reputation system: https://blog.codinghorror.com/
+- LLD-08 Behavioral Patterns (State for question lifecycle, Observer for vote notifications).
+- Solution-LinkedIn.md, Solution-Social-Network.md (sister content/voting platforms).

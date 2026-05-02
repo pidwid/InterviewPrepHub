@@ -170,3 +170,11 @@ public class BookingService {
 ### 4. Search and Read-Heavy Operations
 99% of requests to BookMyShow are people browsing movies and checking seat maps, not buying.
 The `ShowSeat` array/list status for a specific show should ideally be heavily cached in **Redis** or a fast memory grid, updating only when a lock is successfully acquired.
+---
+
+## Sources / Cross-Refs
+- BookMyShow engineering blog: https://in.bookmyshow.com/blog/category/engineering/
+- Postgres `SELECT ... FOR UPDATE` row-level locking: https://www.postgresql.org/docs/current/explicit-locking.html#LOCKING-ROWS
+- LLD-08 Behavioral Patterns (State for booking lifecycle, Strategy for pricing).
+- Solution-Hotel-Management.md, Solution-Concert-Booking.md (sister atomic-allocation problems).
+- Solution-Concurrency-Notes — pessimistic vs optimistic locking trade-offs.

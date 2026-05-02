@@ -121,3 +121,12 @@ If a Broker machine explodes, we lose the Partitions stored on its disk.
 3. Subscribing applications scale horizontally using **Consumer Groups**, utilizing an **Offset Tracker** to maintain their location in the log file, giving them the ability to replay time.
 4. Internal software bottlenecks are eliminated using OS-level **Zero-Copy** file transfers directly to the network interface.
 5. High availability is achieved via robust **Leader-Follower replication** managed by a consensus controller.
+---
+
+## Sources / Cross-Refs
+- Jay Kreps, Neha Narkhede, Jun Rao — *Kafka: a Distributed Messaging System for Log Processing* (NetDB 2011) — original Kafka paper.
+- Apache Kafka design docs: https://kafka.apache.org/documentation/#design
+- Martin Kleppmann — *Making Sense of Stream Processing* (O'Reilly, 2016, free PDF): https://www.confluent.io/resources/ebook/making-sense-of-stream-processing/
+- AWS SQS / Amazon Kinesis docs (for contrast): https://docs.aws.amazon.com/sqs/, https://docs.aws.amazon.com/kinesis/
+- 13-Asynchronism.md, 19-Event-Driven-Architecture.md (this repo).
+- Solution-Pub-Sub.md (LLD broker counterpart).

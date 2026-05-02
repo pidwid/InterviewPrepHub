@@ -168,3 +168,11 @@ public class SlidingWindowRateLimiter {
 }
 ```
 *Note:* The Sliding Window Log is 100% accurate but takes O(N) memory per user based on the limit. For a limit of 10,000 req/min, a Queue is too memory-heavy, and you should switch back to Token Bucket.
+---
+
+## Sources / Cross-Refs
+- Stripe Engineering — *Scaling your API with rate limiters*: https://stripe.com/blog/rate-limiters
+- Cloudflare — *How we built rate limiting capable of scaling to millions of domains*: https://blog.cloudflare.com/counting-things-a-lot-of-different-things/
+- 17-Rate-Limiting.md (this repo) — algorithm comparison and cross-references.
+- Solution-Rate-Limiter.md (system-design counterpart for distributed rate limiting).
+- Solution-Notification-Throttler.md (related throttling pattern).

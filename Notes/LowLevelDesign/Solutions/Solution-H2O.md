@@ -88,3 +88,12 @@ class H2O {
 7. H3 (which was blocked) immediately acquires a permit and proceeds.
 
 This perfectly coordinates the $2:1$ ratio indefinitely without race conditions.
+
+---
+
+## Sources / Cross-Refs
+- LeetCode #1117 — *Building H2O*: https://leetcode.com/problems/building-h2o/
+- Allen B. Downey — *The Little Book of Semaphores* (2nd ed., free e-book), Ch. 5 ("Classical synchronization problems") — the H2O problem and `multiplex` patterns.
+- Java API docs — `java.util.concurrent.Semaphore`: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/Semaphore.html
+- LLD-09 Concurrency, LLD-12 Concurrency Deep Dive (this repo).
+- Solution-FizzBuzz.md, Solution-FooBar.md, Solution-Zero-Even-Odd.md (sister concurrency problems).

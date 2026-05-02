@@ -478,3 +478,13 @@ The **read-time filters** (block, mute, reply visibility) are applied at read be
 - **"What about the new user with zero history?"** — Cold-start path: pull from `tweets WHERE author_id IN (followees) ORDER BY id DESC LIMIT 800`, populate the Redis cache, and serve. A nightly job populates inactive users on demand.
 
 > **Sources for this section.** "How Twitter Uses Redis to Scale - 105TB RAM, 39MM QPS, 10,000+ Instances" (High Scalability summary of Yao Yue's QCon talk, 2014); Stackbit's "How would you build Twitter today" series; SystemDesignHandbook and TechInterview's Twitter breakdowns; "How Twitter caches timelines" (algonote, 2023). Specific thresholds (~10K-follower split) and active-user windows (30 days) are commonly cited in these analyses but Twitter itself has not published a single canonical number.
+
+---
+
+## Sources / Cross-Refs
+- Yao Yue (Twitter) — *How Twitter Uses Redis to Scale - 105TB RAM, 39MM QPS, 10,000+ Instances* (QCon 2014, summarized on High Scalability): http://highscalability.com/blog/2014/9/8/how-twitter-uses-redis-to-scale-105tb-ram-39mm-qps-10000-ins.html
+- Twitter Engineering — *Timelines at Scale* (multiple posts at blog.twitter.com / engineering).
+- Raffi Krikorian — *Timelines at Scale* (QCon 2013 talk, archived).
+- *Designing Data-Intensive Applications* (Kleppmann, 2017), Ch. 1 — Twitter is the canonical fan-out-on-write vs read example.
+- 12-Caching.md, 13-Asynchronism.md, 45-Read-Heavy-vs-Write-Heavy.md (this repo).
+- Solution-News-Feed.md, Solution-Instagram.md (sister feed designs).

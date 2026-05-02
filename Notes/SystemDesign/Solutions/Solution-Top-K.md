@@ -110,3 +110,12 @@ The requirement was querying trending tags over 1 hour, 1 day, and 1 week.
 4. The second stage applies hash-based routing to ensure final distributed aggregation.
 5. The processed chunks are saved to an Aggregation DB, and a Reducer node uses a **Min-Heap** to compute the Global Top K.
 6. The final Top K list is pushed to Redis, allowing users to query trending items with zero-latency.
+---
+
+## Sources / Cross-Refs
+- Graham Cormode & S. Muthukrishnan — *An Improved Data Stream Summary: The Count-Min Sketch and its Applications* (LATIN 2004).
+- Ahmed Metwally, Divyakant Agrawal, Amr El Abbadi — *Efficient Computation of Frequent and Top-k Elements in Data Streams* (ICDT 2005) — the SpaceSaving algorithm.
+- Apache Flink docs — windowed aggregations: https://nightlies.apache.org/flink/flink-docs-stable/docs/dev/datastream/operators/windows/
+- Twitter Engineering — *Trending topics* architecture talks (Heron / Storm).
+- 13-Asynchronism.md, 21-Data-Pipelines.md (this repo).
+- Solution-Amazon-Sales-Ranking.md (related leaderboard).

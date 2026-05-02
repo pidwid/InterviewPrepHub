@@ -403,3 +403,13 @@ Client → Any Node (Coordinator)
 - **Multi-datacenter** — Async replication across datacenters, each DC has local quorum
 - **Linearizability** — Use Raft/Paxos consensus for strong consistency (CP mode)
 - **Real-world systems** — DynamoDB, Cassandra, Riak, Voldemort all use these techniques
+
+---
+
+## Sources / Cross-Refs
+- Giuseppe DeCandia et al. — *Dynamo: Amazon's Highly Available Key-value Store* (SOSP 2007) — vector clocks, sloppy quorum, hinted handoff.
+- Avinash Lakshman & Prashant Malik — *Cassandra — A Decentralized Structured Storage System* (LADIS 2009).
+- Patrick O'Neil et al. — *The Log-Structured Merge-Tree (LSM-Tree)* (1996) — the foundation of modern KV storage.
+- *Designing Data-Intensive Applications* (Kleppmann, 2017), Ch. 3 (Storage and Retrieval) and Ch. 5 (Replication).
+- 11-Databases.md, 18-Distributed-Systems.md, 43-Consistent-Hashing.md (this repo).
+- Solution-Distributed-Cache.md, Solution-Consistent-Hashing.md (related primitives).

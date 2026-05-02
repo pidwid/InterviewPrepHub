@@ -116,3 +116,13 @@ public class SharedDictionary {
 
 ### Note on Reentrancy
 The lock above is **NOT Reentrant**. If Thread A calls `lockWrite()`, it gets it. If Thread A then calls `lockWrite()` again (e.g., in a recursive function), it will block *itself* forever because `writersCount > 0`. Making a primitive ReadWriteLock reentrant requires tracking `Thread.currentThread()` and a map of lock counts per thread, which is why `java.util.concurrent.locks.ReentrantReadWriteLock` is so complex under the hood.
+
+---
+
+## Sources / Cross-Refs
+- P. J. Courtois, F. Heymans, D. L. Parnas — *Concurrent Control with Readers and Writers* (CACM, Oct 1971) — the original readers/writers problem and starvation analysis.
+- Java API docs — `java.util.concurrent.locks.ReentrantReadWriteLock`: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/locks/ReentrantReadWriteLock.html
+- Java API docs — `StampedLock` (Java 8+, optimistic reads): https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/locks/StampedLock.html
+- Brian Goetz et al. — *Java Concurrency in Practice* (2006), Ch. 13 §13.3 (`ReentrantReadWriteLock`).
+- LLD-09 Concurrency, LLD-12 Concurrency Deep Dive (this repo).
+- Solution-Concurrent-HashMap.md (uses RW-lock per segment).

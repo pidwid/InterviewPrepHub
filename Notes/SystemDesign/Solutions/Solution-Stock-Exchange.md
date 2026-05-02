@@ -126,3 +126,12 @@ The actual deduction of money from User A and the transfer of shares to User B d
 3. The core **Matching Engine** relies on single-threaded, highly optimized in-memory data structures (Price/Time priority queues) partitioned horizontally by stock symbol.
 4. State persistence is achieved through **Event Sourcing**; rather than saving the Order Book to disk, the incoming sequence of events is saved logically, allowing secondary replica engines to maintain identical hot-standby state in their RAM.
 5. All downstream ledgers (money movement) act asynchronously, consuming the output events of the Matching engine.
+---
+
+## Sources / Cross-Refs
+- Martin Thompson et al. — LMAX Disruptor: *Inter-Thread Messaging at Millions of TPS*: https://lmax-exchange.github.io/disruptor/
+- Nasdaq INET architecture talks (multiple QCon presentations).
+- *Algorithmic and High-Frequency Trading* (Cartea, Jaimungal, Penalva, 2015) — order-book mechanics & limit-order book data structure.
+- FIX protocol spec: https://www.fixtrading.org/standards/
+- 18-Distributed-Systems.md, 19-Event-Driven-Architecture.md (this repo).
+- Solution-Order-Matching-Engine.md (LLD counterpart), Solution-Stock-Brokerage.md.

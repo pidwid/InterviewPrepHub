@@ -215,3 +215,13 @@ public class Main {
 - **Using ReentrantLocks & Conditions:**
   Instead of using intrinsic `synchronized` blocks and `wait/notify` on the object monitor, modern Java uses `ReentrantLock` and `Condition` variables.
   - Doing `Condition notEmpty = lock.newCondition();` allows you to explicitly call `notEmpty.await()` and `notEmpty.signal()`. This is exactly how Java's actual `ArrayBlockingQueue` is implemented under the hood. It allows separating the "signal to producers" from the "signal to consumers" to avoid waking up the wrong type of thread.
+
+---
+
+## Sources / Cross-Refs
+- Java API docs — `ThreadPoolExecutor`: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/ThreadPoolExecutor.html
+- Java API docs — `Executors` factory methods (cached / fixed / scheduled): https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/Executors.html
+- Brian Goetz et al. — *Java Concurrency in Practice* (2006), Ch. 6 ("Task Execution") and Ch. 8 ("Applying Thread Pools").
+- Doug Lea — *A Java Fork/Join Framework* (2000) — design principles behind `ForkJoinPool`.
+- LLD-09 Concurrency, LLD-12 Concurrency Deep Dive (this repo).
+- Solution-Blocking-Queue.md (the work-queue underlying every pool), Solution-Producer-Consumer.md.

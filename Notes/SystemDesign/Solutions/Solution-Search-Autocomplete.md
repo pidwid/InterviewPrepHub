@@ -410,3 +410,13 @@ Query Path:
 - **AB testing** — Test different ranking algorithms, number of suggestions, UI layouts
 - **Privacy** — Don't leak other users' searches; aggregate before building suggestions
 - **Mobile-specific** — Larger suggestion tiles for touch, voice-to-text integration
+
+---
+
+## Sources / Cross-Refs
+- *Alex Xu — System Design Interview* (Vol. 1, 2020), Ch. 13 ("Design a Search Autocomplete System").
+- Google Research blog — *Query suggestion for mobile*: https://research.google/blog/
+- Elasticsearch — completion suggester docs: https://www.elastic.co/guide/en/elasticsearch/reference/current/search-suggesters.html#completion-suggester
+- *Introduction to Algorithms* (Cormen et al., 4e), Ch. 12 (Tries / Radix trees).
+- 28-Search-Systems.md (this repo).
+- Solution-Google-Search.md, Solution-Top-K.md (related).

@@ -138,3 +138,12 @@ We must separate the read path.
 3. The true source-of-truth is a strict **Relational Database**, modeling time by creating a distinct inventory row for every single day a room exists.
 4. Concurrency anomalies (overbooking) are algorithmically prevented using **Row-Level Pessimistic Locking (FOR UPDATE)** within brief ACID transactions.
 5. "Cart holding" is managed via a state machine and a **TTL / Delayed Job Worker** pattern to temporarily reserve inventory while the user completes 3rd-party payment flows.
+---
+
+## Sources / Cross-Refs
+- Airbnb Engineering — *How Airbnb Migrated to Microservices*: https://medium.com/airbnb-engineering
+- Booking.com Engineering blog — pricing & search architecture: https://blog.booking.com/
+- Postgres `SELECT ... FOR UPDATE` row-level locking (the "no double booking" primitive): https://www.postgresql.org/docs/current/explicit-locking.html
+- *Designing Data-Intensive Applications* (Kleppmann, 2017), Ch. 7 (Transactions, isolation levels).
+- 11-Databases.md, 12-Caching.md (this repo).
+- Solution-Hotel-Management.md (LLD counterpart), Solution-E-Commerce.md (sister checkout flow).

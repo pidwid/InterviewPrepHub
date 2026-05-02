@@ -138,3 +138,13 @@ If a user calls `getConnection()` and receives a dead connection, their SQL quer
 What if a junior developer writes `Connection c = pool.getConnection();` but forgets to call `pool.releaseConnection(c)` inside a `finally` block? That connection is gone forever. If it happens 20 times, the app freezes.
 - *Fix:* Give connections a `lastRentedTimestamp`. A background daemon thread scans active connections. If a connection has been checked out for > 5 minutes, it assumes a leak, forcefully kills the physical socket, and generates a new internal connection, logging a massive warning.
 - *Proxy Pattern:* Don't return the raw `java.sql.Connection`. Return a Proxy `WrappedConnection` that overrides the `close()` method. When the user calls `c.close()`, it intercepts the call and runs `pool.releaseConnection(this)`.
+
+---
+
+## Sources / Cross-Refs
+- HikariCP — the de-facto JDBC connection pool, design notes: https://github.com/brettwooldridge/HikariCP/wiki/Down-the-Rabbit-Hole
+- Apache Commons DBCP 2 — older but well-documented reference implementation: https://commons.apache.org/proper/commons-dbcp/
+- Java JDBC `DataSource` API docs: https://docs.oracle.com/en/java/javase/17/docs/api/java.sql/javax/sql/DataSource.html
+- Brian Goetz et al. — *Java Concurrency in Practice* (2006), Ch. 12 (object pooling caveats).
+- LLD-07 Structural Patterns (Proxy, Object Pool).
+- Solution-Thread-Pool.md (sister pooling pattern).

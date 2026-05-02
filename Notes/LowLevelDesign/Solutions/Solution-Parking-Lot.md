@@ -166,3 +166,11 @@ How do we find an empty spot efficiently without iterating through a list of 10,
 - **Truck** can park in -> `LargeSpot` only.
 
 The `ParkingFloor.assignVehicle(Vehicle v)` method iterates through its internal Min-Heaps in the order of the vehicle's permissions, grabbing the most restrictive suitable spot first to save larger spots for larger vehicles.
+---
+
+## Sources / Cross-Refs
+- *Cracking the Coding Interview* (Gayle Laakmann McDowell, 6th ed.), **Q7.4** ("Parking Lot").
+- *Grokking the Object-Oriented Design Interview* (Educative).
+- LLD-06 Creational Patterns (Factory for spot/vehicle types, Singleton for the lot).
+- LLD-08 Behavioral Patterns (Strategy for fee calculation).
+- Solution-OOD-Parking-Lot.md (CTCI walkthrough), Solution-Amazon-Locker.md (sister allocation problem).

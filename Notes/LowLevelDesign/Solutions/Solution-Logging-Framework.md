@@ -161,3 +161,12 @@ public class AsyncLogger {
 }
 ```
 This is how modern loggers like Log4j2 achieve massive throughput—by utilizing asynchronous disruptive ring buffers (LMAX Disruptor) or standard BlockingQueues.
+---
+
+## Sources / Cross-Refs
+- Apache Log4j 2 architecture — async appenders & LMAX Disruptor integration: https://logging.apache.org/log4j/2.x/manual/async.html
+- Logback architecture: https://logback.qos.ch/manual/architecture.html
+- LMAX Disruptor (Martin Thompson et al.) — *high-performance inter-thread messaging library*: https://lmax-exchange.github.io/disruptor/
+- LLD-08 Behavioral Patterns (Chain of Responsibility for log-level filtering, Strategy for appenders).
+- LLD-06 Creational Patterns (Singleton, Factory).
+- Solution-Blocking-Queue.md (the queue underlying async loggers).

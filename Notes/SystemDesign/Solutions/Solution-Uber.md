@@ -233,3 +233,11 @@ Enforced server-side; client transitions are advisory only. Each transition writ
 - **SQL vs Redis for location storage** — at 1M+ writes/s a B-tree on a SQL DB cannot keep up; an in-memory geo store (Redis GEO) is the standard choice.
 - **Global vs geo-sharded Redis** — geo-shard per city; cross-city queries don't make sense and a global cluster becomes a write bottleneck.
 - **Global vs local matching** — restrict matching to the same H3 cell or k-ring; otherwise ETAs balloon.
+---
+
+## Sources / Cross-Refs
+- Uber Engineering — *H3: Uber's Hexagonal Hierarchical Spatial Index*: https://www.uber.com/blog/h3/ and https://h3geo.org/
+- Uber Engineering — *Engineering the Architecture Behind Uber's New Driver App*: https://www.uber.com/blog/engineering-the-architecture-behind-ubers-new-driver-app/
+- *Alex Xu — System Design Interview* (Vol. 2, 2022), Ch. 3 ("Proximity Service").
+- 27-Proximity-Location-Services.md, 18-Distributed-Systems.md (this repo).
+- Solution-Yelp.md (sister geospatial design), Solution-Google-Maps.md (routing layer).

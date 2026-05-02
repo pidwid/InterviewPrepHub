@@ -409,3 +409,13 @@ CREATE TABLE user_conversations (
 - **Postgres vs Cassandra for messages** — Postgres is simpler but write throughput saturates at single-digit shards; Cassandra scales horizontally for write-heavy workloads.
 - **E2E encryption timing** — adding it later changes the data model and search story; design for it from day one if it's a likely requirement.
 - **Push vs poll for delivery state** — push via the existing WebSocket; polling burns battery and bandwidth.
+
+---
+
+## Sources / Cross-Refs
+- *Alex Xu — System Design Interview* (Vol. 1, 2020), Ch. 12 ("Design a Chat System").
+- WhatsApp engineering — *1 Million WhatsApp Messages Per Second* (Erlang Factory 2014, Rick Reed).
+- WebSocket protocol — IETF RFC 6455: https://datatracker.ietf.org/doc/html/rfc6455
+- Signal Protocol (E2E encryption) — *The Double Ratchet Algorithm* (Marlinspike & Perrin): https://signal.org/docs/specifications/doubleratchet/
+- 14-Communication-Protocols.md, 18-Distributed-Systems.md (this repo).
+- Solution-Discord.md (large-group variant), Solution-Notification-System.md (offline delivery).

@@ -105,3 +105,11 @@ When a user searches "Ed Sheer", we need instant auto-complete suggestions.
 2. The heavy lifting of the audio payload is entirely offloaded to a globally distributed CDN, isolating the application servers from the immense egress bandwidth.
 3. Actual application servers are stateless REST APIs that merely serve text JSON metadata (Search results, playlist structures, URLs to CDN assets) backed by an Elasticsearch cluster.
 4. Heavy computational workloads (transcoding new music, calculating royalty payouts, training recommendation models) are handled offline via asynchronous Message Queues and Big Data processing clusters.
+---
+
+## Sources / Cross-Refs
+- Spotify Engineering — *Spotify's Event Delivery* (Kafka-based pipeline) and *How we migrated to GCP*: https://engineering.atspotify.com/
+- Spotify R&D — Annoy (Approximate Nearest Neighbors Oh Yeah): https://github.com/spotify/annoy
+- HLS spec — IETF RFC 8216: https://datatracker.ietf.org/doc/html/rfc8216
+- 07-Content-Delivery-Networks.md, 38-ML-System-Design.md, 28-Search-Systems.md (this repo).
+- Solution-Video-Streaming.md, Solution-Recommendation.md (related systems).

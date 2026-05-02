@@ -160,3 +160,14 @@ class Entry<K, V> {
 ### 3. Handling Global Operations (like `size()`)
 If someone calls `size()`, you have a problem. You must lock *all 16 segments simultaneously*, sum their counts, and unlock them. If you only lock them one by one, the count might change behind your back while you are iterating.
 `java.util.concurrent.ConcurrentHashMap` uses advanced probabilistic counters (like `LongAdder`) to estimate size to avoid this global locking penalty.
+
+---
+
+## Sources / Cross-Refs
+- OpenJDK source — `java.util.concurrent.ConcurrentHashMap` (Doug Lea): https://github.com/openjdk/jdk/blob/master/src/java.base/share/classes/java/util/concurrent/ConcurrentHashMap.java
+- Java API docs — `ConcurrentHashMap`: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/ConcurrentHashMap.html
+- Java API docs — `LongAdder` (striped counter): https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/atomic/LongAdder.html
+- Maurice Herlihy & Nir Shavit — *The Art of Multiprocessor Programming* (2nd ed., 2020), Ch. 13 ("Concurrent Hashing").
+- Brian Goetz et al. — *Java Concurrency in Practice* (2006), Ch. 5 §5.2 (`ConcurrentHashMap`).
+- LLD-12 Concurrency Deep Dive (this repo).
+- Solution-Hashmap.md, Solution-OOD-Hashmap.md (single-threaded foundation).

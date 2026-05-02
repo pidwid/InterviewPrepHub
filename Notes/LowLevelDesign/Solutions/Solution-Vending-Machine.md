@@ -180,3 +180,11 @@ public void returnChange(int balanceDue) {
     }
 }
 ```
+---
+
+## Sources / Cross-Refs
+- Erich Gamma et al. (GoF) — *Design Patterns: Elements of Reusable Object-Oriented Software* (1994), **State** chapter (p. 305) — vending machines are the canonical State-pattern example.
+- *Head First Design Patterns* (Freeman & Robson, 2004) — Ch. 10 ("State of Things" — Gumball Machine, the same problem).
+- LLD-08 Behavioral Patterns (State, Strategy for payment).
+- LLD-06 Creational Patterns (Singleton).
+- Solution-Coffee-Vending.md (variant with customization), Solution-ATM.md (sister state-machine problem).

@@ -98,3 +98,12 @@ class FizzBuzz {
 
 Because all 4 threads check the same single number in unison (only one succeeds, while the others fail their `if` check), this problem can also be modeled using a `CyclicBarrier`.
 However, `CyclicBarrier` logic here is often considered "clever" but overly complex and harder to read than the standard `wait/notify` loop. The standard `synchronized` approach is highly recommended for interviews as it proves you understand primitive monitor locks.
+
+---
+
+## Sources / Cross-Refs
+- LeetCode #1195 — *Fizz Buzz Multithreaded*: https://leetcode.com/problems/fizz-buzz-multithreaded/
+- Brian Goetz et al. — *Java Concurrency in Practice* (2006), Ch. 14 §14.2 (Condition queues) — explains the `while`-vs-`if` rule and spurious wakeups.
+- Java API docs — `Object.wait/notify/notifyAll`: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait()
+- LLD-09 Concurrency, LLD-12 Concurrency Deep Dive (this repo).
+- Solution-FooBar.md, Solution-Zero-Even-Odd.md, Solution-H2O.md (sister concurrency problems).

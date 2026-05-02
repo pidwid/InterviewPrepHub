@@ -115,3 +115,12 @@ Showing green/grey dots for 500,000 people in a server is famously difficult to 
 3. The message is immediately dropped into a high-throughput Pub/Sub bus (Kafka/Redis).
 4. The WebSocket nodes, subscribing only to the channels their users are active in, catch the broadcasted message.
 5. The nodes simultaneously push the message down the pipes to the endpoints, achieving <100ms real-time delivery without polling HTTP.
+---
+
+## Sources / Cross-Refs
+- Discord Engineering — *How Discord scaled Elixir to 5,000,000 concurrent users*: https://discord.com/blog/how-discord-scaled-elixir-to-5-000-000-concurrent-users
+- Discord Engineering — *How Discord stores billions of messages* (Cassandra → ScyllaDB): https://discord.com/blog/how-discord-stores-trillions-of-messages
+- Slack Engineering — *Real-Time Messaging in Slack* (the Edge Messaging Server architecture): https://slack.engineering/
+- WebSocket protocol — IETF RFC 6455: https://datatracker.ietf.org/doc/html/rfc6455
+- 14-Communication-Protocols.md, 18-Distributed-Systems.md (this repo).
+- Solution-Chat-System.md (1-on-1 messaging variant).

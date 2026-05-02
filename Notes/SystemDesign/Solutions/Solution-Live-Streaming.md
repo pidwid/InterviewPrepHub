@@ -122,3 +122,12 @@ The video is HLS, but the chat is 100% **WebSockets**.
 2. Highly optimized, hardware-accelerated **Transcoding nodes** decompress and re-encode the stream into multiple resolutions (1080p, 720p) in real-time.
 3. The continuous streams are packaged into tiny 1-2 second HTTP files using **Low-Latency HLS or DASH**.
 4. The files are aggressively pushed and cached across a global **CDN**. Client browsers infinitely poll text manifest files and download these video chunks, ensuring buffering-free viewing across 15 Tbps of combined egress traffic.
+---
+
+## Sources / Cross-Refs
+- Twitch Engineering — *How Twitch's Live Video Architecture works*: https://blog.twitch.tv/en/tags/engineering/
+- Apple HLS spec — IETF RFC 8216: https://datatracker.ietf.org/doc/html/rfc8216
+- WebRTC standard — W3C: https://www.w3.org/TR/webrtc/
+- Cisco — *Visual Networking Index* (latency budget references for live media).
+- 07-Content-Delivery-Networks.md, 14-Communication-Protocols.md (this repo).
+- Solution-Video-Streaming.md, Solution-TikTok.md (related streaming systems).

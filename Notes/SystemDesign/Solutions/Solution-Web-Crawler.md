@@ -390,3 +390,13 @@ Seeds → URL Frontier (Priority + Politeness)
 - **Legal compliance** — Respect robots.txt, handle DMCA takedowns, GDPR considerations
 - **Monitoring** — Track crawl rate, error rate, queue depth, content freshness metrics
 - **Checkpointing** — Snapshot frontier state periodically for crash recovery
+
+---
+
+## Sources / Cross-Refs
+- Allan Heydon & Marc Najork — *Mercator: A Scalable, Extensible Web Crawler* (1999, Compaq SRC).
+- Sergey Brin & Larry Page — *The Anatomy of a Large-Scale Hypertextual Web Search Engine* (WWW 1998) — the original Google paper covers the crawler, indexer, and PageRank.
+- Internet Engineering Task Force (IETF) RFC 9309 — *Robots Exclusion Protocol* (`robots.txt`): https://datatracker.ietf.org/doc/rfc9309/
+- Apache Nutch (open-source production crawler): https://nutch.apache.org/
+- 18-Distributed-Systems.md, 28-Search-Systems.md (this repo).
+- Solution-Google-Search.md (the indexer + query side).

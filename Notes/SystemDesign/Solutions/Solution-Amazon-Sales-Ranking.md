@@ -385,3 +385,12 @@ Order Service ──▶ Kafka (order-events)
 - **Anti-gaming** — Detect fake purchases intended to boost rank; filter suspicious orders
 - **Real-time leaderboard** — For top 100, could use Redis Sorted Sets updated in real-time (not hourly)
 - **Machine learning** — Predict future rank based on sales trends, precompute for recommendation
+
+---
+
+## Sources / Cross-Refs
+- *System Design Primer* (Donne Martin) — Amazon sales-ranking solution: https://github.com/donnemartin/system-design-primer/tree/master/solutions/system_design/sales_rank
+- Apache Spark / MapReduce documentation — batch aggregation jobs: https://spark.apache.org/docs/latest/
+- Redis Sorted Sets (`ZADD`/`ZRANGE`) for live leaderboards: https://redis.io/docs/data-types/sorted-sets/
+- 21-Data-Pipelines.md, 13-Asynchronism.md (this repo).
+- Solution-Top-K.md (related "trending" / heavy-hitters problem).

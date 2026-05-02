@@ -206,3 +206,12 @@ To verify if a move puts the opponent in "Check":
 - For each piece, call `canMove()` targeting the Square where the Opponent's King currently resides.
 - If *any* piece returns true, the state is Check.
 - *Checkmate* involves generating a hypothetical tree of all legal moves the opponent can make next, and verifying that *none* of them result in escaping the Check state. (This touches Minimax algorithms).
+---
+
+## Sources / Cross-Refs
+- FIDE — *Laws of Chess* (official rule set): https://handbook.fide.com/chapter/E012023
+- Claude E. Shannon — *Programming a Computer for Playing Chess* (Philosophical Magazine, 1950) — minimax foundation.
+- Stockfish open-source engine (bitboards, move generation reference): https://github.com/official-stockfish/Stockfish
+- LLD-06 Creational Patterns (Factory for piece types, Prototype for cloning the board for move-validation).
+- LLD-08 Behavioral Patterns (Strategy for per-piece movement rules, Memento for undo).
+- Solution-Connect-Four.md, Solution-Tic-Tac-Toe.md (sister board-game problems).
