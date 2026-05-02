@@ -132,6 +132,7 @@ function ContentPanel({
   onSetBookmark,
   recordActivity,
   markViewed,
+  onNavigateNote,
 }) {
   const [activeTab, setActiveTab] = useState("notes");
   const [fetched, setFetched] = useState(null);
@@ -329,7 +330,7 @@ function ContentPanel({
                 bookmarkedHeadingId={getBookmark?.(targetFile)}
                 onSetBookmark={onSetBookmark}
               />
-              <NoteNav noteFile={targetFile} />
+              <NoteNav noteFile={targetFile} onNavigate={onNavigateNote} />
             </>
           ) : fetched && fetched.file === targetFile && fetched.md === null ? (
             <div className="sb-no-content">
@@ -431,6 +432,64 @@ export default function SidebarLayout({
       }
     },
     [onTopicSelect],
+  );
+
+  // In-place Next/Previous handler used by the footer NoteNav.
+  // Resolves the neighbor (which is keyed by noteFile / solutionFile) to a
+  // topic in the *current* categories list (Categories tab vs Practice tab
+  // expose different category arrays). If we find one, we swap the active
+  // topic *within* this SidebarLayout — the user stays on the same dashTab
+  // (Categories or Practice) and the sidebar stays visible. If we can't
+  // find it (e.g. the neighbor lives in the other dashTab), we fall back
+  // to the global open-note event so the app can route appropriately.
+  const handleNavigateNote = useCallback(
+    (neighbor) => {
+      if (!neighbor?.noteFile) return;
+      let foundTopic = null;
+      let foundCatId = null;
+      for (const cat of categories) {
+        const t = cat.topics.find(
+          (x) =>
+            x.noteFile === neighbor.noteFile ||
+            x.solutionFile === neighbor.noteFile,
+        );
+        if (t) {
+          foundTopic = t;
+          foundCatId = cat.id;
+          break;
+        }
+      }
+      if (foundTopic) {
+        setActiveTopic(foundTopic);
+        setExpandedCats((prev) => new Set([...prev, foundCatId]));
+        onTopicSelect?.(foundTopic.id);
+        // Scroll the content panel back to the top of the new note
+        if (mainRef.current) {
+          requestAnimationFrame(() => {
+            mainRef.current?.scrollTo({ top: 0, behavior: "auto" });
+          });
+        }
+        if (
+          typeof window !== "undefined" &&
+          window.innerWidth <= MOBILE_BREAKPOINT
+        ) {
+          setSidebarCollapsed(true);
+        }
+        return;
+      }
+      // Fall back to the global event (e.g. neighbor lives in a different
+      // dashTab / namespace).
+      window.dispatchEvent(
+        new CustomEvent("open-note", {
+          detail: {
+            namespace: neighbor.namespace,
+            noteFile: neighbor.noteFile,
+            title: neighbor.title,
+          },
+        }),
+      );
+    },
+    [categories, onTopicSelect],
   );
 
   // Auto-select topic when navigated from roadmap
@@ -623,6 +682,7 @@ export default function SidebarLayout({
           onSetBookmark={setBookmark}
           recordActivity={recordActivity}
           markViewed={viewed?.markViewed}
+          onNavigateNote={handleNavigateNote}
         />
       </main>
     </div>

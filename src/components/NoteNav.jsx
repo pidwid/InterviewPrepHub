@@ -1,9 +1,18 @@
 import { getNeighbors } from "../data/noteOrder";
 
 // Footer Next/Previous links shown at the bottom of every note.
-// Dispatches the same `open-note` CustomEvent the SearchPalette uses,
-// so navigation works the same way regardless of source.
-function go({ namespace, noteFile, title }) {
+//
+// Two navigation modes:
+//   1. Default (NoteViewer / standalone full-page): dispatches the global
+//      `open-note` CustomEvent — same channel SearchPalette uses. The
+//      TabSection event listener swaps the activeNote, keeping the user
+//      in the full-page note viewer.
+//   2. `onNavigate` prop (SidebarLayout / inline content panel): calls
+//      the supplied callback with the neighbor descriptor. The caller is
+//      responsible for swapping the active topic *within the same view*
+//      (Categories / Practice tab), so we don't kick the user out of the
+//      sidebar layout into the full-page viewer.
+function dispatchOpen({ namespace, noteFile, title }) {
   window.dispatchEvent(
     new CustomEvent("open-note", {
       detail: { namespace, noteFile, title },
@@ -11,10 +20,15 @@ function go({ namespace, noteFile, title }) {
   );
 }
 
-export default function NoteNav({ noteFile }) {
+export default function NoteNav({ noteFile, onNavigate }) {
   if (!noteFile) return null;
   const { prev, next } = getNeighbors(noteFile);
   if (!prev && !next) return null;
+
+  const go = (neighbor) => {
+    if (onNavigate) onNavigate(neighbor);
+    else dispatchOpen(neighbor);
+  };
 
   return (
     <nav className="note-nav" aria-label="Note navigation">
