@@ -191,7 +191,7 @@ export const LLD_CATEGORIES = [
       { id: 'lld-json-parser',           title: 'Design a JSON Parser from Scratch', solutionFile: 'Solution-JSON-Parser.md', youtubeId: 'qzcwOaRb1zE' },
       { id: 'lld-truecaller',            title: 'Design Truecaller', solutionFile: 'Solution-Truecaller.md', youtubeId: 'ZtN2ZtxpfgA' },
       { id: 'lld-amazon-locker',         title: 'Design Amazon Locker Service', solutionFile: 'Solution-Amazon-Locker.md', youtubeId: '_V191nQYp4g' },
-      { id: 'lld-jira',                  title: 'Design a System like Jira', solutionFile: 'Solution-Jira.md' },
+      { id: 'lld-jira',                  title: 'Design a System like Jira', solutionFile: 'Solution-Jira.md', youtubeId: 'NrAXmQX-XI8' },
       { id: 'lld-card-game',             title: 'Design an Online Card Game (e.g. Poker)',    solutionFile: 'Solution-Card-Game.md', youtubeId: 'PbOSdbd2q-M' },
       { id: 'lld-finite-state-machine',  title: 'Implement a Finite State Machine',    solutionFile: 'Solution-FSM.md', youtubeId: 'hHaGYyKwRXY' },
       { id: 'lld-e-commerce-review',     title: 'Design an e-Commerce Review System',    solutionFile: 'Solution-ECommerce-Review.md', youtubeId: 'pQQTy05sv5Q' },
