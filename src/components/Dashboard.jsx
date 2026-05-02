@@ -14,6 +14,7 @@ const DASHBOARD_TABS = [
 ];
 
 export default function Dashboard({
+  namespace,
   stats,
   progress,
   onNavigate,
@@ -151,10 +152,14 @@ export default function Dashboard({
                           handleRoadmapTopicClick(topicId)
                         }
                       />
-                      <QuickRefs onOpenNote={onOpenNote} />
+                      <QuickRefs
+                        namespace={namespace}
+                        onOpenNote={onOpenNote}
+                      />
                     </div>
                   ) : null}
                   <RoadmapSection
+                    namespace={namespace}
                     progress={progress}
                     roadmapPhases={roadmapPhases}
                     allTopics={allTopics}

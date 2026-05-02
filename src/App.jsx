@@ -117,6 +117,7 @@ function TabSection({
   if (view === "dashboard") {
     return (
       <Dashboard
+        namespace={namespace}
         stats={stats}
         progress={progress}
         onNavigate={setView}
