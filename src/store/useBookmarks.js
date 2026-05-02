@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { bookmarkStorage, getStorageMode } from "./storageMiddleware";
+import { recordStreakActivity } from "./useStreakState";
 
 const MIGRATION_FLAG = "prep_bookmarks_ns_migrated";
 
@@ -93,6 +94,8 @@ export function useBookmarks() {
     }
     setBookmarks((prev) => ({ ...prev, [key]: headingId }));
     bookmarkStorage.set(key, headingId);
+    // Setting a bookmark is an explicit engagement signal.
+    recordStreakActivity();
   }, []);
 
   const clearBookmark = useCallback((noteFile, namespace) => {

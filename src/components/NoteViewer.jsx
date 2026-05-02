@@ -26,10 +26,14 @@ export default function NoteViewer({
   // Note: scroll restore is handled by ReadingProgress (per-note position).
   // We avoid resetting scroll here so refresh resumes where you left off.
 
-  // Record a streak activity after 30s of viewing the note
+  // Record a streak activity after 15s of viewing the note. Lowered from
+  // 30s so that quick reads still count toward the daily streak — the
+  // explicit engagement signals (status change, bookmark, Q&A answer)
+  // already cover the "user actually did something" case; this timer
+  // is the gentle catch-all for "user opened a note and read for a bit".
   useEffect(() => {
     if (!recordActivity || !noteFile) return undefined;
-    const t = setTimeout(() => recordActivity(), 30_000);
+    const t = setTimeout(() => recordActivity(), 15_000);
     return () => clearTimeout(t);
   }, [noteFile, recordActivity]);
 

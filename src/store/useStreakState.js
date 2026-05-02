@@ -62,6 +62,16 @@ function calcStreaks(state) {
   return { current, longest, total: days.length };
 }
 
+// Components anywhere in the tree can fire an activity without prop-drilling
+// recordActivity by dispatching this CustomEvent. useStreakState subscribes
+// once at the top of the App tree.
+export const STREAK_ACTIVITY_EVENT = "prep:streak-activity";
+
+export function recordStreakActivity() {
+  if (typeof window === "undefined") return;
+  window.dispatchEvent(new CustomEvent(STREAK_ACTIVITY_EVENT));
+}
+
 export function useStreakState() {
   // Sync init from localStorage (pruned) for instant render
   const [state, setState] = useState(() => pruneOld(loadLocal()));
@@ -80,6 +90,35 @@ export function useStreakState() {
       return { ...prev, [k]: nextCount };
     });
   }, []);
+
+  // Listen for global activity events from anywhere in the app (bookmark,
+  // Q&A answer, app-open, etc.) so we don't need to thread recordActivity
+  // through the entire prop tree.
+  useEffect(() => {
+    if (typeof window === "undefined") return undefined;
+    const handler = () => recordActivity();
+    window.addEventListener(STREAK_ACTIVITY_EVENT, handler);
+    return () => window.removeEventListener(STREAK_ACTIVITY_EVENT, handler);
+  }, [recordActivity]);
+
+  // Once-per-day app-open signal: if the user opens the app at all, that
+  // counts as a study activity for today. We guard with a sessionStorage
+  // flag so refreshes within the same tab don't double-fire (the daily
+  // dedup is implicit because the streak map is keyed by date — extra
+  // calls just bump the day's counter — but we still avoid pointless
+  // localStorage churn).
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const FLAG = "prep_streak_app_open_today";
+    const today = todayKey();
+    try {
+      if (sessionStorage.getItem(FLAG) === today) return;
+      sessionStorage.setItem(FLAG, today);
+    } catch {
+      /* ignore */
+    }
+    recordActivity();
+  }, [recordActivity]);
 
   const clearAll = useCallback(() => {
     setState({});

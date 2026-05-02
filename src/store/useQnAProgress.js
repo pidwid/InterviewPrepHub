@@ -7,6 +7,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { qnaStorage, getStorageMode } from "./storageMiddleware";
+import { recordStreakActivity } from "./useStreakState";
 
 function loadLocal() {
   try {
@@ -32,6 +33,9 @@ export function useQnAProgress() {
   const markAnswer = useCallback((questionId, result) => {
     setQnAProgress((prev) => ({ ...prev, [questionId]: result }));
     qnaStorage.set(questionId, result);
+    // Answering a practice question (correct OR incorrect) is a strong
+    // engagement signal — counts toward today's streak.
+    recordStreakActivity();
   }, []);
 
   return { qnaProgress, markAnswer };

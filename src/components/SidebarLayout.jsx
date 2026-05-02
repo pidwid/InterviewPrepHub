@@ -183,15 +183,17 @@ function ContentPanel({
     return () => el.removeEventListener("scroll", onScroll);
   }, [scrollRef, targetFileForFetch, contentLoaded]);
 
-  // Record a streak activity AND mark this topic as viewed after 30s.
+  // Record a streak activity AND mark this topic as viewed after 15s.
   // Both fire from the same timer to keep "the user actually engaged
-  // with this content" semantics aligned across features.
+  // with this content" semantics aligned across features. The lower
+  // threshold (was 30s) tolerates faster reading / quick scans, while
+  // still filtering out accidental clicks.
   useEffect(() => {
     if (!targetFileForFetch) return undefined;
     const t = setTimeout(() => {
       recordActivity?.();
       if (topic?.id) markViewed?.(topic.id);
-    }, 30_000);
+    }, 15_000);
     return () => clearTimeout(t);
   }, [targetFileForFetch, recordActivity, markViewed, topic?.id]);
 
