@@ -26,6 +26,36 @@
     border-bottom: 1px solid var(--border);
 }
 
+/* When h1/h2 are inside a .heading-row wrapper (bookmark button row),
+   remove the border from the tag itself and put it on the wrapper instead —
+   otherwise the bookmark button sits outside the bordered area and you
+   see two lines (tag border + wrapper edge). */
+.markdown-body .heading-row {
+    margin: 0;
+    padding-bottom: 0;
+}
+
+.markdown-body .heading-row:has(h1) {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border);
+}
+
+.markdown-body .heading-row:has(h2) {
+    margin-top: 1.75rem;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.35rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.markdown-body .heading-row h1,
+.markdown-body .heading-row h2 {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin: 0;
+}
+
 .markdown-body h3 {
     font-size: 1.1rem;
     font-weight: 700;
