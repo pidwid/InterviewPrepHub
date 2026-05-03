@@ -2771,7 +2771,7 @@ Write to DB → DB query cache (stale) → Redis (stale) → API Gateway (stale)
 | **Ordering** | Per-queue FIFO | Per-partition FIFO | FIFO queues (limited throughput) |
 | **Replay** | No (messages deleted after ack) | Yes (retain messages for days/forever) | No (deleted after processing) |
 | **Exactly-once** | No (at-least-once) | Yes (transactional producer + idempotent consumer) | No (at-least-once, FIFO has exactly-once delivery) |
-| **Throughput** | ~50K msg/sec | ~1M+ msg/sec per cluster | ~3K msg/sec (FIFO), unlimited (standard) |
+| **Throughput** | ~50K msg/sec | ~1M+ msg/sec per cluster | 300 msg/sec FIFO default; 3K/sec with batching; 70K+/sec with high-throughput mode; unlimited (standard) |
 
 **For this requirement (exactly-once + ordering + replay):** **Kafka** is the only option that supports all three.
 
@@ -5954,7 +5954,7 @@ Where: L = average number of in-flight requests, λ = arrival rate (QPS), W = av
 **Is 1M/sec impressive?**
 - For a single application: Yes. Most apps process 1K-100K/sec
 - For Kafka: Moderate. LinkedIn's Kafka processes 7+ trillion messages/day (~80M/sec)
-- For comparison: Visa processes ~65,000 transactions/sec globally (not events, but financial transactions)
+- For comparison: Visa processes ~1,700 transactions/sec on average globally, with a peak capacity of ~65,000 TPS (not events, but financial transactions)
 
 **Message size matters enormously:**
 - 1M × 100 bytes = 100 MB/s (trivial — any laptop can do this)
