@@ -601,25 +601,27 @@ Data movement:
 
 ## 🔥 Senior Interview Questions
 
-1. Compare Lambda architecture vs Kappa architecture. You're building an analytics platform that needs both real-time dashboards and historical reports. Which architecture do you choose, and why are many teams moving from Lambda to Kappa? [Answer](QnA-Answer-Key.md#21-data-pipelines)
+> 💡 Use the **Practice Questions** section above to reveal answers and track your progress.
 
-2. Your Kafka Streams application has 100ms end-to-end latency for processing events. The business wants 10ms. Walk through the bottleneck analysis: serialization, network, computation, state store access. How do you optimize each? [Answer](QnA-Answer-Key.md#21-data-pipelines)
+1. Compare Lambda architecture vs Kappa architecture. You're building an analytics platform that needs both real-time dashboards and historical reports. Which architecture do you choose, and why are many teams moving from Lambda to Kappa?
 
-3. You need to process 1 billion events per day with exactly-once semantics. Compare Kafka Streams, Apache Flink, and Spark Structured Streaming for this workload. Consider state management, windowing, and failure recovery. [Answer](QnA-Answer-Key.md#21-data-pipelines)
+2. Your Kafka Streams application has 100ms end-to-end latency for processing events. The business wants 10ms. Walk through the bottleneck analysis: serialization, network, computation, state store access. How do you optimize each?
 
-4. Your ETL pipeline runs nightly and takes 8 hours. One morning it fails at hour 6. How do you design the pipeline to be resumable/restartable without reprocessing everything? Discuss checkpointing, idempotent writes, and watermarks. [Answer](QnA-Answer-Key.md#21-data-pipelines)
+3. You need to process 1 billion events per day with exactly-once semantics. Compare Kafka Streams, Apache Flink, and Spark Structured Streaming for this workload. Consider state management, windowing, and failure recovery.
 
-5. Compare CDC (Change Data Capture) via Debezium vs dual writes vs application-level events for keeping a search index (Elasticsearch) in sync with a database. What are the failure modes and consistency guarantees of each? [Answer](QnA-Answer-Key.md#21-data-pipelines)
+4. Your ETL pipeline runs nightly and takes 8 hours. One morning it fails at hour 6. How do you design the pipeline to be resumable/restartable without reprocessing everything? Discuss checkpointing, idempotent writes, and watermarks.
 
-6. You're designing a real-time fraud detection pipeline. Events come from payment processing at 50,000 events/sec. You need to check each transaction against user history (last 30 days). How do you design the state management and windowing? [Answer](QnA-Answer-Key.md#21-data-pipelines)
+5. Compare CDC (Change Data Capture) via Debezium vs dual writes vs application-level events for keeping a search index (Elasticsearch) in sync with a database. What are the failure modes and consistency guarantees of each?
 
-7. An interviewer says: "We have a data lake with 10 PB of data, but nobody trusts it." What went wrong? Discuss data quality, schema enforcement, data contracts, lineage tracking, and the data mesh approach. [Answer](QnA-Answer-Key.md#21-data-pipelines)
+6. You're designing a real-time fraud detection pipeline. Events come from payment processing at 50,000 events/sec. You need to check each transaction against user history (last 30 days). How do you design the state management and windowing?
 
-8. You have a stream processing job that joins two event streams (orders and payments) by order ID. A payment event arrives before the order event. How do you handle this out-of-order processing? Discuss event-time windows, watermarks, and late-arriving data. [Answer](QnA-Answer-Key.md#21-data-pipelines)
+7. An interviewer says: "We have a data lake with 10 PB of data, but nobody trusts it." What went wrong? Discuss data quality, schema enforcement, data contracts, lineage tracking, and the data mesh approach.
 
-9. Compare Apache Airflow, Prefect, Dagster, and dbt for orchestrating data pipelines. Your team needs to orchestrate 500 daily batch jobs with dependencies. Which do you choose and why? [Answer](QnA-Answer-Key.md#21-data-pipelines)
+8. You have a stream processing job that joins two event streams (orders and payments) by order ID. A payment event arrives before the order event. How do you handle this out-of-order processing? Discuss event-time windows, watermarks, and late-arriving data.
 
-10. Your real-time pipeline processes correctly, but the downstream materialized views in the database are inconsistent because consumers process at different speeds. How do you achieve cross-stream consistency? Discuss transactions in Kafka (exactly-once), coordinated checkpoints, and eventual convergence. [Answer](QnA-Answer-Key.md#21-data-pipelines)
+9. Compare Apache Airflow, Prefect, Dagster, and dbt for orchestrating data pipelines. Your team needs to orchestrate 500 daily batch jobs with dependencies. Which do you choose and why?
+
+10. Your real-time pipeline processes correctly, but the downstream materialized views in the database are inconsistent because consumers process at different speeds. How do you achieve cross-stream consistency? Discuss transactions in Kafka (exactly-once), coordinated checkpoints, and eventual convergence.
 
 ---
 

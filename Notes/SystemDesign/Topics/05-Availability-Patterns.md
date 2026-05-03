@@ -477,25 +477,27 @@ Example:
 
 ## 🔥 Senior Interview Questions
 
-1. Your SLA promises 99.99% availability (four 9s). You have three services in series, each at 99.95%. What's your actual availability? How do you reach four 9s without improving individual service reliability? [Answer](QnA-Answer-Key.md#5-availability-patterns)
+> 💡 Use the **Practice Questions** section above to reveal answers and track your progress.
 
-2. Active-active vs active-passive failover: when would you choose each? What are the hidden complexities of active-active that most people underestimate? [Answer](QnA-Answer-Key.md#5-availability-patterns)
+1. Your SLA promises 99.99% availability (four 9s). You have three services in series, each at 99.95%. What's your actual availability? How do you reach four 9s without improving individual service reliability?
 
-3. A database failover takes 30 seconds. During that time, all writes are lost. How would you redesign the system to achieve zero data loss during failover? Discuss synchronous replication, <abbr title="WAL shipping (Write-Ahead Log shipping): the primary database streams its transaction log (WAL) to replicas in near real-time, so replicas stay nearly in sync and can take over with minimal data loss">WAL shipping</abbr>, and their trade-offs. [Answer](QnA-Answer-Key.md#5-availability-patterns)
+2. Active-active vs active-passive failover: when would you choose each? What are the hidden complexities of active-active that most people underestimate?
 
-4. Your system uses health checks to detect failure. A service is responding to health checks but returning incorrect data (a <abbr title="Gray failure: a partial failure where a service appears healthy (health checks pass) but is actually misbehaving — returning wrong data, silently dropping requests, or running very slowly. Harder to detect than a complete crash.">gray failure</abbr>). How do you detect and handle this? [Answer](QnA-Answer-Key.md#5-availability-patterns)
+3. A database failover takes 30 seconds. During that time, all writes are lost. How would you redesign the system to achieve zero data loss during failover? Discuss synchronous replication, <abbr title="WAL shipping (Write-Ahead Log shipping): the primary database streams its transaction log (WAL) to replicas in near real-time, so replicas stay nearly in sync and can take over with minimal data loss">WAL shipping</abbr>, and their trade-offs.
 
-5. Explain the circuit breaker pattern in detail. What are the three states? How do you set the thresholds? What happens to in-flight requests when the circuit opens? [Answer](QnA-Answer-Key.md#5-availability-patterns)
+4. Your system uses health checks to detect failure. A service is responding to health checks but returning incorrect data (a <abbr title="Gray failure: a partial failure where a service appears healthy (health checks pass) but is actually misbehaving — returning wrong data, silently dropping requests, or running very slowly. Harder to detect than a complete crash.">gray failure</abbr>). How do you detect and handle this?
 
-6. You're designing a system that must survive an entire AWS region going down. Walk through the architecture: DNS failover, data replication strategy, state management, and the cost implications. [Answer](QnA-Answer-Key.md#5-availability-patterns)
+5. Explain the circuit breaker pattern in detail. What are the three states? How do you set the thresholds? What happens to in-flight requests when the circuit opens?
 
-7. An interviewer says: "Just add more replicas for higher availability." What are the diminishing returns? At what point do more replicas actually hurt availability (hint: coordination overhead, split-brain risk)? [Answer](QnA-Answer-Key.md#5-availability-patterns)
+6. You're designing a system that must survive an entire AWS region going down. Walk through the architecture: DNS failover, data replication strategy, state management, and the cost implications.
 
-8. Compare these approaches to handling a downstream service being slow: timeout + retry, circuit breaker, bulkhead isolation, and graceful degradation. When do you use each, and can they be combined? [Answer](QnA-Answer-Key.md#5-availability-patterns)
+7. An interviewer says: "Just add more replicas for higher availability." What are the diminishing returns? At what point do more replicas actually hurt availability (hint: coordination overhead, split-brain risk)?
 
-9. Your CDN provider goes down and 40% of your traffic fails. How should your system respond automatically? Design the fallback architecture. [Answer](QnA-Answer-Key.md#5-availability-patterns)
+8. Compare these approaches to handling a downstream service being slow: timeout + retry, circuit breaker, bulkhead isolation, and graceful degradation. When do you use each, and can they be combined?
 
-10. Explain the difference between high availability and disaster recovery. A company says "we have DR, so we're highly available." Why is this wrong? [Answer](QnA-Answer-Key.md#5-availability-patterns)
+9. Your CDN provider goes down and 40% of your traffic fails. How should your system respond automatically? Design the fallback architecture.
+
+10. Explain the difference between high availability and disaster recovery. A company says "we have DR, so we're highly available." Why is this wrong?
 
 ---
 

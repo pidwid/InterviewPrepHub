@@ -720,25 +720,27 @@ What do I need?
 
 ## 🔥 Senior Interview Questions
 
-1. Your synchronous API takes 30 seconds to generate a report. Users are frustrated. Walk through how you'd redesign it with async processing, including the user notification flow (polling, WebSocket, webhook). [Answer](QnA-Answer-Key.md#13-asynchronism)
+> 💡 Use the **Practice Questions** section above to reveal answers and track your progress.
 
-2. Compare RabbitMQ, Kafka, and SQS. You need exactly-once processing, ordering guarantees, and the ability to replay old messages. Which do you choose and why? Can any of them truly guarantee exactly-once? [Answer](QnA-Answer-Key.md#13-asynchronism)
+1. Your synchronous API takes 30 seconds to generate a report. Users are frustrated. Walk through how you'd redesign it with async processing, including the user notification flow (polling, WebSocket, webhook).
 
-3. Your message queue depth is growing faster than consumers can process. It's now at 10 million messages and climbing. Walk through your escalation strategy: back pressure, scaling consumers, load shedding, and dead letter queues. [Answer](QnA-Answer-Key.md#13-asynchronism)
+2. Compare RabbitMQ, Kafka, and SQS. You need exactly-once processing, ordering guarantees, and the ability to replay old messages. Which do you choose and why? Can any of them truly guarantee exactly-once?
 
-4. An interviewer says: "Just make everything async." What are the downsides? When is synchronous processing actually better? Discuss debugging complexity, data consistency, and user experience. [Answer](QnA-Answer-Key.md#13-asynchronism)
+3. Your message queue depth is growing faster than consumers can process. It's now at 10 million messages and climbing. Walk through your escalation strategy: back pressure, scaling consumers, load shedding, and dead letter queues.
 
-5. You have an async pipeline: Order Service → Queue → Payment Service → Queue → Fulfillment Service. The Payment Service fails after charging the customer but before acknowledging the message. How do you prevent double-charging? Discuss idempotency keys and the Outbox pattern. [Answer](QnA-Answer-Key.md#13-asynchronism)
+4. An interviewer says: "Just make everything async." What are the downsides? When is synchronous processing actually better? Discuss debugging complexity, data consistency, and user experience.
 
-6. Compare task queues (Celery) vs message queues (RabbitMQ) vs event streams (Kafka). What are the fundamental differences in semantics, delivery guarantees, and use cases? [Answer](QnA-Answer-Key.md#13-asynchronism)
+5. You have an async pipeline: Order Service → Queue → Payment Service → Queue → Fulfillment Service. The Payment Service fails after charging the customer but before acknowledging the message. How do you prevent double-charging? Discuss idempotency keys and the Outbox pattern.
 
-7. You're processing 100,000 image uploads per day asynchronously. Occasionally, a worker crashes mid-processing, leaving an image in a corrupted state. How do you design for idempotent, resumable processing? [Answer](QnA-Answer-Key.md#13-asynchronism)
+6. Compare task queues (Celery) vs message queues (RabbitMQ) vs event streams (Kafka). What are the fundamental differences in semantics, delivery guarantees, and use cases?
 
-8. Explain the difference between at-most-once, at-least-once, and exactly-once delivery. Why is exactly-once so hard in distributed systems? How does Kafka's transactional producer approximate it? [Answer](QnA-Answer-Key.md#13-asynchronism)
+7. You're processing 100,000 image uploads per day asynchronously. Occasionally, a worker crashes mid-processing, leaving an image in a corrupted state. How do you design for idempotent, resumable processing?
 
-9. Your async job takes 5 minutes to complete. The user cancels the request after 30 seconds. How do you handle cancellation in an async pipeline? What about compensating transactions for work already done? [Answer](QnA-Answer-Key.md#13-asynchronism)
+8. Explain the difference between at-most-once, at-least-once, and exactly-once delivery. Why is exactly-once so hard in distributed systems? How does Kafka's transactional producer approximate it?
 
-10. You have a microservices architecture where services communicate entirely via message queues (choreography). Debugging a failed order requires tracing through 8 services. How do you make this observable? Discuss correlation IDs, distributed tracing, and saga state machines. [Answer](QnA-Answer-Key.md#13-asynchronism)
+9. Your async job takes 5 minutes to complete. The user cancels the request after 30 seconds. How do you handle cancellation in an async pipeline? What about compensating transactions for work already done?
+
+10. You have a microservices architecture where services communicate entirely via message queues (choreography). Debugging a failed order requires tracing through 8 services. How do you make this observable? Discuss correlation IDs, distributed tracing, and saga state machines.
 
 ---
 

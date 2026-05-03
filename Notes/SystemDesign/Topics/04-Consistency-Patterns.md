@@ -395,25 +395,27 @@ These two terms are often confused. They're both about "consistency" but in diff
 
 ## 🔥 Senior Interview Questions
 
-1. You're designing a social media "like" counter. Do you need strong consistency, eventual consistency, or something else? What if the counter is used to determine ad billing — does your answer change? [Answer](QnA-Answer-Key.md#4-consistency-patterns)
+> 💡 Use the **Practice Questions** section above to reveal answers and track your progress.
 
-2. Explain the difference between linearizability and serializability. Many engineers confuse them — when does each matter, and can you have one without the other? [Answer](QnA-Answer-Key.md#4-consistency-patterns)
+1. You're designing a social media "like" counter. Do you need strong consistency, eventual consistency, or something else? What if the counter is used to determine ad billing — does your answer change?
 
-3. A user updates their profile photo and immediately refreshes the page but sees the old photo. Is this a bug or expected behavior? Which consistency model would prevent this, and at what cost? [Answer](QnA-Answer-Key.md#4-consistency-patterns)
+2. Explain the difference between linearizability and serializability. Many engineers confuse them — when does each matter, and can you have one without the other?
 
-4. Your system uses eventual consistency with a replication lag of ~500ms. A downstream service reads stale data and makes a wrong decision. How do you architect around this without switching to strong consistency? [Answer](QnA-Answer-Key.md#4-consistency-patterns)
+3. A user updates their profile photo and immediately refreshes the page but sees the old photo. Is this a bug or expected behavior? Which consistency model would prevent this, and at what cost?
 
-5. Compare <abbr title="Quorum-based consistency: R + W > N means the number of nodes that must confirm a read (R) plus the number that must confirm a write (W) must exceed the total number of replicas (N). This guarantees at least one node overlaps, ensuring you always read the latest write.">quorum-based consistency (R + W > N)</abbr> with synchronous replication. When would you prefer one over the other? What are the failure modes of each? [Answer](QnA-Answer-Key.md#4-consistency-patterns)
+4. Your system uses eventual consistency with a replication lag of ~500ms. A downstream service reads stale data and makes a wrong decision. How do you architect around this without switching to strong consistency?
 
-6. You need causal consistency for a messaging app (messages must appear in order). How would you implement this without strong consistency? Discuss vector clocks, <abbr title="Lamport timestamps: a simple logical clock where each event increments a counter. Events can be ordered, but you can't detect true concurrency — vector clocks are needed for that.">Lamport timestamps</abbr>, or <abbr title="Hybrid Logical Clocks (HLC): combines physical wall-clock time with logical counters to give you both real-time ordering and causality tracking, even when clocks drift slightly">hybrid logical clocks</abbr>. [Answer](QnA-Answer-Key.md#4-consistency-patterns)
+5. Compare <abbr title="Quorum-based consistency: R + W > N means the number of nodes that must confirm a read (R) plus the number that must confirm a write (W) must exceed the total number of replicas (N). This guarantees at least one node overlaps, ensuring you always read the latest write.">quorum-based consistency (R + W > N)</abbr> with synchronous replication. When would you prefer one over the other? What are the failure modes of each?
 
-7. An interviewer asks you to design a distributed counter that is strongly consistent. Then they ask: "What if we need 100,000 increments per second?" Walk through why strong consistency at that scale is hard and what patterns (CRDTs, sharded counters) help. [Answer](QnA-Answer-Key.md#4-consistency-patterns)
+6. You need causal consistency for a messaging app (messages must appear in order). How would you implement this without strong consistency? Discuss vector clocks, <abbr title="Lamport timestamps: a simple logical clock where each event increments a counter. Events can be ordered, but you can't detect true concurrency — vector clocks are needed for that.">Lamport timestamps</abbr>, or <abbr title="Hybrid Logical Clocks (HLC): combines physical wall-clock time with logical counters to give you both real-time ordering and causality tracking, even when clocks drift slightly">hybrid logical clocks</abbr>.
 
-8. Explain the "read-your-writes" consistency model. How would you implement it in a system with multiple read replicas? What happens if the user switches devices? [Answer](QnA-Answer-Key.md#4-consistency-patterns)
+7. An interviewer asks you to design a distributed counter that is strongly consistent. Then they ask: "What if we need 100,000 increments per second?" Walk through why strong consistency at that scale is hard and what patterns (CRDTs, sharded counters) help.
 
-9. You have a system where some operations (e.g., payments) need strong consistency and others (e.g., notifications) are fine with eventual. How do you architect a single system that supports both? [Answer](QnA-Answer-Key.md#4-consistency-patterns)
+8. Explain the "read-your-writes" consistency model. How would you implement it in a system with multiple read replicas? What happens if the user switches devices?
 
-10. What is "monotonic read consistency" and why is it important? Describe a scenario where violating it causes user-visible bugs and how you'd fix it. [Answer](QnA-Answer-Key.md#4-consistency-patterns)
+9. You have a system where some operations (e.g., payments) need strong consistency and others (e.g., notifications) are fine with eventual. How do you architect a single system that supports both?
+
+10. What is "monotonic read consistency" and why is it important? Describe a scenario where violating it causes user-visible bugs and how you'd fix it.
 
 ---
 

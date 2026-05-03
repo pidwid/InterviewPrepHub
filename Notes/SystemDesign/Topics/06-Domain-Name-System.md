@@ -339,25 +339,27 @@ DNS Health Check:
 
 ## 🔥 Senior Interview Questions
 
-1. You need to migrate traffic from one data center to another with zero downtime. Walk through how you'd use DNS (TTL management, weighted routing, health checks) to achieve this safely. [Answer](QnA-Answer-Key.md#6-domain-name-system)
+> 💡 Use the **Practice Questions** section above to reveal answers and track your progress.
 
-2. An interviewer asks: "What happens when you type google.com in a browser?" Walk through the full DNS resolution chain, including browser cache, OS cache, recursive resolver, root, TLD, and authoritative servers. [Answer](QnA-Answer-Key.md#6-domain-name-system)
+1. You need to migrate traffic from one data center to another with zero downtime. Walk through how you'd use DNS (TTL management, weighted routing, health checks) to achieve this safely.
 
-3. Your DNS provider (e.g., Route 53) experiences an outage. How does this affect your system? What architectural decisions would have prevented a total outage? [Answer](QnA-Answer-Key.md#6-domain-name-system)
+2. An interviewer asks: "What happens when you type google.com in a browser?" Walk through the full DNS resolution chain, including browser cache, OS cache, recursive resolver, root, TLD, and authoritative servers.
 
-4. Explain the difference between A, AAAA, CNAME, MX, NS, TXT, and SRV records. When would you use an ALIAS/ANAME record instead of a CNAME at the zone apex? [Answer](QnA-Answer-Key.md#6-domain-name-system)
+3. Your DNS provider (e.g., Route 53) experiences an outage. How does this affect your system? What architectural decisions would have prevented a total outage?
 
-5. You set a TTL of 5 minutes for a DNS record, but after changing the IP, some users are still hitting the old IP 2 hours later. Why? Discuss recursive resolver caching, client-side caching, and Java's notorious DNS caching. [Answer](QnA-Answer-Key.md#6-domain-name-system)
+4. Explain the difference between A, AAAA, CNAME, MX, NS, TXT, and SRV records. When would you use an ALIAS/ANAME record instead of a CNAME at the zone apex?
 
-6. How would you implement <abbr title="GSLB (Global Server Load Balancing): distributes traffic across servers in different geographic regions using DNS, directing users to the best available region based on latency, health, or location">DNS-based global server load balancing (GSLB)</abbr> for a multi-region deployment? Compare latency-based routing, geolocation routing, and weighted routing. [Answer](QnA-Answer-Key.md#6-domain-name-system)
+5. You set a TTL of 5 minutes for a DNS record, but after changing the IP, some users are still hitting the old IP 2 hours later. Why? Discuss recursive resolver caching, client-side caching, and Java's notorious DNS caching.
 
-7. An attacker is performing a DNS cache poisoning attack against your service. What is happening, and how do DNSSEC and DNS-over-HTTPS (DoH) mitigate this? [Answer](QnA-Answer-Key.md#6-domain-name-system)
+6. How would you implement <abbr title="GSLB (Global Server Load Balancing): distributes traffic across servers in different geographic regions using DNS, directing users to the best available region based on latency, health, or location">DNS-based global server load balancing (GSLB)</abbr> for a multi-region deployment? Compare latency-based routing, geolocation routing, and weighted routing.
 
-8. Your startup is choosing between using Route 53, Cloudflare DNS, and running your own BIND servers. Compare them on reliability, latency, cost, and features. [Answer](QnA-Answer-Key.md#6-domain-name-system)
+7. An attacker is performing a DNS cache poisoning attack against your service. What is happening, and how do DNSSEC and DNS-over-HTTPS (DoH) mitigate this?
 
-9. In a microservices environment, you need service discovery. Compare DNS-based service discovery (e.g., <abbr title="Consul: a service networking tool that provides service discovery, health checking, and a DNS interface so services can find each other by name rather than hard-coded IP addresses">Consul DNS</abbr>) vs a service registry (e.g., <abbr title="Eureka: Netflix's open-source service registry where microservices register themselves on startup and discover other services by name, without needing DNS changes">Eureka</abbr>) vs a service mesh (e.g., <abbr title="Istio: a service mesh that handles service-to-service communication, security, and observability by injecting a sidecar proxy alongside each service, bypassing DNS for internal routing">Istio</abbr>). When does DNS fall short? [Answer](QnA-Answer-Key.md#6-domain-name-system)
+8. Your startup is choosing between using Route 53, Cloudflare DNS, and running your own BIND servers. Compare them on reliability, latency, cost, and features.
 
-10. The Dyn DDoS attack in 2016 took down Twitter, GitHub, and Netflix. How did a DNS attack cascade into application-level outages, and what architectural lesson should every system designer learn from it? [Answer](QnA-Answer-Key.md#6-domain-name-system)
+9. In a microservices environment, you need service discovery. Compare DNS-based service discovery (e.g., <abbr title="Consul: a service networking tool that provides service discovery, health checking, and a DNS interface so services can find each other by name rather than hard-coded IP addresses">Consul DNS</abbr>) vs a service registry (e.g., <abbr title="Eureka: Netflix's open-source service registry where microservices register themselves on startup and discover other services by name, without needing DNS changes">Eureka</abbr>) vs a service mesh (e.g., <abbr title="Istio: a service mesh that handles service-to-service communication, security, and observability by injecting a sidecar proxy alongside each service, bypassing DNS for internal routing">Istio</abbr>). When does DNS fall short?
+
+10. The Dyn DDoS attack in 2016 took down Twitter, GitHub, and Netflix. How did a DNS attack cascade into application-level outages, and what architectural lesson should every system designer learn from it?
 
 ---
 

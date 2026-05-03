@@ -324,25 +324,27 @@ Ask yourself these questions:
 
 ## 🔥 Senior Interview Questions
 
-1. An interviewer says "CAP theorem means you can only have two out of three." How would you correct or nuance this statement? Why is partition tolerance not really optional? [Answer](QnA-Answer-Key.md#3-availability-vs-consistency)
+> 💡 Use the **Practice Questions** section above to reveal answers and track your progress.
 
-2. You're designing a global e-commerce checkout system. Would you choose CP or AP? What if the interviewer then asks: "What about the product catalog — same choice?" Justify why different components may need different CAP trade-offs. [Answer](QnA-Answer-Key.md#3-availability-vs-consistency)
+1. An interviewer says "CAP theorem means you can only have two out of three." How would you correct or nuance this statement? Why is partition tolerance not really optional?
 
-3. Explain PACELC with a concrete example. For Cassandra (PA/EL), what does it mean during normal operation vs. during a network partition? [Answer](QnA-Answer-Key.md#3-availability-vs-consistency)
+2. You're designing a global e-commerce checkout system. Would you choose CP or AP? What if the interviewer then asks: "What about the product catalog — same choice?" Justify why different components may need different CAP trade-offs.
 
-4. A banking system needs strong consistency, but the team wants to use Cassandra for scalability. Is this possible? How would you configure Cassandra's consistency levels (QUORUM reads + QUORUM writes) to achieve it, and what do you sacrifice? [Answer](QnA-Answer-Key.md#3-availability-vs-consistency)
+3. Explain PACELC with a concrete example. For Cassandra (PA/EL), what does it mean during normal operation vs. during a network partition?
 
-5. Your system experiences a network partition between two data centers. Users in DC-East can still write data. When the partition heals, you discover conflicting writes. How do you resolve them? Compare <abbr title="Last-write-wins: the most recently timestamped write overwrites all others. Simple but can silently discard valid data.">last-write-wins</abbr>, <abbr title="Vector clocks: a data structure that tracks the causal history of updates across nodes, allowing the system to detect and reason about conflicting writes rather than blindly discarding them.">vector clocks</abbr>, and application-level resolution. [Answer](QnA-Answer-Key.md#3-availability-vs-consistency)
+4. A banking system needs strong consistency, but the team wants to use Cassandra for scalability. Is this possible? How would you configure Cassandra's consistency levels (QUORUM reads + QUORUM writes) to achieve it, and what do you sacrifice?
 
-6. Why is the CAP theorem often called misleading? Discuss the criticisms by Martin Kleppmann and others who argue that "CP vs AP" is an oversimplification. [Answer](QnA-Answer-Key.md#3-availability-vs-consistency)
+5. Your system experiences a network partition between two data centers. Users in DC-East can still write data. When the partition heals, you discover conflicting writes. How do you resolve them? Compare <abbr title="Last-write-wins: the most recently timestamped write overwrites all others. Simple but can silently discard valid data.">last-write-wins</abbr>, <abbr title="Vector clocks: a data structure that tracks the causal history of updates across nodes, allowing the system to detect and reason about conflicting writes rather than blindly discarding them.">vector clocks</abbr>, and application-level resolution.
 
-7. Design a shopping cart system that remains available during network partitions but eventually becomes consistent. How do you handle the case where a user adds items from two partitioned DCs simultaneously? [Answer](QnA-Answer-Key.md#3-availability-vs-consistency)
+6. Why is the CAP theorem often called misleading? Discuss the criticisms by Martin Kleppmann and others who argue that "CP vs AP" is an oversimplification.
 
-8. You're told to design a system that is "always consistent and always available." How do you explain to a non-technical stakeholder that this is impossible in a distributed system? What compromises do you propose? [Answer](QnA-Answer-Key.md#3-availability-vs-consistency)
+7. Design a shopping cart system that remains available during network partitions but eventually becomes consistent. How do you handle the case where a user adds items from two partitioned DCs simultaneously?
 
-9. Compare how DynamoDB, MongoDB, and CockroachDB handle the availability-consistency spectrum. For each, identify where it falls on CAP and PACELC. [Answer](QnA-Answer-Key.md#3-availability-vs-consistency)
+8. You're told to design a system that is "always consistent and always available." How do you explain to a non-technical stakeholder that this is impossible in a distributed system? What compromises do you propose?
 
-10. An interviewer asks: "If strong consistency is so expensive, why do banks use it?" Then follows with: "Could a bank ever use eventual consistency?" Walk through both sides. [Answer](QnA-Answer-Key.md#3-availability-vs-consistency)
+9. Compare how DynamoDB, MongoDB, and CockroachDB handle the availability-consistency spectrum. For each, identify where it falls on CAP and PACELC.
+
+10. An interviewer asks: "If strong consistency is so expensive, why do banks use it?" Then follows with: "Could a bank ever use eventual consistency?" Walk through both sides.
 
 ---
 

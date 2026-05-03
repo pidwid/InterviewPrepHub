@@ -802,25 +802,27 @@ X-Features: new-response-format
 
 ## 🔥 Senior Interview Questions
 
-1. You're designing a public API for a platform with 10,000 third-party developers. How do you design a versioning strategy that allows evolving the API without breaking existing integrations? Compare URL versioning, header versioning, and content negotiation. [Answer](QnA-Answer-Key.md#15-api-design)
+> 💡 Use the **Practice Questions** section above to reveal answers and track your progress.
 
-2. An API returns a list of 10 million records. Compare offset-based pagination vs cursor-based pagination vs keyset pagination. When does each break down? What happens to offset pagination when records are inserted during paginating? [Answer](QnA-Answer-Key.md#15-api-design)
+1. You're designing a public API for a platform with 10,000 third-party developers. How do you design a versioning strategy that allows evolving the API without breaking existing integrations? Compare URL versioning, header versioning, and content negotiation.
 
-3. A client sends a payment request. Due to a network timeout, they retry. You now have two payment requests. How do you make this idempotent? Walk through the idempotency key pattern from design to implementation to storage. [Answer](QnA-Answer-Key.md#15-api-design)
+2. An API returns a list of 10 million records. Compare offset-based pagination vs cursor-based pagination vs keyset pagination. When does each break down? What happens to offset pagination when records are inserted during paginating?
 
-4. Your API currently returns a 2MB JSON response for a user profile endpoint because it includes embedded relationships (posts, friends, settings). How would you redesign this? Compare field filtering, sparse fieldsets (JSON:API), GraphQL, and BFF (Backend-for-Frontend) patterns. [Answer](QnA-Answer-Key.md#15-api-design)
+3. A client sends a payment request. Due to a network timeout, they retry. You now have two payment requests. How do you make this idempotent? Walk through the idempotency key pattern from design to implementation to storage.
 
-5. You're designing an API gateway that handles authentication, rate limiting, request transformation, and routing for 50 microservices. At what point does the gateway become a bottleneck or a "god service"? How do you scale it? [Answer](QnA-Answer-Key.md#15-api-design)
+4. Your API currently returns a 2MB JSON response for a user profile endpoint because it includes embedded relationships (posts, friends, settings). How would you redesign this? Compare field filtering, sparse fieldsets (JSON:API), GraphQL, and BFF (Backend-for-Frontend) patterns.
 
-6. Explain the differences between PUT, PATCH, and POST. A developer uses POST for everything. Why is this problematic? How do PUT and PATCH differ in terms of idempotency, partial updates, and caching? [Answer](QnA-Answer-Key.md#15-api-design)
+5. You're designing an API gateway that handles authentication, rate limiting, request transformation, and routing for 50 microservices. At what point does the gateway become a bottleneck or a "god service"? How do you scale it?
 
-7. Your REST API has grown to 300 endpoints over 3 years. Nobody knows which endpoints are still used. How do you deprecate endpoints safely? Discuss API analytics, sunset headers, and deprecation policies. [Answer](QnA-Answer-Key.md#15-api-design)
+6. Explain the differences between PUT, PATCH, and POST. A developer uses POST for everything. Why is this problematic? How do PUT and PATCH differ in terms of idempotency, partial updates, and caching?
 
-8. Compare REST API authentication approaches: API keys, OAuth 2.0 (authorization code, client credentials), and JWT bearer tokens. For a B2B SaaS product with partners, which would you choose and why? [Answer](QnA-Answer-Key.md#15-api-design)
+7. Your REST API has grown to 300 endpoints over 3 years. Nobody knows which endpoints are still used. How do you deprecate endpoints safely? Discuss API analytics, sunset headers, and deprecation policies.
 
-9. An interviewer asks you to design the API for a ride-sharing app (like Uber). Walk through the key endpoints, resource naming, HTTP methods, error handling, and real-time updates (ride status). How do you handle the "request a ride" workflow that spans multiple services? [Answer](QnA-Answer-Key.md#15-api-design)
+8. Compare REST API authentication approaches: API keys, OAuth 2.0 (authorization code, client credentials), and JWT bearer tokens. For a B2B SaaS product with partners, which would you choose and why?
 
-10. You need to support both a mobile app (limited bandwidth) and an admin dashboard (needs all data) from the same API. Compare building two separate APIs, using GraphQL, using BFF pattern, and using sparse fieldsets. What are the organizational implications of each? [Answer](QnA-Answer-Key.md#15-api-design)
+9. An interviewer asks you to design the API for a ride-sharing app (like Uber). Walk through the key endpoints, resource naming, HTTP methods, error handling, and real-time updates (ride status). How do you handle the "request a ride" workflow that spans multiple services?
+
+10. You need to support both a mobile app (limited bandwidth) and an admin dashboard (needs all data) from the same API. Compare building two separate APIs, using GraphQL, using BFF pattern, and using sparse fieldsets. What are the organizational implications of each?
 
 ---
 

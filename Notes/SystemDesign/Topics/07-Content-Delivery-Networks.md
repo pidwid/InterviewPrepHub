@@ -383,25 +383,27 @@ Drawback: Invalidation takes time to propagate across all edge servers
 
 ## 🔥 Senior Interview Questions
 
-1. You're designing an image-heavy social media app serving users globally. Walk through your CDN strategy — would you use push or pull? How would you handle dynamic content like personalized feeds? [Answer](QnA-Answer-Key.md#7-content-delivery-networks)
+> 💡 Use the **Practice Questions** section above to reveal answers and track your progress.
 
-2. A Pull CDN causes a <abbr title="Thundering herd: when many requests simultaneously trigger a cache miss (e.g., after cache expiry), flooding the origin server with identical requests at once — potentially overwhelming it">thundering herd</abbr> problem when a popular item's cache expires and thousands of requests hit your origin simultaneously. How do you prevent this? [Answer](QnA-Answer-Key.md#7-content-delivery-networks)
+1. You're designing an image-heavy social media app serving users globally. Walk through your CDN strategy — would you use push or pull? How would you handle dynamic content like personalized feeds?
 
-3. Your CDN cache hit ratio is only 40%. What are the common causes, and how would you systematically improve it to 90%+? [Answer](QnA-Answer-Key.md#7-content-delivery-networks)
+2. A Pull CDN causes a <abbr title="Thundering herd: when many requests simultaneously trigger a cache miss (e.g., after cache expiry), flooding the origin server with identical requests at once — potentially overwhelming it">thundering herd</abbr> problem when a popular item's cache expires and thousands of requests hit your origin simultaneously. How do you prevent this?
 
-4. An interviewer asks: "Can you put API responses on a CDN?" Discuss when this makes sense, how you'd handle authentication, personalization, and cache invalidation for dynamic content at the edge. [Answer](QnA-Answer-Key.md#7-content-delivery-networks)
+3. Your CDN cache hit ratio is only 40%. What are the common causes, and how would you systematically improve it to 90%+?
 
-5. Compare CloudFront, Cloudflare, and Akamai. If you were picking a CDN for a video streaming platform serving 50 million users globally, what criteria would you evaluate? [Answer](QnA-Answer-Key.md#7-content-delivery-networks)
+4. An interviewer asks: "Can you put API responses on a CDN?" Discuss when this makes sense, how you'd handle authentication, personalization, and cache invalidation for dynamic content at the edge.
 
-6. You deploy a bug to production and need to invalidate all cached assets on your CDN immediately. Walk through the trade-offs between cache invalidation, URL versioning (fingerprinting), and short TTLs. [Answer](QnA-Answer-Key.md#7-content-delivery-networks)
+5. Compare CloudFront, Cloudflare, and Akamai. If you were picking a CDN for a video streaming platform serving 50 million users globally, what criteria would you evaluate?
 
-7. Your company operates in China, where most Western CDNs don't have PoPs. How do you serve low-latency content to Chinese users while complying with local regulations? [Answer](QnA-Answer-Key.md#7-content-delivery-networks)
+6. You deploy a bug to production and need to invalidate all cached assets on your CDN immediately. Walk through the trade-offs between cache invalidation, URL versioning (fingerprinting), and short TTLs.
 
-8. Explain how a CDN edge server decides whether to serve a cached response or fetch from the origin. Walk through the role of Cache-Control headers, <abbr title="ETag (Entity Tag): a unique identifier the server assigns to a specific version of a resource. The client sends it back on the next request; if the content hasn't changed, the server replies with 304 Not Modified (no body needed), saving bandwidth.">ETags</abbr>, and <abbr title="If-Modified-Since: an HTTP header the client sends with the date of the cached version. The server only sends the full content if it has changed since that date; otherwise it returns 304 Not Modified.">If-Modified-Since</abbr>. [Answer](QnA-Answer-Key.md#7-content-delivery-networks)
+7. Your company operates in China, where most Western CDNs don't have PoPs. How do you serve low-latency content to Chinese users while complying with local regulations?
 
-9. You're using a CDN for both static assets AND as a DDoS shield. The CDN provider has an outage. What happens to your traffic, and how do you design for CDN failure? [Answer](QnA-Answer-Key.md#7-content-delivery-networks)
+8. Explain how a CDN edge server decides whether to serve a cached response or fetch from the origin. Walk through the role of Cache-Control headers, <abbr title="ETag (Entity Tag): a unique identifier the server assigns to a specific version of a resource. The client sends it back on the next request; if the content hasn't changed, the server replies with 304 Not Modified (no body needed), saving bandwidth.">ETags</abbr>, and <abbr title="If-Modified-Since: an HTTP header the client sends with the date of the cached version. The server only sends the full content if it has changed since that date; otherwise it returns 304 Not Modified.">If-Modified-Since</abbr>.
 
-10. Your startup is debating whether to build their own CDN using multi-region object storage (S3 + CloudFront in each region) vs using a third-party CDN. What are the trade-offs in cost, complexity, control, and performance? [Answer](QnA-Answer-Key.md#7-content-delivery-networks)
+9. You're using a CDN for both static assets AND as a DDoS shield. The CDN provider has an outage. What happens to your traffic, and how do you design for CDN failure?
+
+10. Your startup is debating whether to build their own CDN using multi-region object storage (S3 + CloudFront in each region) vs using a third-party CDN. What are the trade-offs in cost, complexity, control, and performance?
 
 ---
 

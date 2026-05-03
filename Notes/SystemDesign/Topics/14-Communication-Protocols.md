@@ -750,25 +750,27 @@ Need real-time?
 
 ## 🔥 Senior Interview Questions
 
-1. Compare REST, gRPC, and GraphQL for an application where the mobile client needs a subset of fields, the web app needs the full object, and internal services need high-throughput binary communication. How would you use all three in the same system? [Answer](QnA-Answer-Key.md#14-communication-protocols)
+> 💡 Use the **Practice Questions** section above to reveal answers and track your progress.
 
-2. Your gRPC service works perfectly in testing but fails in production behind an AWS Application Load Balancer. Why? Discuss HTTP/2, gRPC trailers, and L7 load balancer compatibility issues. [Answer](QnA-Answer-Key.md#14-communication-protocols)
+1. Compare REST, gRPC, and GraphQL for an application where the mobile client needs a subset of fields, the web app needs the full object, and internal services need high-throughput binary communication. How would you use all three in the same system?
 
-3. An interviewer asks: "Why do we still use HTTP/1.1 when HTTP/2 exists?" Discuss the head-of-line blocking problem in HTTP/2 (at the TCP level), and how HTTP/3 (QUIC) solves it. [Answer](QnA-Answer-Key.md#14-communication-protocols)
+2. Your gRPC service works perfectly in testing but fails in production behind an AWS Application Load Balancer. Why? Discuss HTTP/2, gRPC trailers, and L7 load balancer compatibility issues.
 
-4. You're building a real-time collaborative document editor (like Google Docs). Compare WebSockets, Server-Sent Events (SSE), and long polling for this use case. Which would you choose and why? [Answer](QnA-Answer-Key.md#14-communication-protocols)
+3. An interviewer asks: "Why do we still use HTTP/1.1 when HTTP/2 exists?" Discuss the head-of-line blocking problem in HTTP/2 (at the TCP level), and how HTTP/3 (QUIC) solves it.
 
-5. Your REST API returns 200 OK with an error message in the body. Why is this an anti-pattern? How should errors be communicated in REST vs gRPC vs GraphQL? [Answer](QnA-Answer-Key.md#14-communication-protocols)
+4. You're building a real-time collaborative document editor (like Google Docs). Compare WebSockets, Server-Sent Events (SSE), and long polling for this use case. Which would you choose and why?
 
-6. You need to migrate 200 REST microservices to gRPC for performance. How do you do this incrementally without a big-bang migration? Discuss gRPC-Gateway, Envoy transcoding, and the adapter pattern. [Answer](QnA-Answer-Key.md#14-communication-protocols)
+5. Your REST API returns 200 OK with an error message in the body. Why is this an anti-pattern? How should errors be communicated in REST vs gRPC vs GraphQL?
 
-7. Explain how TCP's three-way handshake and TLS handshake impact API latency. For a mobile client on a 3G connection making its first API call, how many round trips occur before the first byte of data arrives? How do HTTP/2, TLS 1.3, and 0-RTT help? [Answer](QnA-Answer-Key.md#14-communication-protocols)
+6. You need to migrate 200 REST microservices to gRPC for performance. How do you do this incrementally without a big-bang migration? Discuss gRPC-Gateway, Envoy transcoding, and the adapter pattern.
 
-8. Compare the serialization overhead of JSON, Protocol Buffers, MessagePack, and Avro. When does serialization format actually matter for system performance, and when is it premature optimization? [Answer](QnA-Answer-Key.md#14-communication-protocols)
+7. Explain how TCP's three-way handshake and TLS handshake impact API latency. For a mobile client on a 3G connection making its first API call, how many round trips occur before the first byte of data arrives? How do HTTP/2, TLS 1.3, and 0-RTT help?
 
-9. You have a service that needs to send 1 million notifications per minute to different clients. Compare pull-based (clients polling), push-based (WebSocket/SSE), and hybrid approaches. Calculate the overhead of each. [Answer](QnA-Answer-Key.md#14-communication-protocols)
+8. Compare the serialization overhead of JSON, Protocol Buffers, MessagePack, and Avro. When does serialization format actually matter for system performance, and when is it premature optimization?
 
-10. Your system uses synchronous REST calls between 5 microservices in sequence (A → B → C → D → E). The total latency is 500ms. How would you redesign the communication to reduce latency? Discuss parallelization, async messaging, and service aggregation. [Answer](QnA-Answer-Key.md#14-communication-protocols)
+9. You have a service that needs to send 1 million notifications per minute to different clients. Compare pull-based (clients polling), push-based (WebSocket/SSE), and hybrid approaches. Calculate the overhead of each.
+
+10. Your system uses synchronous REST calls between 5 microservices in sequence (A → B → C → D → E). The total latency is 500ms. How would you redesign the communication to reduce latency? Discuss parallelization, async messaging, and service aggregation.
 
 ---
 

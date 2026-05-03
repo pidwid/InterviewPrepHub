@@ -1083,25 +1083,27 @@ Start here:
 
 ## 🔥 Senior Interview Questions
 
-1. You're designing a system that handles 1 billion rows of user activity data per day. Walk through your database choice (SQL vs NoSQL), schema design, partitioning strategy, and how you'd handle queries spanning multiple partitions. [Answer](QnA-Answer-Key.md#11-databases)
+> 💡 Use the **Practice Questions** section above to reveal answers and track your progress.
 
-2. Compare the internal architecture of PostgreSQL (B-tree, MVCC, WAL) vs Cassandra (LSM tree, SSTables, compaction). How do these architectural differences make each better suited for different workloads? [Answer](QnA-Answer-Key.md#11-databases)
+1. You're designing a system that handles 1 billion rows of user activity data per day. Walk through your database choice (SQL vs NoSQL), schema design, partitioning strategy, and how you'd handle queries spanning multiple partitions.
 
-3. Your sharded database has a hot partition — one shard receives 80% of all writes. How did this happen, and what are your options to fix it? Discuss consistent hashing, virtual nodes, and shard splitting. [Answer](QnA-Answer-Key.md#11-databases)
+2. Compare the internal architecture of PostgreSQL (B-tree, MVCC, WAL) vs Cassandra (LSM tree, SSTables, compaction). How do these architectural differences make each better suited for different workloads?
 
-4. An interviewer asks: "When would you use both SQL and NoSQL in the same system?" Describe a concrete architecture where this makes sense, how data flows between them, and how you keep them in sync. [Answer](QnA-Answer-Key.md#11-databases)
+3. Your sharded database has a hot partition — one shard receives 80% of all writes. How did this happen, and what are your options to fix it? Discuss consistent hashing, virtual nodes, and shard splitting.
 
-5. You need to add a new column to a table with 10 billion rows in a live production database with zero downtime. Walk through the migration strategy. Compare online DDL (gh-ost, pt-online-schema-change) vs expand-and-contract. [Answer](QnA-Answer-Key.md#11-databases)
+4. An interviewer asks: "When would you use both SQL and NoSQL in the same system?" Describe a concrete architecture where this makes sense, how data flows between them, and how you keep them in sync.
 
-6. Explain the N+1 query problem, how ORMs cause it, and three different approaches to fix it (eager loading, batching, joins). At what scale does this become a critical performance issue? [Answer](QnA-Answer-Key.md#11-databases)
+5. You need to add a new column to a table with 10 billion rows in a live production database with zero downtime. Walk through the migration strategy. Compare online DDL (gh-ost, pt-online-schema-change) vs expand-and-contract.
 
-7. Your read replicas have 5 seconds of replication lag. A user writes data and immediately reads it from a replica, seeing stale data. How do you solve this without routing all reads to the primary? [Answer](QnA-Answer-Key.md#11-databases)
+6. Explain the N+1 query problem, how ORMs cause it, and three different approaches to fix it (eager loading, batching, joins). At what scale does this become a critical performance issue?
 
-8. Compare DynamoDB's single-table design pattern with a traditional multi-table relational approach. When does the single-table pattern shine, and when does it become unmaintainable? [Answer](QnA-Answer-Key.md#11-databases)
+7. Your read replicas have 5 seconds of replication lag. A user writes data and immediately reads it from a replica, seeing stale data. How do you solve this without routing all reads to the primary?
 
-9. You need ACID transactions across two different databases (e.g., PostgreSQL and MongoDB). How do you achieve this? Discuss two-phase commit, the Saga pattern, and the Outbox pattern. [Answer](QnA-Answer-Key.md#11-databases)
+8. Compare DynamoDB's single-table design pattern with a traditional multi-table relational approach. When does the single-table pattern shine, and when does it become unmaintainable?
 
-10. Your database needs to handle 500,000 writes per second. Walk through the spectrum of solutions: vertical scaling → write-behind caching → sharding → event sourcing → specialized time-series DBs. When would you jump to each level? [Answer](QnA-Answer-Key.md#11-databases)
+9. You need ACID transactions across two different databases (e.g., PostgreSQL and MongoDB). How do you achieve this? Discuss two-phase commit, the Saga pattern, and the Outbox pattern.
+
+10. Your database needs to handle 500,000 writes per second. Walk through the spectrum of solutions: vertical scaling → write-behind caching → sharding → event sourcing → specialized time-series DBs. When would you jump to each level?
 
 ---
 

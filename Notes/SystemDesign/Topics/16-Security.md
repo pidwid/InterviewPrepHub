@@ -711,25 +711,27 @@ Infrastructure: Protect the perimeter
 
 ## 🔥 Senior Interview Questions
 
-1. An interviewer says: "We use HTTPS, so our API is secure." What are all the ways an API can still be vulnerable despite TLS? Walk through at least 5 threats (SSRF, broken auth, injection, etc.). [Answer](QnA-Answer-Key.md#16-security)
+> 💡 Use the **Practice Questions** section above to reveal answers and track your progress.
 
-2. Compare authentication approaches for a system with users, admin dashboard, mobile app, and third-party API consumers: session cookies, JWT, OAuth 2.0, API keys, and mTLS. Which would you use for each and why? [Answer](QnA-Answer-Key.md#16-security)
+1. An interviewer says: "We use HTTPS, so our API is secure." What are all the ways an API can still be vulnerable despite TLS? Walk through at least 5 threats (SSRF, broken auth, injection, etc.).
 
-3. You discover that your application stores passwords using MD5. Walk through the migration strategy to bcrypt/Argon2 without forcing all users to reset their passwords. [Answer](QnA-Answer-Key.md#16-security)
+2. Compare authentication approaches for a system with users, admin dashboard, mobile app, and third-party API consumers: session cookies, JWT, OAuth 2.0, API keys, and mTLS. Which would you use for each and why?
 
-4. Your REST API is vulnerable to a BOLA (Broken Object Level Authorization) attack — users can access other users' data by changing the ID in the URL. How do you fix this at the application level, API gateway level, and database level? [Answer](QnA-Answer-Key.md#16-security)
+3. You discover that your application stores passwords using MD5. Walk through the migration strategy to bcrypt/Argon2 without forcing all users to reset their passwords.
 
-5. An attacker is sending 10 million requests/second to your login endpoint (DDoS). Walk through your defense layers: edge protection (Cloudflare/AWS Shield), rate limiting, CAPTCHAs, and account lockout policies. What are the trade-offs of each? [Answer](QnA-Answer-Key.md#16-security)
+4. Your REST API is vulnerable to a BOLA (Broken Object Level Authorization) attack — users can access other users' data by changing the ID in the URL. How do you fix this at the application level, API gateway level, and database level?
 
-6. Explain the difference between authentication, authorization, and access control. Your system uses JWTs for auth. An employee leaves the company. How do you revoke their access if JWTs are stateless? Compare short-lived tokens, token blacklists, and reference tokens. [Answer](QnA-Answer-Key.md#16-security)
+5. An attacker is sending 10 million requests/second to your login endpoint (DDoS). Walk through your defense layers: edge protection (Cloudflare/AWS Shield), rate limiting, CAPTCHAs, and account lockout policies. What are the trade-offs of each?
 
-7. You're designing a multi-tenant SaaS platform where tenant data must be completely isolated. Compare row-level security, schema-per-tenant, and database-per-tenant. How does your security testing strategy differ for each? [Answer](QnA-Answer-Key.md#16-security)
+6. Explain the difference between authentication, authorization, and access control. Your system uses JWTs for auth. An employee leaves the company. How do you revoke their access if JWTs are stateless? Compare short-lived tokens, token blacklists, and reference tokens.
 
-8. An interviewer asks: "How do you handle secrets management?" Walk through the evolution from hardcoded secrets → environment variables → vault (HashiCorp Vault, AWS Secrets Manager). How do you handle secret rotation without downtime? [Answer](QnA-Answer-Key.md#16-security)
+7. You're designing a multi-tenant SaaS platform where tenant data must be completely isolated. Compare row-level security, schema-per-tenant, and database-per-tenant. How does your security testing strategy differ for each?
 
-9. Your system needs to be compliant with GDPR (right to erasure) and SOC 2. How does this affect your database design, logging strategy, and data pipeline architecture? Can you truly delete data from event-sourced systems? [Answer](QnA-Answer-Key.md#16-security)
+8. An interviewer asks: "How do you handle secrets management?" Walk through the evolution from hardcoded secrets → environment variables → vault (HashiCorp Vault, AWS Secrets Manager). How do you handle secret rotation without downtime?
 
-10. Explain zero-trust security architecture. Your company's network was breached through a compromised VPN. How does zero-trust (verify every request, mTLS, microsegmentation) prevent lateral movement compared to the traditional perimeter-based model? [Answer](QnA-Answer-Key.md#16-security)
+9. Your system needs to be compliant with GDPR (right to erasure) and SOC 2. How does this affect your database design, logging strategy, and data pipeline architecture? Can you truly delete data from event-sourced systems?
+
+10. Explain zero-trust security architecture. Your company's network was breached through a compromised VPN. How does zero-trust (verify every request, mTLS, microsegmentation) prevent lateral movement compared to the traditional perimeter-based model?
 
 ---
 

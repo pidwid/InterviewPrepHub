@@ -377,25 +377,27 @@ Asynchronous (user doesn't wait):
 
 ## 🔥 Senior Interview Questions
 
-1. Your API has a P50 latency of 50ms but a P99 of 2 seconds. The PM says "average latency is fine." How do you convince them this is a serious problem, and what would you investigate? [Answer](QnA-Answer-Key.md#2-latency-vs-throughput)
+> 💡 Use the **Practice Questions** section above to reveal answers and track your progress.
 
-2. You're choosing between two designs: one optimizes for latency (single powerful node) and the other for throughput (many small workers). How do you decide, and can you have both? [Answer](QnA-Answer-Key.md#2-latency-vs-throughput)
+1. Your API has a P50 latency of 50ms but a P99 of 2 seconds. The PM says "average latency is fine." How do you convince them this is a serious problem, and what would you investigate?
 
-3. An upstream team added a synchronous call to another microservice, increasing your tail latency by 200ms. They argue "it's just one call." Explain the compounding effect in a distributed system. [Answer](QnA-Answer-Key.md#2-latency-vs-throughput)
+2. You're choosing between two designs: one optimizes for latency (single powerful node) and the other for throughput (many small workers). How do you decide, and can you have both?
 
-4. You're designing a video transcoding pipeline. Should you optimize for latency or throughput? What if the same system must handle both live streams and batch uploads? [Answer](QnA-Answer-Key.md#2-latency-vs-throughput)
+3. An upstream team added a synchronous call to another microservice, increasing your tail latency by 200ms. They argue "it's just one call." Explain the compounding effect in a distributed system.
 
-5. Your database can handle 5,000 QPS, but the application needs 50,000 QPS. Walk through every technique you'd use, and in what order, to bridge that gap. [Answer](QnA-Answer-Key.md#2-latency-vs-throughput)
+4. You're designing a video transcoding pipeline. Should you optimize for latency or throughput? What if the same system must handle both live streams and batch uploads?
 
-6. How does <abbr title="Little's Law: L = λW. The average number of items in a system (L) equals the arrival rate (λ) multiplied by average time in system (W). Fundamental to understanding queuing and capacity">Little's Law</abbr> (L = λW) apply to system design? If your service has an average of 100 concurrent requests and each takes 200ms, what is your throughput? What happens if latency doubles? [Answer](QnA-Answer-Key.md#2-latency-vs-throughput)
+5. Your database can handle 5,000 QPS, but the application needs 50,000 QPS. Walk through every technique you'd use, and in what order, to bridge that gap.
 
-7. An interviewer claims that "adding a cache always improves latency." Present a scenario where adding a cache actually worsens latency or overall system behavior. [Answer](QnA-Answer-Key.md#2-latency-vs-throughput)
+6. How does <abbr title="Little's Law: L = λW. The average number of items in a system (L) equals the arrival rate (λ) multiplied by average time in system (W). Fundamental to understanding queuing and capacity">Little's Law</abbr> (L = λW) apply to system design? If your service has an average of 100 concurrent requests and each takes 200ms, what is your throughput? What happens if latency doubles?
 
-8. You have two services: Service A has 10ms latency and 10,000 req/s throughput, Service B has 100ms latency and 100,000 req/s. If A calls B for every request, what's the effective latency and throughput of the combined system? [Answer](QnA-Answer-Key.md#2-latency-vs-throughput)
+7. An interviewer claims that "adding a cache always improves latency." Present a scenario where adding a cache actually worsens latency or overall system behavior.
 
-9. Your team wants to batch database writes to increase throughput. What impact does this have on latency, durability, and failure recovery? How do you mitigate the downsides? [Answer](QnA-Answer-Key.md#2-latency-vs-throughput)
+8. You have two services: Service A has 10ms latency and 10,000 req/s throughput, Service B has 100ms latency and 100,000 req/s. If A calls B for every request, what's the effective latency and throughput of the combined system?
 
-10. Explain the relationship between latency, throughput, and utilization. Why does latency spike exponentially as utilization approaches 100%? Draw the curve and explain the math behind it. [Answer](QnA-Answer-Key.md#2-latency-vs-throughput)
+9. Your team wants to batch database writes to increase throughput. What impact does this have on latency, durability, and failure recovery? How do you mitigate the downsides?
+
+10. Explain the relationship between latency, throughput, and utilization. Why does latency spike exponentially as utilization approaches 100%? Draw the curve and explain the math behind it.
 
 ---
 

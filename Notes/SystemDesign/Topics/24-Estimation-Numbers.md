@@ -499,25 +499,27 @@ Step 6: Sanity check
 
 ## 🔥 Senior Interview Questions
 
-1. Estimate the storage needed for Twitter: 500 million tweets/day, average tweet = 280 chars + metadata (user ID, timestamp, location). Include media storage (10% of tweets have images, 1% have video). Calculate daily, monthly, and 5-year storage. [Answer](QnA-Answer-Key.md#24-estimation--numbers)
+> 💡 Use the **Practice Questions** section above to reveal answers and track your progress.
 
-2. An interviewer asks: "How many servers do you need to serve 1 billion daily active users?" Walk through the estimation: average requests per user, peak QPS (2-5x average), QPS per server, and the impact of caching on reducing server count. [Answer](QnA-Answer-Key.md#24-estimation--numbers)
+1. Estimate the storage needed for Twitter: 500 million tweets/day, average tweet = 280 chars + metadata (user ID, timestamp, location). Include media storage (10% of tweets have images, 1% have video). Calculate daily, monthly, and 5-year storage.
 
-3. Estimate the bandwidth required for YouTube: 1 billion video views per day, average video = 5 minutes at 720p (~50MB). What's the peak bandwidth in Gbps? How does a CDN reduce origin bandwidth? [Answer](QnA-Answer-Key.md#24-estimation--numbers)
+2. An interviewer asks: "How many servers do you need to serve 1 billion daily active users?" Walk through the estimation: average requests per user, peak QPS (2-5x average), QPS per server, and the impact of caching on reducing server count.
 
-4. Your interviewer asks: "Design the cache for Instagram's home feed." Estimate: 500 million DAU, each feed = 50 posts, each post = 1KB metadata. How much memory do you need? Should you cache everyone's feed or only active users? [Answer](QnA-Answer-Key.md#24-estimation--numbers)
+3. Estimate the bandwidth required for YouTube: 1 billion video views per day, average video = 5 minutes at 720p (~50MB). What's the peak bandwidth in Gbps? How does a CDN reduce origin bandwidth?
 
-5. You're designing a URL shortener that needs to generate 1 billion unique short URLs over 10 years. How many characters do you need if using Base62 (a-z, A-Z, 0-9)? Calculate the keyspace and discuss collision probability. [Answer](QnA-Answer-Key.md#24-estimation--numbers)
+4. Your interviewer asks: "Design the cache for Instagram's home feed." Estimate: 500 million DAU, each feed = 50 posts, each post = 1KB metadata. How much memory do you need? Should you cache everyone's feed or only active users?
 
-6. Estimate the QPS for a payment processing system during Black Friday: 100 million transactions in 24 hours, but 50% happen in a 2-hour window. What's the peak QPS? How does this inform your database choice and scaling strategy? [Answer](QnA-Answer-Key.md#24-estimation--numbers)
+5. You're designing a URL shortener that needs to generate 1 billion unique short URLs over 10 years. How many characters do you need if using Base62 (a-z, A-Z, 0-9)? Calculate the keyspace and discuss collision probability.
 
-7. Your chat application needs to store message history. 100 million users send an average of 40 messages/day, average message size = 100 bytes. How much storage per day, per year? Compare storing in Cassandra vs PostgreSQL at this scale. [Answer](QnA-Answer-Key.md#24-estimation--numbers)
+6. Estimate the QPS for a payment processing system during Black Friday: 100 million transactions in 24 hours, but 50% happen in a 2-hour window. What's the peak QPS? How does this inform your database choice and scaling strategy?
 
-8. An interviewer shows you that a system has 10ms average latency, 100ms P99 latency, and 10,000 QPS. Using Little's Law, how many requests are in-flight at any time on average? At P99? How does this inform your thread pool sizing? [Answer](QnA-Answer-Key.md#24-estimation--numbers)
+7. Your chat application needs to store message history. 100 million users send an average of 40 messages/day, average message size = 100 bytes. How much storage per day, per year? Compare storing in Cassandra vs PostgreSQL at this scale.
 
-9. Estimate how much RAM you need for a Redis cache that stores 100 million user profiles, each ~500 bytes. Account for Redis overhead (pointers, metadata — roughly 2x raw data size). Would you use a single instance or a cluster? [Answer](QnA-Answer-Key.md#24-estimation--numbers)
+8. An interviewer shows you that a system has 10ms average latency, 100ms P99 latency, and 10,000 QPS. Using Little's Law, how many requests are in-flight at any time on average? At P99? How does this inform your thread pool sizing?
 
-10. You're told: "Our system handles 1 million events per second." Is this impressive? Put it in context — compare it to Kafka's throughput limits per partition (~10K-100K msg/sec), and calculate how many partitions and brokers you'd need. [Answer](QnA-Answer-Key.md#24-estimation--numbers)
+9. Estimate how much RAM you need for a Redis cache that stores 100 million user profiles, each ~500 bytes. Account for Redis overhead (pointers, metadata — roughly 2x raw data size). Would you use a single instance or a cluster?
+
+10. You're told: "Our system handles 1 million events per second." Is this impressive? Put it in context — compare it to Kafka's throughput limits per partition (~10K-100K msg/sec), and calculate how many partitions and brokers you'd need.
 
 ---
 

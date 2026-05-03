@@ -506,25 +506,27 @@ Step 4: Eventually, monolith is gone
 
 ## 🔥 Senior Interview Questions
 
-1. You're migrating a monolith to microservices. The monolith has 50 tightly-coupled modules. How do you decide what to extract first? Discuss the Strangler Fig pattern and bounded contexts. [Answer](QnA-Answer-Key.md#10-application-layer)
+> 💡 Use the **Practice Questions** section above to reveal answers and track your progress.
 
-2. An interviewer says: "Microservices solve all scaling problems." What are the top 5 problems that microservices introduce that a monolith didn't have? When is a monolith actually the better choice? [Answer](QnA-Answer-Key.md#10-application-layer)
+1. You're migrating a monolith to microservices. The monolith has 50 tightly-coupled modules. How do you decide what to extract first? Discuss the Strangler Fig pattern and bounded contexts.
 
-3. You have 100 microservices and a new feature requires changes to 7 of them deployed atomically. How do you handle cross-service transactions? Compare <abbr title="2PC (Two-Phase Commit): a distributed transaction protocol where a coordinator asks all participants to 'prepare' (phase 1), then tells them all to 'commit' or 'abort' (phase 2). Provides strong consistency but blocks if any participant fails.">2PC</abbr>, Saga (choreography vs orchestration), and eventual consistency. [Answer](QnA-Answer-Key.md#10-application-layer)
+2. An interviewer says: "Microservices solve all scaling problems." What are the top 5 problems that microservices introduce that a monolith didn't have? When is a monolith actually the better choice?
 
-4. Service A calls Service B, which calls Service C. Service C is slow. How does this cascade, and what patterns (circuit breaker, timeout budget, bulkhead) prevent Service A from failing too? [Answer](QnA-Answer-Key.md#10-application-layer)
+3. You have 100 microservices and a new feature requires changes to 7 of them deployed atomically. How do you handle cross-service transactions? Compare <abbr title="2PC (Two-Phase Commit): a distributed transaction protocol where a coordinator asks all participants to 'prepare' (phase 1), then tells them all to 'commit' or 'abort' (phase 2). Provides strong consistency but blocks if any participant fails.">2PC</abbr>, Saga (choreography vs orchestration), and eventual consistency.
 
-5. Compare Consul, Eureka, etcd, and Kubernetes DNS for service discovery. Which would you choose for a 500-service architecture running on Kubernetes, and what about a hybrid cloud/on-prem deployment? [Answer](QnA-Answer-Key.md#10-application-layer)
+4. Service A calls Service B, which calls Service C. Service C is slow. How does this cascade, and what patterns (circuit breaker, timeout budget, bulkhead) prevent Service A from failing too?
 
-6. Your microservices architecture experiences the "distributed monolith" anti-pattern — services are technically separate but deploy and fail together. How do you detect this and fix it? [Answer](QnA-Answer-Key.md#10-application-layer)
+5. Compare Consul, Eureka, etcd, and Kubernetes DNS for service discovery. Which would you choose for a 500-service architecture running on Kubernetes, and what about a hybrid cloud/on-prem deployment?
 
-7. An API gateway handles auth, rate limiting, routing, and request transformation. At what scale does the API gateway itself become a bottleneck? How do you scale it, and when would you consider a mesh approach instead? [Answer](QnA-Answer-Key.md#10-application-layer)
+6. Your microservices architecture experiences the "distributed monolith" anti-pattern — services are technically separate but deploy and fail together. How do you detect this and fix it?
 
-8. You're designing a greenfield system. The team has 5 engineers. An architect proposes starting with microservices. Make the case for starting with a modular monolith and define the criteria for when to split. [Answer](QnA-Answer-Key.md#10-application-layer)
+7. An API gateway handles auth, rate limiting, routing, and request transformation. At what scale does the API gateway itself become a bottleneck? How do you scale it, and when would you consider a mesh approach instead?
 
-9. How do you handle shared data (e.g., user data needed by 10 services) in a microservices architecture? Compare shared database, API calls, data replication via events, and data mesh. [Answer](QnA-Answer-Key.md#10-application-layer)
+8. You're designing a greenfield system. The team has 5 engineers. An architect proposes starting with microservices. Make the case for starting with a modular monolith and define the criteria for when to split.
 
-10. You're seeing high latency in a request that fans out to 12 microservices. How do you trace the request across services, identify the bottleneck, and optimize the call graph? Discuss distributed tracing, parallel vs sequential calls, and service aggregation. [Answer](QnA-Answer-Key.md#10-application-layer)
+9. How do you handle shared data (e.g., user data needed by 10 services) in a microservices architecture? Compare shared database, API calls, data replication via events, and data mesh.
+
+10. You're seeing high latency in a request that fans out to 12 microservices. How do you trace the request across services, identify the bottleneck, and optimize the call graph? Discuss distributed tracing, parallel vs sequential calls, and service aggregation.
 
 ---
 

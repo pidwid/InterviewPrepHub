@@ -608,6 +608,8 @@ Increasingly required (EU AI Act, financial regulations).
 
 ## 19. Senior Interview Questions (ML SD)
 
+> 💡 Use the **Practice Questions** section above to reveal answers and track your progress.
+
 1. *"How would you detect that your fraud model is degrading in production before it causes financial damage?"* — drift detection on input features (KS test), output distribution, business KPI.
 2. *"Walk me through deploying a new ranking model. How do you guarantee it won't tank the homepage CTR?"* — shadow mode → canary → A/B with guardrails → kill switch.
 3. *"You have a 200B parameter LLM that needs to serve at 100 QPS with <500ms p99. Walk me through serving infrastructure."* — quantization, batching, KV cache, tensor parallelism, model sharding.

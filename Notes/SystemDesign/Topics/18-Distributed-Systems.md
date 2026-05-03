@@ -1156,25 +1156,27 @@ Querying:      Scatter-gather for cross-partition queries
 
 ## 🔥 Senior Interview Questions
 
-1. Explain the Raft consensus algorithm step by step: leader election, log replication, and safety. What happens during a network partition where two nodes both think they're the leader (split-brain)? [Answer](QnA-Answer-Key.md#18-distributed-systems)
+> 💡 Use the **Practice Questions** section above to reveal answers and track your progress.
 
-2. You're designing a distributed lock service. Compare Redis Redlock vs ZooKeeper ephemeral nodes vs etcd leases. Martin Kleppmann wrote a famous critique of Redlock — what are his arguments, and does Antirez's rebuttal address them? [Answer](QnA-Answer-Key.md#18-distributed-systems)
+1. Explain the Raft consensus algorithm step by step: leader election, log replication, and safety. What happens during a network partition where two nodes both think they're the leader (split-brain)?
 
-3. Your microservices system needs to execute a distributed transaction: debit Account A → credit Account B → send notification. Implement this using the Saga pattern (both choreography and orchestration). What are the compensating transactions for each step? [Answer](QnA-Answer-Key.md#18-distributed-systems)
+2. You're designing a distributed lock service. Compare Redis Redlock vs ZooKeeper ephemeral nodes vs etcd leases. Martin Kleppmann wrote a famous critique of Redlock — what are his arguments, and does Antirez's rebuttal address them?
 
-4. Explain the Two Generals' Problem and the FLP impossibility result. What do they tell us about the fundamental limits of distributed computing? How do practical systems (like Raft) work despite these theoretical impossibilities? [Answer](QnA-Answer-Key.md#18-distributed-systems)
+3. Your microservices system needs to execute a distributed transaction: debit Account A → credit Account B → send notification. Implement this using the Saga pattern (both choreography and orchestration). What are the compensating transactions for each step?
 
-5. You're using consistent hashing for your cache cluster. A node goes down. Walk through what happens: which keys are affected, how are they redistributed, and what's the impact on cache hit rate? How do virtual nodes improve the distribution? [Answer](QnA-Answer-Key.md#18-distributed-systems)
+4. Explain the Two Generals' Problem and the FLP impossibility result. What do they tell us about the fundamental limits of distributed computing? How do practical systems (like Raft) work despite these theoretical impossibilities?
 
-6. Compare Lamport timestamps, vector clocks, and hybrid logical clocks. You're building a collaborative editing system where operations can happen concurrently on different servers. Which clock mechanism do you need and why? [Answer](QnA-Answer-Key.md#18-distributed-systems)
+5. You're using consistent hashing for your cache cluster. A node goes down. Walk through what happens: which keys are affected, how are they redistributed, and what's the impact on cache hit rate? How do virtual nodes improve the distribution?
 
-7. An interviewer asks you to design a distributed counter that's eventually consistent but can handle 1 million increments per second across 10 data centers. Discuss CRDTs (specifically G-Counter and PN-Counter), gossip protocols, and anti-entropy mechanisms. [Answer](QnA-Answer-Key.md#18-distributed-systems)
+6. Compare Lamport timestamps, vector clocks, and hybrid logical clocks. You're building a collaborative editing system where operations can happen concurrently on different servers. Which clock mechanism do you need and why?
 
-8. Your system has a distributed lock, and the process holding the lock dies without releasing it. How do you handle this? Discuss TTL-based expiration, fencing tokens, and the dangers of relying on timeouts in distributed systems. [Answer](QnA-Answer-Key.md#18-distributed-systems)
+7. An interviewer asks you to design a distributed counter that's eventually consistent but can handle 1 million increments per second across 10 data centers. Discuss CRDTs (specifically G-Counter and PN-Counter), gossip protocols, and anti-entropy mechanisms.
 
-9. Explain the Byzantine Generals' Problem. In what real-world systems (beyond blockchain) do you need Byzantine fault tolerance? Why don't most systems bother with it? [Answer](QnA-Answer-Key.md#18-distributed-systems)
+8. Your system has a distributed lock, and the process holding the lock dies without releasing it. How do you handle this? Discuss TTL-based expiration, fencing tokens, and the dangers of relying on timeouts in distributed systems.
 
-10. You're designing a globally distributed database like Google Spanner. How does Spanner achieve external consistency (linearizability) across data centers? Explain TrueTime, commit-wait, and why atomic clocks and GPS receivers are essential to the design. [Answer](QnA-Answer-Key.md#18-distributed-systems)
+9. Explain the Byzantine Generals' Problem. In what real-world systems (beyond blockchain) do you need Byzantine fault tolerance? Why don't most systems bother with it?
+
+10. You're designing a globally distributed database like Google Spanner. How does Spanner achieve external consistency (linearizability) across data centers? Explain TrueTime, commit-wait, and why atomic clocks and GPS receivers are essential to the design.
 
 ---
 

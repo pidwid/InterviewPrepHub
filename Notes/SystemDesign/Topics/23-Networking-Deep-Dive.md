@@ -617,25 +617,27 @@ Nice to know (senior/architect):
 
 ## 🔥 Senior Interview Questions
 
-1. Walk through everything that happens at the network level when a user types "https://example.com" in their browser and hits Enter. Cover DNS, TCP handshake, TLS handshake, HTTP request, and response. How many round trips before the first byte of content arrives? [Answer](QnA-Answer-Key.md#23-networking-deep-dive)
+> 💡 Use the **Practice Questions** section above to reveal answers and track your progress.
 
-2. Your microservices communicate over HTTP/1.1 within a Kubernetes cluster. You're seeing high latency during traffic spikes. An engineer suggests switching to HTTP/2 or gRPC. Explain the head-of-line blocking difference between HTTP/1.1, HTTP/2 (over TCP), and HTTP/3 (over QUIC). [Answer](QnA-Answer-Key.md#23-networking-deep-dive)
+1. Walk through everything that happens at the network level when a user types "https://example.com" in their browser and hits Enter. Cover DNS, TCP handshake, TLS handshake, HTTP request, and response. How many round trips before the first byte of content arrives?
 
-3. Explain how NAT (Network Address Translation) works. Your application runs on EC2 instances in a private subnet. How does it access the internet? Walk through the role of NAT Gateway, Internet Gateway, and route tables. [Answer](QnA-Answer-Key.md#23-networking-deep-dive)
+2. Your microservices communicate over HTTP/1.1 within a Kubernetes cluster. You're seeing high latency during traffic spikes. An engineer suggests switching to HTTP/2 or gRPC. Explain the head-of-line blocking difference between HTTP/1.1, HTTP/2 (over TCP), and HTTP/3 (over QUIC).
 
-4. You're debugging a production issue where TCP connections between two services are being reset randomly. Walk through your diagnostic process using tools like `ss`, `tcpdump`, `netstat`. What could cause TCP RST packets? [Answer](QnA-Answer-Key.md#23-networking-deep-dive)
+3. Explain how NAT (Network Address Translation) works. Your application runs on EC2 instances in a private subnet. How does it access the internet? Walk through the role of NAT Gateway, Internet Gateway, and route tables.
 
-5. Compare VPC peering, Transit Gateway, VPN, and PrivateLink for connecting two AWS VPCs. When would you use each? What are the bandwidth, latency, and cost implications? [Answer](QnA-Answer-Key.md#23-networking-deep-dive)
+4. You're debugging a production issue where TCP connections between two services are being reset randomly. Walk through your diagnostic process using tools like `ss`, `tcpdump`, `netstat`. What could cause TCP RST packets?
 
-6. Your application opens 10,000 short-lived TCP connections per second to a database. Each connection goes through the 3-way handshake. Calculate the overhead and explain why connection pooling (PgBouncer, ProxySQL) is essential at scale. [Answer](QnA-Answer-Key.md#23-networking-deep-dive)
+5. Compare VPC peering, Transit Gateway, VPN, and PrivateLink for connecting two AWS VPCs. When would you use each? What are the bandwidth, latency, and cost implications?
 
-7. An interviewer says: "TLS adds too much latency." Quantify the latency difference between TLS 1.2 (2-RTT handshake) and TLS 1.3 (1-RTT, 0-RTT resumption). When is 0-RTT dangerous and why? [Answer](QnA-Answer-Key.md#23-networking-deep-dive)
+6. Your application opens 10,000 short-lived TCP connections per second to a database. Each connection goes through the 3-way handshake. Calculate the overhead and explain why connection pooling (PgBouncer, ProxySQL) is essential at scale.
 
-8. Explain BGP (Border Gateway Protocol) at a high level. How does internet routing work between autonomous systems? What happens during a BGP route leak or hijack (like the Cloudflare/Verizon incident)? [Answer](QnA-Answer-Key.md#23-networking-deep-dive)
+7. An interviewer says: "TLS adds too much latency." Quantify the latency difference between TLS 1.2 (2-RTT handshake) and TLS 1.3 (1-RTT, 0-RTT resumption). When is 0-RTT dangerous and why?
 
-9. You're designing a multi-region architecture with servers in US, EU, and Asia. How does anycast routing work, and how do CDNs like Cloudflare use it? Compare anycast with DNS-based global load balancing. [Answer](QnA-Answer-Key.md#23-networking-deep-dive)
+8. Explain BGP (Border Gateway Protocol) at a high level. How does internet routing work between autonomous systems? What happens during a BGP route leak or hijack (like the Cloudflare/Verizon incident)?
 
-10. Your system uses WebSocket connections for real-time updates. Each WebSocket holds an open TCP connection. You have 1 million concurrent users. Calculate the server resources needed (file descriptors, memory) and explain how you'd architect this with connection servers, pub/sub, and horizontal scaling. [Answer](QnA-Answer-Key.md#23-networking-deep-dive)
+9. You're designing a multi-region architecture with servers in US, EU, and Asia. How does anycast routing work, and how do CDNs like Cloudflare use it? Compare anycast with DNS-based global load balancing.
+
+10. Your system uses WebSocket connections for real-time updates. Each WebSocket holds an open TCP connection. You have 1 million concurrent users. Calculate the server resources needed (file descriptors, memory) and explain how you'd architect this with connection servers, pub/sub, and horizontal scaling.
 
 ---
 

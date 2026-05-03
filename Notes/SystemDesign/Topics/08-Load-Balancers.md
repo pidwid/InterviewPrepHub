@@ -552,25 +552,27 @@ Software load balancers (Nginx, HAProxy, Envoy) are the **standard choice** for 
 
 ## 🔥 Senior Interview Questions
 
-1. You have a microservices architecture with 200+ services. Would you use a single centralized load balancer, per-service load balancers, or client-side load balancing (like gRPC)? Discuss the trade-offs of each. [Answer](QnA-Answer-Key.md#8-load-balancers)
+> 💡 Use the **Practice Questions** section above to reveal answers and track your progress.
 
-2. Explain the difference between L4 and L7 load balancing with concrete examples. When would L4 be faster but L7 be necessary? What about L3 (<abbr title="DSR (Direct Server Return): an advanced load balancing mode where the backend server sends responses directly to the client without going back through the load balancer, reducing LB bandwidth and latency. The LB only handles incoming requests.">DSR — Direct Server Return</abbr>)? [Answer](QnA-Answer-Key.md#8-load-balancers)
+1. You have a microservices architecture with 200+ services. Would you use a single centralized load balancer, per-service load balancers, or client-side load balancing (like gRPC)? Discuss the trade-offs of each.
 
-3. Your load balancer uses round-robin, but one server is consistently slower than others, causing request queuing. How would you detect this, and which algorithm would fix it? Compare least connections, weighted RR, and adaptive algorithms. [Answer](QnA-Answer-Key.md#8-load-balancers)
+2. Explain the difference between L4 and L7 load balancing with concrete examples. When would L4 be faster but L7 be necessary? What about L3 (<abbr title="DSR (Direct Server Return): an advanced load balancing mode where the backend server sends responses directly to the client without going back through the load balancer, reducing LB bandwidth and latency. The LB only handles incoming requests.">DSR — Direct Server Return</abbr>)?
 
-4. You're serving WebSocket connections for a real-time chat app. How does this affect your load balancing strategy? Why can't you use standard L7 load balancing with connection draining? [Answer](QnA-Answer-Key.md#8-load-balancers)
+3. Your load balancer uses round-robin, but one server is consistently slower than others, causing request queuing. How would you detect this, and which algorithm would fix it? Compare least connections, weighted RR, and adaptive algorithms.
 
-5. An interviewer says: "The load balancer itself is a single point of failure." Walk through exactly how you make load balancing highly available — discuss DNS round-robin, BGP anycast, VRRP/keepalived, and cloud-native solutions (ALB, NLB). [Answer](QnA-Answer-Key.md#8-load-balancers)
+4. You're serving WebSocket connections for a real-time chat app. How does this affect your load balancing strategy? Why can't you use standard L7 load balancing with connection draining?
 
-6. You need to do a rolling deployment of a new version. How does the load balancer participate? Discuss health checks, <abbr title="Connection draining: before removing a server from the load balancer pool, allow existing connections to finish naturally rather than cutting them off, preventing in-flight requests from failing">connection draining</abbr>, <abbr title="Blue-green deployments: run two identical production environments (blue = current, green = new). Switch all traffic from blue to green at once. Easy rollback: just switch back. Zero downtime but requires double infrastructure.">blue-green deployments</abbr>, and canary routing at the LB level. [Answer](QnA-Answer-Key.md#8-load-balancers)
+5. An interviewer says: "The load balancer itself is a single point of failure." Walk through exactly how you make load balancing highly available — discuss DNS round-robin, BGP anycast, VRRP/keepalived, and cloud-native solutions (ALB, NLB).
 
-7. Compare hardware load balancers (F5), software load balancers (HAProxy, NGINX), and cloud-native load balancers (AWS ALB/NLB). When would a company still buy a hardware LB in 2025? [Answer](QnA-Answer-Key.md#8-load-balancers)
+6. You need to do a rolling deployment of a new version. How does the load balancer participate? Discuss health checks, <abbr title="Connection draining: before removing a server from the load balancer pool, allow existing connections to finish naturally rather than cutting them off, preventing in-flight requests from failing">connection draining</abbr>, <abbr title="Blue-green deployments: run two identical production environments (blue = current, green = new). Switch all traffic from blue to green at once. Easy rollback: just switch back. Zero downtime but requires double infrastructure.">blue-green deployments</abbr>, and canary routing at the LB level.
 
-8. Your application uses sticky sessions (session affinity). A server goes down and 10,000 users lose their sessions. How do you redesign to eliminate this problem while maintaining session state? [Answer](QnA-Answer-Key.md#8-load-balancers)
+7. Compare hardware load balancers (F5), software load balancers (HAProxy, NGINX), and cloud-native load balancers (AWS ALB/NLB). When would a company still buy a hardware LB in 2025?
 
-9. Explain how a global load balancer differs from a local one. If you need to route US users to us-east and EU users to eu-west, what combination of DNS, GSLB, and regional LBs would you use? [Answer](QnA-Answer-Key.md#8-load-balancers)
+8. Your application uses sticky sessions (session affinity). A server goes down and 10,000 users lose their sessions. How do you redesign to eliminate this problem while maintaining session state?
 
-10. Your load balancer is performing SSL termination for 100,000 concurrent TLS connections. This is consuming significant CPU. What are your options to scale SSL termination without adding more LB instances? [Answer](QnA-Answer-Key.md#8-load-balancers)
+9. Explain how a global load balancer differs from a local one. If you need to route US users to us-east and EU users to eu-west, what combination of DNS, GSLB, and regional LBs would you use?
+
+10. Your load balancer is performing SSL termination for 100,000 concurrent TLS connections. This is consuming significant CPU. What are your options to scale SSL termination without adding more LB instances?
 
 ---
 

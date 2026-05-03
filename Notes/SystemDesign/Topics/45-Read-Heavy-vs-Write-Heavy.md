@@ -182,6 +182,8 @@ When the same system has both read-heavy *and* write-heavy paths, **separate the
 
 ## 9. Senior Interview Questions
 
+> 💡 Use the **Practice Questions** section above to reveal answers and track your progress.
+
 1. *"You estimate 100M users, 10M DAU, 5 reads/sec/user, 1 write/min/user. What's the workload shape and what does that imply?"*
 2. *"How would you design a system that's read-heavy on weekdays but write-heavy on weekends (e-commerce flash sales)?"*
 3. *"Your read replicas are showing 5s of lag. Walk me through the trade-offs of sync vs async replication."*

@@ -560,25 +560,27 @@ Budget almost gone → slow down, focus on reliability.
 
 ## 🔥 Senior Interview Questions
 
-1. Your distributed system has 200 microservices. A user reports intermittent slow responses. Walk through your debugging process using logs, metrics, and traces. How do you correlate across pillars to find the root cause? [Answer](QnA-Answer-Key.md#20-observability)
+> 💡 Use the **Practice Questions** section above to reveal answers and track your progress.
 
-2. You're generating 50 TB of logs per day. Storage costs are exploding. How do you reduce volume without losing critical observability? Discuss sampling, log levels, structured logging, and hot/warm/cold tiering. [Answer](QnA-Answer-Key.md#20-observability)
+1. Your distributed system has 200 microservices. A user reports intermittent slow responses. Walk through your debugging process using logs, metrics, and traces. How do you correlate across pillars to find the root cause?
 
-3. Compare Prometheus + Grafana vs Datadog vs New Relic for monitoring a Kubernetes-based microservices platform. Consider cost at scale, cardinality limits, custom metrics, and alerting capabilities. [Answer](QnA-Answer-Key.md#20-observability)
+2. You're generating 50 TB of logs per day. Storage costs are exploding. How do you reduce volume without losing critical observability? Discuss sampling, log levels, structured logging, and hot/warm/cold tiering.
 
-4. An interviewer says: "Our alerts fire 200 times per day and on-call engineers ignore most of them." How do you fix this? Discuss alert fatigue, SLO-based alerting, multi-window burn rate alerts, and error budgets. [Answer](QnA-Answer-Key.md#20-observability)
+3. Compare Prometheus + Grafana vs Datadog vs New Relic for monitoring a Kubernetes-based microservices platform. Consider cost at scale, cardinality limits, custom metrics, and alerting capabilities.
 
-5. Explain the difference between monitoring and observability. A system with 100% test coverage and extensive dashboards still has production incidents that take hours to diagnose. Why, and how does observability (vs monitoring) help? [Answer](QnA-Answer-Key.md#20-observability)
+4. An interviewer says: "Our alerts fire 200 times per day and on-call engineers ignore most of them." How do you fix this? Discuss alert fatigue, SLO-based alerting, multi-window burn rate alerts, and error budgets.
 
-6. You need to implement distributed tracing across services using 5 different programming languages and 3 different frameworks. How do you do this without modifying every service? Discuss OpenTelemetry auto-instrumentation, sidecar proxies, and service mesh telemetry. [Answer](QnA-Answer-Key.md#20-observability)
+5. Explain the difference between monitoring and observability. A system with 100% test coverage and extensive dashboards still has production incidents that take hours to diagnose. Why, and how does observability (vs monitoring) help?
 
-7. Your Prometheus metrics have high cardinality (user_id as a label) and the instance is running out of memory. Explain why high cardinality is dangerous for metrics (not logs), and how you'd redesign the metrics to maintain usefulness. [Answer](QnA-Answer-Key.md#20-observability)
+6. You need to implement distributed tracing across services using 5 different programming languages and 3 different frameworks. How do you do this without modifying every service? Discuss OpenTelemetry auto-instrumentation, sidecar proxies, and service mesh telemetry.
 
-8. What are SLIs, SLOs, and SLAs? Design them for a payment processing API. Which SLIs would you track, what SLO targets would you set, and how do error budgets influence engineering prioritization? [Answer](QnA-Answer-Key.md#20-observability)
+7. Your Prometheus metrics have high cardinality (user_id as a label) and the instance is running out of memory. Explain why high cardinality is dangerous for metrics (not logs), and how you'd redesign the metrics to maintain usefulness.
 
-9. You're tracing a request through 12 microservices. The end-to-end latency is 2 seconds, but each service's individual metrics show <100ms latency. What's happening? Discuss queueing time, network latency, serialization overhead, and the difference between service time and wait time. [Answer](QnA-Answer-Key.md#20-observability)
+8. What are SLIs, SLOs, and SLAs? Design them for a payment processing API. Which SLIs would you track, what SLO targets would you set, and how do error budgets influence engineering prioritization?
 
-10. Your entire observability stack goes down (Prometheus, ELK, Jaeger). How do you still diagnose production issues? What manual debugging techniques and failsafe mechanisms should every system have? [Answer](QnA-Answer-Key.md#20-observability)
+9. You're tracing a request through 12 microservices. The end-to-end latency is 2 seconds, but each service's individual metrics show <100ms latency. What's happening? Discuss queueing time, network latency, serialization overhead, and the difference between service time and wait time.
+
+10. Your entire observability stack goes down (Prometheus, ELK, Jaeger). How do you still diagnose production issues? What manual debugging techniques and failsafe mechanisms should every system have?
 
 ---
 

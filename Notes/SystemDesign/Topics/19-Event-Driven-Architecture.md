@@ -570,25 +570,27 @@ Do I need an orchestrator?
 
 ## 🔥 Senior Interview Questions
 
-1. Compare choreography vs orchestration for a saga that involves Order, Payment, Inventory, and Shipping services. Walk through the happy path, failure path, and compensating transactions for each approach. When would you choose one over the other? [Answer](QnA-Answer-Key.md#19-event-driven-architecture)
+> 💡 Use the **Practice Questions** section above to reveal answers and track your progress.
 
-2. You're using event sourcing for an order management system. The event store has 500 million events. Rebuilding aggregate state by replaying all events takes 30 seconds. How do you optimize this? Discuss snapshots, projection stores, and event archiving. [Answer](QnA-Answer-Key.md#19-event-driven-architecture)
+1. Compare choreography vs orchestration for a saga that involves Order, Payment, Inventory, and Shipping services. Walk through the happy path, failure path, and compensating transactions for each approach. When would you choose one over the other?
 
-3. An interviewer asks: "What's the difference between an event, a command, and a query?" Then follows with: "Can a consumer of an event emit another event?" Walk through the implications of event chains and how to prevent infinite loops. [Answer](QnA-Answer-Key.md#19-event-driven-architecture)
+2. You're using event sourcing for an order management system. The event store has 500 million events. Rebuilding aggregate state by replaying all events takes 30 seconds. How do you optimize this? Discuss snapshots, projection stores, and event archiving.
 
-4. Your event-driven system has 20 services publishing to a shared Kafka cluster. A new event schema version breaks 3 downstream consumers. How do you prevent this? Discuss schema registries, backward/forward compatibility, and contract testing. [Answer](QnA-Answer-Key.md#19-event-driven-architecture)
+3. An interviewer asks: "What's the difference between an event, a command, and a query?" Then follows with: "Can a consumer of an event emit another event?" Walk through the implications of event chains and how to prevent infinite loops.
 
-5. Compare Kafka, RabbitMQ, and AWS EventBridge as event brokers. You need durable event storage, replay capability, and exactly-once processing. Which do you choose and why? [Answer](QnA-Answer-Key.md#19-event-driven-architecture)
+4. Your event-driven system has 20 services publishing to a shared Kafka cluster. A new event schema version breaks 3 downstream consumers. How do you prevent this? Discuss schema registries, backward/forward compatibility, and contract testing.
 
-6. You implement CQRS with separate read and write databases. The read projection is 5 seconds behind the write database. A user creates an order and immediately views "My Orders" but doesn't see it. How do you solve this UX problem without sacrificing the benefits of CQRS? [Answer](QnA-Answer-Key.md#19-event-driven-architecture)
+5. Compare Kafka, RabbitMQ, and AWS EventBridge as event brokers. You need durable event storage, replay capability, and exactly-once processing. Which do you choose and why?
 
-7. An interviewer says: "Event sourcing means you never delete data." But your application needs GDPR's right-to-erasure. How do you reconcile these? Discuss crypto-shredding, tombstone events, and personal data stores. [Answer](QnA-Answer-Key.md#19-event-driven-architecture)
+6. You implement CQRS with separate read and write databases. The read projection is 5 seconds behind the write database. A user creates an order and immediately views "My Orders" but doesn't see it. How do you solve this UX problem without sacrificing the benefits of CQRS?
 
-8. You're debugging a production incident where an order was double-charged. The event logs show the PaymentProcessed event was consumed twice. How did this happen (at-least-once delivery) and how do you prevent it from causing real-world damage? [Answer](QnA-Answer-Key.md#19-event-driven-architecture)
+7. An interviewer says: "Event sourcing means you never delete data." But your application needs GDPR's right-to-erasure. How do you reconcile these? Discuss crypto-shredding, tombstone events, and personal data stores.
 
-9. Compare event-driven architecture with request-driven (REST) architecture for a food delivery system (like DoorDash). Which parts of the system benefit from events and which should remain synchronous? Draw the boundary. [Answer](QnA-Answer-Key.md#19-event-driven-architecture)
+8. You're debugging a production incident where an order was double-charged. The event logs show the PaymentProcessed event was consumed twice. How did this happen (at-least-once delivery) and how do you prevent it from causing real-world damage?
 
-10. You have an event-sourced system that needs to support reports ("show me all orders last month by region"). Querying the event store directly is impractical. Design the projection/materialized view strategy, including how you handle projection failures, schema evolution, and rebuilding projections from scratch. [Answer](QnA-Answer-Key.md#19-event-driven-architecture)
+9. Compare event-driven architecture with request-driven (REST) architecture for a food delivery system (like DoorDash). Which parts of the system benefit from events and which should remain synchronous? Draw the boundary.
+
+10. You have an event-sourced system that needs to support reports ("show me all orders last month by region"). Querying the event store directly is impractical. Design the projection/materialized view strategy, including how you handle projection failures, schema evolution, and rebuilding projections from scratch.
 
 ---
 

@@ -813,25 +813,27 @@ Do I need caching?
 
 ## 🔥 Senior Interview Questions
 
-1. You introduce a Redis cache and get a 99% hit rate, but your P99 latency is worse than before. How is this possible? Discuss cache stampede, hot keys, and connection pool exhaustion. [Answer](QnA-Answer-Key.md#12-caching)
+> 💡 Use the **Practice Questions** section above to reveal answers and track your progress.
 
-2. Your cache holds user session data. The cache node crashes and 100,000 users are logged out simultaneously. How do you design for cache failure? Compare replication, consistent hashing, and session stores. [Answer](QnA-Answer-Key.md#12-caching)
+1. You introduce a Redis cache and get a 99% hit rate, but your P99 latency is worse than before. How is this possible? Discuss cache stampede, hot keys, and connection pool exhaustion.
 
-3. Compare cache-aside, write-through, write-behind, and refresh-ahead with a concrete e-commerce example. Which strategy would you use for: product catalog, shopping cart, inventory count, price display? [Answer](QnA-Answer-Key.md#12-caching)
+2. Your cache holds user session data. The cache node crashes and 100,000 users are logged out simultaneously. How do you design for cache failure? Compare replication, consistent hashing, and session stores.
 
-4. An interviewer says: "Just cache everything and set a 1-hour TTL." What can go wrong? Discuss stale data, memory pressure, cold start after restart, and the difference between TTL-based and event-based invalidation. [Answer](QnA-Answer-Key.md#12-caching)
+3. Compare cache-aside, write-through, write-behind, and refresh-ahead with a concrete e-commerce example. Which strategy would you use for: product catalog, shopping cart, inventory count, price display?
 
-5. You have a Redis cluster with 6 nodes. One node goes down, causing a cache stampede on 1/6 of your keys. All those requests hit the database, which crashes too. Walk through every layer of defense against this cascade. [Answer](QnA-Answer-Key.md#12-caching)
+4. An interviewer says: "Just cache everything and set a 1-hour TTL." What can go wrong? Discuss stale data, memory pressure, cold start after restart, and the difference between TTL-based and event-based invalidation.
 
-6. Explain the "dog-pile effect" (cache stampede) in detail. Compare solutions: locking, probabilistic early expiration (XFetch), request coalescing, and pre-warming. [Answer](QnA-Answer-Key.md#12-caching)
+5. You have a Redis cluster with 6 nodes. One node goes down, causing a cache stampede on 1/6 of your keys. All those requests hit the database, which crashes too. Walk through every layer of defense against this cascade.
 
-7. Your application caches the result of an expensive SQL query. The underlying data changes every 30 seconds, but the cache TTL is 5 minutes. A product manager says users see stale prices. How do you design cache invalidation that's both fresh and efficient? [Answer](QnA-Answer-Key.md#12-caching)
+6. Explain the "dog-pile effect" (cache stampede) in detail. Compare solutions: locking, probabilistic early expiration (XFetch), request coalescing, and pre-warming.
 
-8. Compare Memcached vs Redis for a caching layer. When would you choose each? What features does Redis offer that Memcached doesn't, and when are those features footguns? [Answer](QnA-Answer-Key.md#12-caching)
+7. Your application caches the result of an expensive SQL query. The underlying data changes every 30 seconds, but the cache TTL is 5 minutes. A product manager says users see stale prices. How do you design cache invalidation that's both fresh and efficient?
 
-9. You're caching at 5 different layers: browser, CDN, API gateway, application (Redis), and database query cache. A data update occurs. Walk through how staleness propagates and how you'd architect consistent invalidation across all layers. [Answer](QnA-Answer-Key.md#12-caching)
+8. Compare Memcached vs Redis for a caching layer. When would you choose each? What features does Redis offer that Memcached doesn't, and when are those features footguns?
 
-10. You need to cache 500 million key-value pairs with an average value size of 1KB. Calculate the memory needed. Would you use a single large Redis instance or a cluster? Discuss memory fragmentation, eviction policies (LRU vs LFU), and the trade-offs of Redis Cluster vs client-side sharding. [Answer](QnA-Answer-Key.md#12-caching)
+9. You're caching at 5 different layers: browser, CDN, API gateway, application (Redis), and database query cache. A data update occurs. Walk through how staleness propagates and how you'd architect consistent invalidation across all layers.
+
+10. You need to cache 500 million key-value pairs with an average value size of 1KB. Calculate the memory needed. Would you use a single large Redis instance or a cluster? Discuss memory fragmentation, eviction policies (LRU vs LFU), and the trade-offs of Redis Cluster vs client-side sharding.
 
 ---
 

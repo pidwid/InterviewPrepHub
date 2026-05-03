@@ -475,25 +475,27 @@ Which algorithm?
 
 ## 🔥 Senior Interview Questions
 
-1. You need to rate limit an API with 100,000 concurrent users across 50 application servers. A local in-memory counter won't work. Design a distributed rate limiter using Redis. Walk through the data structure, Lua script for atomicity, and failure modes (what happens if Redis goes down?). [Answer](QnA-Answer-Key.md#17-rate-limiting)
+> 💡 Use the **Practice Questions** section above to reveal answers and track your progress.
 
-2. Compare token bucket, leaky bucket, fixed window, sliding window log, and sliding window counter algorithms. Your API needs to allow short bursts but enforce a steady average rate. Which algorithm do you pick and how do you configure it? [Answer](QnA-Answer-Key.md#17-rate-limiting)
+1. You need to rate limit an API with 100,000 concurrent users across 50 application servers. A local in-memory counter won't work. Design a distributed rate limiter using Redis. Walk through the data structure, Lua script for atomicity, and failure modes (what happens if Redis goes down?).
 
-3. An attacker creates 10,000 accounts to bypass per-user rate limits. How do you defend against this? Discuss fingerprinting, IP-based limits, behavioral analysis, and CAPTCHA integration. [Answer](QnA-Answer-Key.md#17-rate-limiting)
+2. Compare token bucket, leaky bucket, fixed window, sliding window log, and sliding window counter algorithms. Your API needs to allow short bursts but enforce a steady average rate. Which algorithm do you pick and how do you configure it?
 
-4. Your rate limiter returns 429 Too Many Requests, but the client doesn't back off — it retries immediately in a tight loop, making the problem worse. How do you handle abusive clients? Discuss Retry-After headers, exponential backoff enforcement, and progressive penalties. [Answer](QnA-Answer-Key.md#17-rate-limiting)
+3. An attacker creates 10,000 accounts to bypass per-user rate limits. How do you defend against this? Discuss fingerprinting, IP-based limits, behavioral analysis, and CAPTCHA integration.
 
-5. You have a tiered pricing model: free users get 100 req/min, paid users get 10,000, and enterprise gets unlimited. How do you implement this in a distributed system? Where do you store tier information, and how do you handle plan upgrades in real-time? [Answer](QnA-Answer-Key.md#17-rate-limiting)
+4. Your rate limiter returns 429 Too Many Requests, but the client doesn't back off — it retries immediately in a tight loop, making the problem worse. How do you handle abusive clients? Discuss Retry-After headers, exponential backoff enforcement, and progressive penalties.
 
-6. An interviewer asks: "Should rate limiting be done at the API gateway or at each service?" Walk through the pros and cons of each approach and when you'd use both (defense in depth). [Answer](QnA-Answer-Key.md#17-rate-limiting)
+5. You have a tiered pricing model: free users get 100 req/min, paid users get 10,000, and enterprise gets unlimited. How do you implement this in a distributed system? Where do you store tier information, and how do you handle plan upgrades in real-time?
 
-7. Your rate limiter uses a fixed time window, and clients exploit the boundary — sending 100 requests at 11:59:59 and 100 more at 12:00:00. How does the sliding window counter algorithm fix this, and what's the memory/accuracy trade-off? [Answer](QnA-Answer-Key.md#17-rate-limiting)
+6. An interviewer asks: "Should rate limiting be done at the API gateway or at each service?" Walk through the pros and cons of each approach and when you'd use both (defense in depth).
 
-8. You're designing a rate limiter for a webhook delivery system that sends events to customer endpoints. Different customers have different rate limit agreements. How do you implement per-customer outbound rate limiting with fair queuing? [Answer](QnA-Answer-Key.md#17-rate-limiting)
+7. Your rate limiter uses a fixed time window, and clients exploit the boundary — sending 100 requests at 11:59:59 and 100 more at 12:00:00. How does the sliding window counter algorithm fix this, and what's the memory/accuracy trade-off?
 
-9. Your distributed rate limiter adds 2-3ms of latency per request (Redis round trip). For a low-latency trading API, this is unacceptable. How do you reduce latency? Discuss local caches, token bucket pre-fetching, and approximate counters. [Answer](QnA-Answer-Key.md#17-rate-limiting)
+8. You're designing a rate limiter for a webhook delivery system that sends events to customer endpoints. Different customers have different rate limit agreements. How do you implement per-customer outbound rate limiting with fair queuing?
 
-10. Explain rate limiting vs throttling vs load shedding vs circuit breaking. When would you use each, and how do they work together in a production system? [Answer](QnA-Answer-Key.md#17-rate-limiting)
+9. Your distributed rate limiter adds 2-3ms of latency per request (Redis round trip). For a low-latency trading API, this is unacceptable. How do you reduce latency? Discuss local caches, token bucket pre-fetching, and approximate counters.
+
+10. Explain rate limiting vs throttling vs load shedding vs circuit breaking. When would you use each, and how do they work together in a production system?
 
 ---
 

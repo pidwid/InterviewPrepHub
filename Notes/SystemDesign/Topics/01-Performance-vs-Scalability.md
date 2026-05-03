@@ -294,25 +294,27 @@ Approach: Started with 3 engineers, scaled carefully
 
 ## 🔥 Senior Interview Questions
 
-1. Your application is performant for a single user but degrades significantly under load — is this a performance problem or a scalability problem? How would you diagnose and fix it? [Answer](QnA-Answer-Key.md#1-performance-vs-scalability)
+> 💡 Use the **Practice Questions** section above to reveal answers and track your progress.
 
-2. A VP argues that the team should scale vertically by buying bigger machines rather than investing in horizontal scaling. What are your counter-arguments, and when might they actually be right? [Answer](QnA-Answer-Key.md#1-performance-vs-scalability)
+1. Your application is performant for a single user but degrades significantly under load — is this a performance problem or a scalability problem? How would you diagnose and fix it?
 
-3. You have a stateful monolithic application. Walk me through the steps to make it horizontally scalable without a full rewrite. [Answer](QnA-Answer-Key.md#1-performance-vs-scalability)
+2. A VP argues that the team should scale vertically by buying bigger machines rather than investing in horizontal scaling. What are your counter-arguments, and when might they actually be right?
 
-4. Your service latency is fine at <abbr title="50th percentile (median): 50% of requests complete within this time">P50</abbr> but terrible at <abbr title="99th percentile (tail): 99% of requests complete within this time">P99</abbr> under load. Is this a performance issue, a scalability issue, or both? How do you approach it? [Answer](QnA-Answer-Key.md#1-performance-vs-scalability)
+3. You have a stateful monolithic application. Walk me through the steps to make it horizontally scalable without a full rewrite.
 
-5. How would you decide between adding more read replicas vs. introducing a caching layer when your database reads are the bottleneck? [Answer](QnA-Answer-Key.md#1-performance-vs-scalability)
+4. Your service latency is fine at <abbr title="50th percentile (median): 50% of requests complete within this time">P50</abbr> but terrible at <abbr title="99th percentile (tail): 99% of requests complete within this time">P99</abbr> under load. Is this a performance issue, a scalability issue, or both? How do you approach it?
 
-6. An interviewer says "Just add more servers." Why is that not always the correct answer? What are the hidden costs of horizontal scaling? [Answer](QnA-Answer-Key.md#1-performance-vs-scalability)
+5. How would you decide between adding more read replicas vs. introducing a caching layer when your database reads are the bottleneck?
 
-7. You're designing a system that must handle 10x traffic spikes during flash sales. Would you pre-provision capacity or use auto-scaling? Discuss the trade-offs. [Answer](QnA-Answer-Key.md#1-performance-vs-scalability)
+6. An interviewer says "Just add more servers." Why is that not always the correct answer? What are the hidden costs of horizontal scaling?
 
-8. Your team claims the system "scales linearly." How would you verify this claim, and what factors typically cause sub-linear or even negative scaling? [Answer](QnA-Answer-Key.md#1-performance-vs-scalability)
+7. You're designing a system that must handle 10x traffic spikes during flash sales. Would you pre-provision capacity or use auto-scaling? Discuss the trade-offs.
 
-9. A colleague proposes caching everything to solve scalability problems. What are the risks, and how can aggressive caching actually harm scalability? [Answer](QnA-Answer-Key.md#1-performance-vs-scalability)
+8. Your team claims the system "scales linearly." How would you verify this claim, and what factors typically cause sub-linear or even negative scaling?
 
-10. You're designing for a startup that currently has 1,000 users but expects to grow to 10 million. How do you balance "build for today" vs "architect for tomorrow"? [Answer](QnA-Answer-Key.md#1-performance-vs-scalability)
+9. A colleague proposes caching everything to solve scalability problems. What are the risks, and how can aggressive caching actually harm scalability?
+
+10. You're designing for a startup that currently has 1,000 users but expects to grow to 10 million. How do you balance "build for today" vs "architect for tomorrow"?
 
 ---
 

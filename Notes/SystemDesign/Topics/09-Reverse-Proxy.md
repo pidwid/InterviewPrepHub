@@ -281,25 +281,27 @@ Nginx as both reverse proxy + load balancer:
 
 ## 🔥 Senior Interview Questions
 
-1. An interviewer asks: "When do you need a reverse proxy if you already have a load balancer?" Explain scenarios where a reverse proxy adds value beyond just load distribution. [Answer](QnA-Answer-Key.md#9-reverse-proxy)
+> 💡 Use the **Practice Questions** section above to reveal answers and track your progress.
 
-2. You're designing an API that serves both mobile clients (bandwidth-sensitive) and internal services (latency-sensitive). How would you configure a reverse proxy to handle both optimally (compression, caching, protocol differences)? [Answer](QnA-Answer-Key.md#9-reverse-proxy)
+1. An interviewer asks: "When do you need a reverse proxy if you already have a load balancer?" Explain scenarios where a reverse proxy adds value beyond just load distribution.
 
-3. Compare NGINX, HAProxy, Envoy, and Traefik as reverse proxies. In a Kubernetes-native environment, which would you choose and why? [Answer](QnA-Answer-Key.md#9-reverse-proxy)
+2. You're designing an API that serves both mobile clients (bandwidth-sensitive) and internal services (latency-sensitive). How would you configure a reverse proxy to handle both optimally (compression, caching, protocol differences)?
 
-4. Your reverse proxy is doing SSL termination, response compression, and caching. A security auditor says traffic between the reverse proxy and backend servers is unencrypted. Is this a problem? When do you need end-to-end encryption (<abbr title="mTLS (mutual TLS): both the client and server authenticate each other with certificates, not just the server authenticating to the client. Used in microservices to ensure only trusted services can communicate.">mTLS</abbr>)? [Answer](QnA-Answer-Key.md#9-reverse-proxy)
+3. Compare NGINX, HAProxy, Envoy, and Traefik as reverse proxies. In a Kubernetes-native environment, which would you choose and why?
 
-5. Explain the difference between a reverse proxy, an <abbr title="API gateway: a specialized reverse proxy that also handles authentication, rate limiting, request transformation, and API versioning — typically the single entry point for all external API traffic">API gateway</abbr>, and a <abbr title="Service mesh sidecar: a proxy container automatically injected alongside each microservice that handles all network communication (retries, load balancing, mTLS, tracing) without any changes to the service itself">service mesh sidecar</abbr>. Where do their responsibilities overlap, and when would you use all three together? [Answer](QnA-Answer-Key.md#9-reverse-proxy)
+4. Your reverse proxy is doing SSL termination, response compression, and caching. A security auditor says traffic between the reverse proxy and backend servers is unencrypted. Is this a problem? When do you need end-to-end encryption (<abbr title="mTLS (mutual TLS): both the client and server authenticate each other with certificates, not just the server authenticating to the client. Used in microservices to ensure only trusted services can communicate.">mTLS</abbr>)?
 
-6. You're using NGINX as a reverse proxy to cache API responses. A user updates their profile, but the cached response still shows old data. How do you handle cache invalidation at the reverse proxy layer? [Answer](QnA-Answer-Key.md#9-reverse-proxy)
+5. Explain the difference between a reverse proxy, an <abbr title="API gateway: a specialized reverse proxy that also handles authentication, rate limiting, request transformation, and API versioning — typically the single entry point for all external API traffic">API gateway</abbr>, and a <abbr title="Service mesh sidecar: a proxy container automatically injected alongside each microservice that handles all network communication (retries, load balancing, mTLS, tracing) without any changes to the service itself">service mesh sidecar</abbr>. Where do their responsibilities overlap, and when would you use all three together?
 
-7. Your reverse proxy is the single point of entry and a SPOF. Walk through how you'd make it highly available. Compare keepalived/VRRP, DNS failover, and cloud-managed solutions. [Answer](QnA-Answer-Key.md#9-reverse-proxy)
+6. You're using NGINX as a reverse proxy to cache API responses. A user updates their profile, but the cached response still shows old data. How do you handle cache invalidation at the reverse proxy layer?
 
-8. An engineer proposes using the reverse proxy to rate-limit requests instead of implementing rate limiting in the application. What are the pros and cons? When would this fail? [Answer](QnA-Answer-Key.md#9-reverse-proxy)
+7. Your reverse proxy is the single point of entry and a SPOF. Walk through how you'd make it highly available. Compare keepalived/VRRP, DNS failover, and cloud-managed solutions.
 
-9. How does a reverse proxy handle WebSocket connections differently from standard HTTP? What configuration challenges arise with long-lived connections? [Answer](QnA-Answer-Key.md#9-reverse-proxy)
+8. An engineer proposes using the reverse proxy to rate-limit requests instead of implementing rate limiting in the application. What are the pros and cons? When would this fail?
 
-10. You need to route `/api/v1/*` to Service A and `/api/v2/*` to Service B, while serving static files directly. Configure this at the reverse proxy level — what are the performance implications of complex routing rules? [Answer](QnA-Answer-Key.md#9-reverse-proxy)
+9. How does a reverse proxy handle WebSocket connections differently from standard HTTP? What configuration challenges arise with long-lived connections?
+
+10. You need to route `/api/v1/*` to Service A and `/api/v2/*` to Service B, while serving static files directly. Configure this at the reverse proxy level — what are the performance implications of complex routing rules?
 
 ---
 

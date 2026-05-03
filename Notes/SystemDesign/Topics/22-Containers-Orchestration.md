@@ -631,25 +631,27 @@ Managed vs self-hosted K8s?
 
 ## 🔥 Senior Interview Questions
 
-1. You're deploying a stateful application (e.g., PostgreSQL) on Kubernetes. Walk through the challenges: persistent volumes, StatefulSets, pod identity, leader election. When should you NOT run databases on Kubernetes? [Answer](QnA-Answer-Key.md#22-containers--orchestration)
+> 💡 Use the **Practice Questions** section above to reveal answers and track your progress.
 
-2. An interviewer asks: "Docker vs Kubernetes — what's the difference?" Many candidates conflate them. Explain the distinction and how they complement each other. Where do containerd, CRI-O, and OCI fit in? [Answer](QnA-Answer-Key.md#22-containers--orchestration)
+1. You're deploying a stateful application (e.g., PostgreSQL) on Kubernetes. Walk through the challenges: persistent volumes, StatefulSets, pod identity, leader election. When should you NOT run databases on Kubernetes?
 
-3. Your Kubernetes cluster has 500 pods. During peak traffic, auto-scaling takes 3 minutes to launch new pods (image pull + startup). Users experience errors during the scaling window. How do you reduce scaling time? Discuss pre-warming, pod priority, Knative, and over-provisioning. [Answer](QnA-Answer-Key.md#22-containers--orchestration)
+2. An interviewer asks: "Docker vs Kubernetes — what's the difference?" Many candidates conflate them. Explain the distinction and how they complement each other. Where do containerd, CRI-O, and OCI fit in?
 
-4. Compare Kubernetes Deployments, StatefulSets, DaemonSets, and Jobs. For each, give a concrete use case and explain why the other options wouldn't work. [Answer](QnA-Answer-Key.md#22-containers--orchestration)
+3. Your Kubernetes cluster has 500 pods. During peak traffic, auto-scaling takes 3 minutes to launch new pods (image pull + startup). Users experience errors during the scaling window. How do you reduce scaling time? Discuss pre-warming, pod priority, Knative, and over-provisioning.
 
-5. Your team uses Helm charts for deployment. A Helm upgrade fails halfway, leaving the cluster in an inconsistent state. How do you design for safe rollbacks? Compare Helm rollback, ArgoCD GitOps, and Flux. [Answer](QnA-Answer-Key.md#22-containers--orchestration)
+4. Compare Kubernetes Deployments, StatefulSets, DaemonSets, and Jobs. For each, give a concrete use case and explain why the other options wouldn't work.
 
-6. Explain Kubernetes networking: how does a request from the internet reach a specific container? Walk through Ingress Controller → Service → kube-proxy → Pod. What's the difference between ClusterIP, NodePort, and LoadBalancer services? [Answer](QnA-Answer-Key.md#22-containers--orchestration)
+5. Your team uses Helm charts for deployment. A Helm upgrade fails halfway, leaving the cluster in an inconsistent state. How do you design for safe rollbacks? Compare Helm rollback, ArgoCD GitOps, and Flux.
 
-7. You have 100 microservices on Kubernetes. Each team deploys independently. A bad deployment in Service A causes cascading failures across the cluster. How do you prevent this? Discuss resource quotas, network policies, Pod Disruption Budgets, and canary deployments. [Answer](QnA-Answer-Key.md#22-containers--orchestration)
+6. Explain Kubernetes networking: how does a request from the internet reach a specific container? Walk through Ingress Controller → Service → kube-proxy → Pod. What's the difference between ClusterIP, NodePort, and LoadBalancer services?
 
-8. Compare running your own Kubernetes cluster vs managed Kubernetes (EKS, GKE, AKS). What are specific operational tasks you avoid with managed K8s? When would a company still run self-managed? [Answer](QnA-Answer-Key.md#22-containers--orchestration)
+7. You have 100 microservices on Kubernetes. Each team deploys independently. A bad deployment in Service A causes cascading failures across the cluster. How do you prevent this? Discuss resource quotas, network policies, Pod Disruption Budgets, and canary deployments.
 
-9. A Docker image for your Java application is 1.2GB. Walk through the optimization: multi-stage builds, distroless base images, JLink custom runtimes, layer caching. What's the impact on build time, image pull time, and security surface? [Answer](QnA-Answer-Key.md#22-containers--orchestration)
+8. Compare running your own Kubernetes cluster vs managed Kubernetes (EKS, GKE, AKS). What are specific operational tasks you avoid with managed K8s? When would a company still run self-managed?
 
-10. Your CI/CD pipeline builds and deploys 50 services to Kubernetes. The full pipeline takes 45 minutes. How do you optimize it? Discuss parallel builds, registry caching, Buildkit, incremental builds, and progressive delivery (canary, blue-green). [Answer](QnA-Answer-Key.md#22-containers--orchestration)
+9. A Docker image for your Java application is 1.2GB. Walk through the optimization: multi-stage builds, distroless base images, JLink custom runtimes, layer caching. What's the impact on build time, image pull time, and security surface?
+
+10. Your CI/CD pipeline builds and deploys 50 services to Kubernetes. The full pipeline takes 45 minutes. How do you optimize it? Discuss parallel builds, registry caching, Buildkit, incremental builds, and progressive delivery (canary, blue-green).
 
 ---
 
